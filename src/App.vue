@@ -1,27 +1,18 @@
 <template>
-  <div id="nav">ASF</div>
-  <router-view />
+  <div class="app">
+    ASF
+    <router-view />
+  </div>
 </template>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+@font-face {
+  font-family: "OPPOSan-M";
+  src: url("./assets/Font-OPPOSans/OPPOSans-M.ttf");
+  font-weight: normal;
+  font-style: normal;
 }
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.app {
+  font-family: "OPPOSan-M", Microsoft Yahei, Times, serif;
 }
 </style>
