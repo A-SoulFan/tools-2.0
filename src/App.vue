@@ -1,7 +1,9 @@
 <template>
   <div class="app">
     ASF
-    <router-view />
+    <div class="route-view">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -14,5 +16,8 @@
 }
 .app {
   font-family: "OPPOSan-M", Microsoft Yahei, Times, serif;
+}
+.route-view {
+  padding: 0 5.83vw;
 }
 </style>
