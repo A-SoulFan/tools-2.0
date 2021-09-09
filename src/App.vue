@@ -8,7 +8,7 @@
 <style>
 @font-face {
   font-family: "OPPOSan-M";
-  src: url("./assets/Font-OPPOSans/OPPOSans-M.ttf");
+  src: url("./assets/font/OPPOSans-M.woff2");
   font-weight: normal;
   font-style: normal;
 }
