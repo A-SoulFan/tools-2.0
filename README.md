@@ -26,6 +26,14 @@ npm run build
 1. Vuter                    vue代码补全
 2. EsLint                   代码规范
 3. Prettier                 代码格式化
+4. 代码保存时检测
+```
+  vscode中，在文件->首选项->设置-> settings.json加入下面设置，能在保存时eslint
+  "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true,
+        "eslint.autoFixOnSave": true,
+    }
+```
 ##### 其他
 1. Path intellisense        文件路径智能识别
 2. Git  History             git可视化
@@ -68,6 +76,7 @@ npm run build
 1. feat：增加**新**功能
 2. style：只修改了**样式**，即不影响业务逻辑功能等
 3. update :  更新修改原有代码逻辑，例如优化性能、 需求变更、修复bug等
+4. doc :  更新文档相关
 
 ###### subject 用于说明提交内容：
 
