@@ -39,35 +39,41 @@ export default defineComponent({
     subTitle: {
       type: String,
     },
-    buttonText: {
-      type: String,
-    },
     buttonType: {
       type: String,
       default: "",
     },
   },
   setup(props, { emit }) {
-    const arrowRef: any = ref(null as HTMLElement | null);
+    const arrowRef: any = ref();
+    const buttonText = ref<string>("");
+    if (props.buttonType === "return") {
+      buttonText.value = "返回";
+    } else if (props.buttonType === "arrow") {
+      buttonText.value = "详情";
+    }
     const handleClick = () => {
       emit("buttonClick");
       if (props.buttonType === "arrow") {
         if (arrowRef.value.style.transform === "") {
           arrowRef.value.style.transform = "rotateX(180deg)";
+          buttonText.value = "收起";
         } else {
           arrowRef.value.style.transform = "";
+          buttonText.value = "详情";
         }
       }
     };
     return {
       handleClick,
       arrowRef,
+      buttonText,
     };
   },
 });
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .main-title {
   font-size: 34px;
   margin-bottom: 7.5px;
@@ -86,13 +92,14 @@ export default defineComponent({
   justify-content: flex-end;
   align-items: center;
   width: 12.41vw;
-}
-.button-text {
-  font-size: 14px;
-  margin-right: 3px;
-}
-.button-icon {
-  width: 15px;
-  height: 15px;
+  cursor: pointer;
+  .button-text {
+    font-size: 14px;
+    margin-right: 3px;
+  }
+  .button-icon {
+    width: 15px;
+    height: 15px;
+  }
 }
 </style>
