@@ -7,6 +7,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "RandomVideo" */ "../views/RandomVideo.vue"),
   },
+  {
+    path: "/duplicateChecking",
+    name: "duplicateChecking",
+    component: () => import("../views/DuplicateChecking.vue"),
+  },
 ];
 
 const router = createRouter({

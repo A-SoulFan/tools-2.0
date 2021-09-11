@@ -11,7 +11,7 @@
                 <li><a href="#">新人指南</a></li>
             </ul>
             <!--pc端-->
-            <a href="#"><img class="more-options" src="../assets/icons/moreOptions.png"></a>
+            <a ><img class="more-options" src="../assets/icons/moreOptions.png"></a>
 
             <!--pc端-->
             <div class="pc-icon-right">
@@ -20,29 +20,28 @@
             </div>
             <!--pc端-->
         </div>
-        <!--<h2>枝网查重</h2>-->
-        <span>枝网查重</span>
+        <span class="title">枝网查重</span>
         <div class="introduction">
             <span>帮你快速识别原创小作文</span>
-            <div class="more-details">
-                <span>{{foldBtnContent}}</span>
-                <a href="#" @click="onUnfoldBtnClick()"><img :class="[foldBtnState?'is-rotated':'recover-rotated']"
-                                                             src="../assets/icons/arrowDown.png"></a>
-            </div>
+            <!--<div class="more-details">-->
+                <!--<span>{{foldBtnContent}}</span>-->
+                <!--<a href="#" @click="onUnfoldBtnClick()"><img :class="[foldBtnState?'is-rotated':'recover-rotated']" src="../assets/icons/arrowDown.png"></a>-->
+            <!--</div>-->
         </div>
+        <!--手机端title-->
+        <div class="mobile-title">
+            <header-title Title="枝网查重"
+                          subTitle="帮你快速识别原创小作文"
+                          buttonType = 'arrow'>
+
+            </header-title>
+        </div>
+
         <!--详情内容-->
         <div class="details" v-show="foldBtnState">
-            <div class="content-range">
-                <span>比对库内容范围:</span>
-                <span>B站动态,视频评论区（仅限A-Soul的六个官方账号）</span>
-            </div>
-            <div class="time-range">
-                <span>比对库时间范围:</span>
-                <span>2020/11/23 21:18:26 至 2021/08/27 11:58:39</span>
-            </div>
-            <div class="reference">
-                <span>参考文献:</span>
-                <span>[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学</span>
+            <div class="content-range" v-for="(content,index) in contents " :key="index">
+                <span>{{content.span1}}</span>
+                <span>{{content.span2}}</span>
             </div>
         </div>
 
@@ -55,17 +54,9 @@
                 <!--pc-详情内容-->
                 <div class="pc-details">
                     <p>功能介绍</p>
-                    <div class="content-range">
-                        <span>比对库内容范围:</span>
-                        <span>B站动态,视频评论区（仅限A-Soul的六个官方账号）</span>
-                    </div>
-                    <div class="time-range">
-                        <span>比对库时间范围:</span>
-                        <span>2020/11/23 21:18:26 至 2021/08/27 11:58:39</span>
-                    </div>
-                    <div class="reference">
-                        <span>参考文献:</span>
-                        <span>[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学</span>
+                    <div class="content-range" v-for="(content,index) in contents" :key="index">
+                        <span>{{content.span1}}</span>
+                        <span>{{content.span2}}</span>
                     </div>
                     <div class="foot-nav">
                         <div class="left">
@@ -94,22 +85,24 @@
                     </div>
                 </div>
             </div>
-            <a href="#"><span :class="['btn-search',{active:isActive}]" @click="search(),onInputBtnContent()">{{btnContent}}</span></a>
-            <a href="#"><span :class="['pc-btn-search',{'pc-active':isActive}]" @click="search(),onInputBtnContent()">{{btnContent}}</span></a>
+            <a ><span :class="['btn-search',{active:isActive}]" @click="search(),onInputBtnContent()">{{btnContent}}</span></a>
+            <a ><span :class="['pc-btn-search',{'pc-active':isActive}]" @click="search(),onInputBtnContent()">{{btnContent}}</span></a>
         </div>
-
         <!--查重结果-->
-        <DuplicateCheckingResult v-for="user in userList" :user="user" v-if="isSearched"></DuplicateCheckingResult>
-        <!--<DuplicateCheckingResult></DuplicateCheckingResult>-->
+        <template v-if="isSearched">
+            <DuplicateCheckingResult v-for="(user,idx) in userList" :user="user" :key="idx"></DuplicateCheckingResult>
+        </template>
+
+
     </div>
 </template>
 
 <script>
     import DuplicateCheckingResult from "../components/DuplicateCheckingResult";
-
+    import headerTitle from "../components/headerTitle.vue";
     export default {
         name: "DuplicateChecking",
-        components: {DuplicateCheckingResult},
+        components: {DuplicateCheckingResult,headerTitle },
         data() {
             return {
                 maxLength: 1000,
@@ -121,6 +114,21 @@
                 contentLength: 0,//textarea中的字数
                 isSearched: false,//是否有进行过查询
                 totalDuplicateCheckingRate: 0,//总复制比
+                contents:[
+                    {
+                        span1:'比对库内容范围:',
+                        span2:'B站动态,视频评论区（仅限A-Soul的六个官方账号）'
+                    },
+                    {
+                        span1:'比对库时间范围:',
+                        span2:'2020/11/23 21:18:26 至 2021/08/27 11:58:39'
+                    },
+                    {
+                        span1:'参考文献:',
+                        span2:'[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学'
+                    },
+
+                ],
                 userList: [
                     {
                         username: '沃克贰叁',
@@ -149,7 +157,6 @@
             hasContent(e) {
                 this.isActive = e.target.value !== '' //如果不为空，isActive就是true
                 this.contentLength = e.target.value.length
-
                 //text内容不为空并且已经进行过搜索，那么只要输入东西就算改变内容
                 if (e.target.value !== '' && this.isSearched === true) {
                     this.btnContent = '查询结果';
@@ -179,6 +186,7 @@
                     this.btnContent = '复制报告'
                 }
             },
+
             onUnfoldBtnClick() {
                 this.foldBtnState = !this.foldBtnState;//状态翻转
                 if (this.foldBtnState === true) {
@@ -186,19 +194,16 @@
                 } else {
                     this.foldBtnContent = '详情' //设置内容变为收起
                 }
-
             }
-
         },
-
     }
 </script>
 
 <style scoped>
-    @font-face {
-        font-family: OPPOSans;
-        src: url("../assets/Font-OPPOSans/OPPOSans-M.ttf");
-    }
+    /*@font-face {*/
+        /*font-family: OPPOSans;*/
+        /*src: url("../assets/Font-OPPOSans/OPPOSans-M.ttf");*/
+    /*}*/
     /*手机端*/
     /*竖屏*/
     @media only screen and (orientation: portrait) and (max-width: 500px) {
@@ -417,16 +422,12 @@
             overflow: hidden;
         }
         /*pc端隐藏元素*/
-        .container .pc-navigation{
-            display: none;
-        }
-        .pc-icon-right{
-            display: none;
-        }
-        .pc-details{
-            display: none;
-        }
-        .pc-btn-search{
+        .title, .introduction,
+        .pc-btn-search,
+        .pc-details,
+        .pc-icon-right,
+        .container .pc-navigation
+        {
             display: none;
         }
     }
@@ -647,17 +648,16 @@
             -webkit-line-clamp:2;
             overflow: hidden;
         }
+        .pc-btn-search:hover{
+            cursor: pointer;
+        }
         /*pc端隐藏元素*/
-        .container .pc-navigation{
-            display: none;
-        }
-        .pc-icon-right{
-            display: none;
-        }
-        .pc-details{
-            display: none;
-        }
-        .pc-btn-search{
+        .title, .introduction,
+        .pc-btn-search,
+        .pc-details,
+        .pc-icon-right,
+        .container .pc-navigation
+        {
             display: none;
         }
     }
@@ -863,6 +863,12 @@
             line-height: 36px;
             background-color: rgb(75, 85, 99);
             color: white;
+        }
+        .mobile-title{
+            display: none;
+        }
+        .pc-btn-search:hover{
+            cursor: pointer;
         }
     }
 
