@@ -9,7 +9,7 @@
       <a v-else>详情<span class="ico-vector"></span></a>
     </div>
 
-    <div v-if="!loading">
+    <div class="page-container" v-if="!loading">
       <div class="search-page" v-if="!showDetail">
         <div class="search-box">
           <input
@@ -419,227 +419,235 @@ export default defineComponent({
     }
   }
 
-  .search-page {
-    margin-top: 20px;
+  .page-container {
+    padding-bottom: 20px;
 
-    .search-box {
-      height: 36px;
-      display: flex;
-      justify-content: center;
+    .search-page {
+      margin-top: 20px;
 
-      input[type="text"] {
-        appearance: none;
-        height: 100%;
-        flex: 1;
-        font-size: 14px;
-        padding: 8px 14px;
-        border: none;
-        outline: none;
-        color: #1f2937;
-        font-family: inherit;
-        border-top: 1px solid #d1d5db;
-        border-bottom: 1px solid #d1d5db;
-        border-left: 1px solid #d1d5db;
-      }
+      .search-box {
+        height: 36px;
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
 
-      input[type="submit"] {
-        appearance: none;
-        height: 100%;
-        border: 0;
-        border-radius: 0;
-        font-size: 14px;
-        padding: 10px 14px;
-        line-height: 100%;
-        font-family: inherit;
-        color: #fff;
-      }
-
-      .submit-enable {
-        background-color: #4b5563;
-      }
-
-      .submit-disable {
-        background-color: #9ca3af;
-      }
-    }
-
-    .entries-box {
-      .tab-component {
-        margin-top: 18px;
-
-        li {
-          white-space: nowrap;
+        input[type="text"] {
+          appearance: none;
+          height: 100%;
+          flex: 1;
+          overflow: hidden;
+          font-size: 14px;
+          padding: 8px 14px;
+          border: none;
+          border-radius: 0;
+          outline: none;
+          color: #1f2937;
+          font-family: inherit;
+          border-top: 1px solid #d1d5db;
+          border-bottom: 1px solid #d1d5db;
+          border-left: 1px solid #d1d5db;
         }
 
-        .main-tab-list-wrapper {
-          overflow: scroll;
-          user-select: none;
-
-          &::-webkit-scrollbar {
-            width: 0;
-            height: 0;
-          }
-
-          .main-tab-list {
-            display: flex;
-            justify-content: space-between;
-
-            li {
-              font-size: 17px;
-              line-height: 30px;
-              padding: 5px 0;
-              margin-right: 9px;
-            }
-
-            .active {
-              border-bottom: 2px solid #374151;
-            }
-          }
+        input[type="submit"] {
+          appearance: none;
+          height: 100%;
+          border: none;
+          border-radius: 0;
+          font-size: 14px;
+          padding: 10px 14px;
+          line-height: 100%;
+          font-family: inherit;
+          color: #fff;
         }
 
-        .sub-tab-list-wrapper {
-          user-select: none;
-          overflow: scroll;
+        .submit-enable {
+          background-color: #4b5563;
+        }
 
-          &::-webkit-scrollbar {
-            width: 0;
-            height: 0;
-          }
-
-          .sub-tab-list {
-            display: flex;
-
-            li {
-              font-size: 12.5px;
-              line-height: 24.5px;
-              padding: 4px 21px;
-              margin-right: 9.5px;
-              margin-top: 9.5px;
-              background-color: #9ca3af;
-              color: #fff;
-            }
-
-            .active {
-              background-color: #4b5563;
-            }
-          }
+        .submit-disable {
+          background-color: #9ca3af;
         }
       }
 
-      .list-container {
-        ul {
+      .entries-box {
+        .tab-component {
+          margin-top: 18px;
+
           li {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 197.5px;
-            margin-top: 22px;
-            padding: 15.5px 17.5px 12px;
-            background-color: #f8f8f8;
+            white-space: nowrap;
+          }
 
-            .dict-title {
+          .main-tab-list-wrapper {
+            overflow: scroll;
+            user-select: none;
+
+            &::-webkit-scrollbar {
+              width: 0;
+              height: 0;
+            }
+
+            .main-tab-list {
               display: flex;
               justify-content: space-between;
-              align-items: center;
 
-              h4 {
-                &::before {
-                  content: "";
-                  display: inline-block;
-                  width: 3px;
-                  height: 12px;
-                  margin-right: 7px;
-                  background-color: #1f2937;
-                }
-
+              li {
                 font-size: 17px;
+                line-height: 30px;
+                padding: 5px 0;
+                margin-right: 9px;
               }
 
-              a {
+              .active {
+                border-bottom: 2px solid #374151;
+              }
+            }
+          }
+
+          .sub-tab-list-wrapper {
+            user-select: none;
+            overflow: scroll;
+
+            &::-webkit-scrollbar {
+              width: 0;
+              height: 0;
+            }
+
+            .sub-tab-list {
+              display: flex;
+
+              li {
+                font-size: 12.5px;
+                line-height: 24.5px;
+                padding: 4px 21px;
+                margin-right: 9.5px;
+                margin-top: 9.5px;
+                background-color: #9ca3af;
+                color: #fff;
+              }
+
+              .active {
+                background-color: #4b5563;
+              }
+            }
+          }
+        }
+
+        .list-container {
+          ul {
+            li {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              height: 197.5px;
+              margin-top: 22px;
+              padding: 15.5px 17.5px 12px;
+              background-color: #f8f8f8;
+
+              .dict-title {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                h4 {
+                  &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 3px;
+                    height: 12px;
+                    margin-right: 7px;
+                    background-color: #1f2937;
+                  }
+
+                  font-size: 17px;
+                }
+
+                a {
+                  display: flex;
+                  align-items: center;
+                  font-size: 12.5px;
+                  color: #6b7280;
+
+                  .ico-link {
+                    margin-right: 5px;
+                    width: 14px;
+                    height: 14px;
+                    background: url("../assets/icons/link.png") no-repeat center;
+                    background-size: contain;
+                  }
+                }
+              }
+
+              .dict-detail {
+                font-size: 14.5px;
+                line-height: 24.5px;
+                color: #6b7280;
+
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 4;
+                line-clamp: 4;
+                overflow: hidden;
+              }
+
+              .dict-updatetime {
                 display: flex;
                 align-items: center;
                 font-size: 12.5px;
                 color: #6b7280;
 
-                .ico-link {
-                  margin-right: 5px;
+                .ico-clock {
+                  margin-right: 4px;
                   width: 14px;
                   height: 14px;
-                  background: url("../assets/icons/link.png") no-repeat center;
+                  background: url("../assets/icons/clock.svg") no-repeat center;
                   background-size: contain;
                 }
-              }
-            }
-
-            .dict-detail {
-              font-size: 14.5px;
-              line-height: 24.5px;
-              color: #6b7280;
-
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 4;
-              line-clamp: 4;
-              overflow: hidden;
-            }
-
-            .dict-updatetime {
-              display: flex;
-              align-items: center;
-              font-size: 12.5px;
-              color: #6b7280;
-
-              .ico-clock {
-                margin-right: 4px;
-                width: 14px;
-                height: 14px;
-                background: url("../assets/icons/clock.svg") no-repeat center;
-                background-size: contain;
               }
             }
           }
         }
       }
     }
-  }
 
-  .detail-page {
-    background-color: #f8f8f8;
-    padding: 13px 15px;
-    margin-top: 28px;
+    .detail-page {
+      background-color: #f8f8f8;
+      padding: 13px 15px;
+      margin-top: 28px;
 
-    .info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12.5px;
-      color: #6b7280;
-
-      .update-time {
+      .info {
         display: flex;
-        align-items: center;
-        white-space: nowrap;
+        justify-content: space-between;
+        font-size: 12.5px;
+        color: #6b7280;
 
-        .ico-clock {
-          margin-right: 3px;
-          width: 14px;
-          height: 14px;
-          background: url("../assets/icons/clock.svg") no-repeat center;
-          background-size: contain;
+        .update-time {
+          display: flex;
+          align-items: center;
+          white-space: nowrap;
+
+          .ico-clock {
+            margin-right: 3px;
+            width: 14px;
+            height: 14px;
+            background: url("../assets/icons/clock.svg") no-repeat center;
+            background-size: contain;
+          }
         }
       }
-    }
 
-    .title {
-      margin-top: 23px;
-      color: #1f2937;
-      font-size: 25px;
-    }
+      .title {
+        margin-top: 23px;
+        color: #1f2937;
+        font-size: 25px;
+      }
 
-    .detail {
-      margin-top: 12px;
-      font-size: 14.5px;
-      line-height: 24.5px;
-      color: #6b7280;
+      .detail {
+        margin-top: 12px;
+        font-size: 14.5px;
+        line-height: 24.5px;
+        font-family: inherit;
+        color: #6b7280;
+      }
     }
   }
 }
