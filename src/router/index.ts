@@ -12,6 +12,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "duplicateChecking",
     component: () => import("../views/DuplicateChecking.vue"),
   },
+  {
+    path: "/zhijiangDict",
+    name: "zhijiangDict",
+    component: () => import("../views/ZhijiangDict.vue"),
+  },
 ];
 
 const router = createRouter({
