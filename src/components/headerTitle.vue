@@ -6,7 +6,7 @@
       <div class="sub-title">
         {{ subTitle }}
       </div>
-      <div class="button-area" @click="handleClick" v-if="buttonText !== ''">
+      <div class="button-area" @click="handleClick" v-if="buttonType !== ''">
         <div class="button-text">
           {{ buttonText }}
         </div>

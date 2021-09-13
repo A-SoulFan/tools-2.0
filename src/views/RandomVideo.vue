@@ -1,11 +1,7 @@
 <!-- 今天溜什么-->
 <template>
   <div>
-    <header-title
-      Title="今天溜什么"
-      subTitle="相见即是缘份"
-      buttonType="arrow"
-    ></header-title>
+    <header-title Title="今天溜什么" subTitle="相见即是缘份"></header-title>
     <div class="update-time-area">
       <img class="icon-clock" src="../assets/icons/clock.svg" />
       <div class="update-time-text">{{ "最近更新" + updateTime }}</div>
@@ -103,11 +99,15 @@ export default defineComponent({
 .iframe-box {
   display: flex;
   flex-direction: column;
+  max-width: 1200px;
+  margin: auto;
 }
 .iframe-box > iframe {
   width: 100%;
   height: 57.59vw;
+  max-height: 590px;
   border: none;
+  margin: auto;
   background-color: #4b5563;
 }
 .iframe-box-button-area {
@@ -140,50 +140,56 @@ export default defineComponent({
 }
 /* iframe区域 */
 /* 历史切片区域 */
-.history-video-title {
-  font-size: 17px;
-  margin: 30px 0 20px 0;
-}
-.history-video {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  justify-content: space-between;
-  grid-gap: 10px 20px;
-  .history-video-item {
-    display: flex;
-    height: 26.11vw;
-    // margin: 0 20px 27px auto;
-    margin-bottom: 27px;
-    background-color: #f8f8f8;
-    max-height: 100px;
-    border-radius: 2px;
-    .video-cover {
-      width: 50%;
-      min-width: 50%;
-      height: 100%;
-      background-color: #4b5563;
-      margin-right: 2.7vw;
-    }
-    .video-info {
-      margin: 7px 0;
+.history-video-area {
+  max-width: 1200px;
+  margin: auto;
+  .history-video-title {
+    font-size: 17px;
+    margin: 30px 0 20px 0;
+  }
+  .history-video {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    justify-content: space-between;
+    grid-gap: 10px 20px;
+
+    .history-video-item {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      .video-title {
-        font-size: 14px;
-        text-overflow: -o-ellipsis-lastline;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
+      height: 26.11vw;
+      // margin: 0 20px 27px auto;
+      margin-bottom: 27px;
+      background-color: #f8f8f8;
+      max-height: 100px;
+      border-radius: 2px;
+      .video-cover {
+        width: 50%;
+        min-width: 50%;
+        height: 100%;
+        background-color: #4b5563;
+        margin-right: 2.7vw;
       }
-      .video-time {
-        font-size: 13px;
+      .video-info {
+        margin: 7px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .video-title {
+          font-size: 14px;
+          text-overflow: -o-ellipsis-lastline;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
+        .video-time {
+          font-size: 13px;
+        }
       }
     }
   }
 }
+
 /* 历史切片区域 */
 </style>
