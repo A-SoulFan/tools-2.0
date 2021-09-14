@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.21.4",
     "less": "^4.1.1",
     "less-loader": "^7.3.0",
     "vue": "^3.0.0",

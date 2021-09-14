@@ -7,13 +7,13 @@
       <div class="update-time-text">{{ "最近更新" + updateTime }}</div>
     </div>
     <div class="iframe-box">
-      <iframe src=""></iframe>
+      <iframe :src="video.play_url"></iframe>
       <div class="iframe-box-button-area">
         <div class="pre-button-area">
           <img class="pre-button-img" src="../assets/icons/cube.svg" />
           <div class="pre-button-text">回到上一条视频</div>
         </div>
-        <div class="random-button">随便看看</div>
+        <div class="random-button" @click="clickRondom">随便看看</div>
       </div>
     </div>
     <div class="history-video-area">
@@ -45,12 +45,11 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import headerTitle from "../components/headerTitle.vue";
+import useCurrentInstance from "@/hooks/useCurrentInstance";
 export default defineComponent({
   components: { headerTitle },
   setup() {
-    const Title = "今天溜什么";
-    const subtitle = "相见即是缘份";
-    let historyVideoList = [
+    let historyVideoList: Array<{ title: string; imgsrc: string }> = [
       {
         title: "标题1",
         imgsrc:
@@ -66,13 +65,47 @@ export default defineComponent({
         imgsrc:
           "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
       },
+      {
+        title: "标题4",
+        imgsrc:
+          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
+      },
+      {
+        title: "标题5",
+        imgsrc:
+          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
+      },
+      {
+        title: "标题6",
+        imgsrc:
+          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
+      },
     ];
+    const video = ref({
+      title: String,
+      cover: String,
+    });
     let updateTime = ref("2021.8.26 15:00");
+    const { proxy } = useCurrentInstance();
+    const getRandomVideo = async () => {
+      const res = await proxy.$request("api/stroll/random");
+      video.value = res;
+    };
+    getRandomVideo();
+    const clickRondom = async () => {
+      await getRandomVideo();
+      // let tempObj = {
+      //   title: video.value.title,
+      //   imgsrc:
+      //     "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
+      // };
+      // historyVideoList.unshift(tempObj);
+    };
     return {
-      Title,
-      subtitle,
       updateTime,
       historyVideoList,
+      video,
+      clickRondom,
     };
   },
 });
@@ -109,6 +142,7 @@ export default defineComponent({
   border: none;
   margin: auto;
   background-color: #4b5563;
+  border: 1px #4b5563 solid;
 }
 .iframe-box-button-area {
   display: flex;
@@ -137,6 +171,7 @@ export default defineComponent({
   color: #fff;
   background-color: #4b5563;
   border-radius: 2px;
+  cursor: pointer;
 }
 /* iframe区域 */
 /* 历史切片区域 */
@@ -149,7 +184,7 @@ export default defineComponent({
   }
   .history-video {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     justify-content: space-between;
     grid-gap: 10px 20px;
 
