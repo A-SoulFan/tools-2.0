@@ -17,6 +17,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "zhijiangDict",
     component: () => import("../views/ZhijiangDict.vue"),
   },
+  {
+    path: "/emojicollect",
+    name: "emojicollect",
+    component: () => import("../views/EmojiCollection.vue"),
+  },
 ];
 
 const router = createRouter({
