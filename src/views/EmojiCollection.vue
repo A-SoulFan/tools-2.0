@@ -18,16 +18,59 @@
     />
     <div class="desc">Description</div>
   </div>
-  <div class="box">
-    <img
-      class="img"
-      src="https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg"
-    />
-    <div class="desc">Description</div>
-  </div>
-  <div class="box">
-    <img class="img" src="" />
-    <div class="desc">Description</div>
+
+  <div class="row f12" id="app-mains">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text">long</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <img
+            class="img"
+            src="https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg"
+          />
+          <p class="card-text">This is a short card.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <img class="img" src="../assets/icons/user.png" />
+          <p class="card-text">long</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text">This is a short card.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <img
+            class="img"
+            src="https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg"
+          />
+          <p class="card-text">long</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text">This is a short card.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -46,7 +89,7 @@ export default defineComponent({
     let updateTime = ref("2021.8.26 15:00");
 
     const state: waterfallFlow = reactive({
-      waterfallFlowHeight: [0, 0],
+      waterfallFlowHeight: [420, 420, 1200],
     });
     const waterfallFlowFun = () => {
       const dom = document.querySelectorAll(".col-6");
@@ -62,6 +105,12 @@ export default defineComponent({
     const filterMin = () => {
       const min = Math.min.apply(null, state.waterfallFlowHeight);
       return state.waterfallFlowHeight.indexOf(min);
+    };
+    const _isMobile = () => {
+      let flag = navigator.userAgent.match(
+        /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+      );
+      return flag;
     };
 
     onMounted(() => waterfallFlowFun());
