@@ -1,6 +1,10 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
+  // {
+  //   path: "/",
+  //   redirect: "/randomVideo",
+  // },
   {
     path: "/randomVideo",
     name: "randomVideo",

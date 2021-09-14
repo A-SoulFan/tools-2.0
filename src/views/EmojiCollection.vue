@@ -36,30 +36,13 @@ import { defineComponent, reactive, ref, onMounted } from "vue";
 import headerTitle from "../components/headerTitle.vue";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 interface waterfallFlow {
-  waterfallFlowHeight: Array;
+  waterfallFlowHeight: Array<number>;
 }
 export default defineComponent({
   components: { headerTitle },
   setup() {
     const Title = "表情包";
     const subtitle = "你想要的表情包都在这里";
-    let items = [
-      {
-        title: "标题1",
-        imgsrc:
-          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
-      },
-      {
-        title: "标题2",
-        imgsrc:
-          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
-      },
-      {
-        title: "标题3",
-        imgsrc:
-          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
-      },
-    ];
     let updateTime = ref("2021.8.26 15:00");
 
     const state: waterfallFlow = reactive({
@@ -80,17 +63,11 @@ export default defineComponent({
       const min = Math.min.apply(null, state.waterfallFlowHeight);
       return state.waterfallFlowHeight.indexOf(min);
     };
-    const _isMobile = () => {
-      let flag = navigator.userAgent.match(
-        /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
-      );
-      return flag;
-    };
+
     onMounted(() => waterfallFlowFun());
     return {
       Title,
       subtitle,
-      items,
       updateTime,
     };
   },
