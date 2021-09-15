@@ -13,7 +13,7 @@
           <img class="pre-button-img" src="../assets/icons/cube.svg" />
           <div class="pre-button-text">回到上一条视频</div>
         </div>
-        <div class="random-button" @click="clickRondom">随便看看</div>
+        <div class="random-button" @click="getRandomVideo">随便看看</div>
       </div>
     </div>
     <div class="history-video-area">
@@ -30,11 +30,9 @@
 
           <div class="video-info">
             <div class="video-title">
-              {{
-                "标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题"
-              }}
+              {{ item.title }}
             </div>
-            <div class="video-time">时间</div>
+            <div class="video-time">BV号：{{ item.bv }}</div>
           </div>
         </div>
       </div>
@@ -49,63 +47,41 @@ import useCurrentInstance from "@/hooks/useCurrentInstance";
 export default defineComponent({
   components: { headerTitle },
   setup() {
-    let historyVideoList: Array<{ title: string; imgsrc: string }> = [
-      {
-        title: "标题1",
-        imgsrc:
-          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
-      },
-      {
-        title: "标题2",
-        imgsrc:
-          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
-      },
-      {
-        title: "标题3",
-        imgsrc:
-          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
-      },
-      {
-        title: "标题4",
-        imgsrc:
-          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
-      },
-      {
-        title: "标题5",
-        imgsrc:
-          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
-      },
-      {
-        title: "标题6",
-        imgsrc:
-          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
-      },
-    ];
+    const historyVideoList: any[] = JSON.parse(
+      localStorage.getItem("historyVideoList") || JSON.stringify([])
+    );
     const video = ref({
       title: String,
       cover: String,
+      bv: String,
     });
     let updateTime = ref("2021.8.26 15:00");
     const { proxy } = useCurrentInstance();
     const getRandomVideo = async () => {
       const res = await proxy.$request("api/stroll/random");
       video.value = res;
+      let tempObj = {
+        title: video.value.title,
+        imgsrc:
+          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
+        bv: video.value.bv,
+      };
+      // 长度保持在二十条
+      if (historyVideoList.length >= 20) {
+        historyVideoList.pop();
+      }
+      historyVideoList.unshift(tempObj);
+      localStorage.setItem(
+        "historyVideoList",
+        JSON.stringify(historyVideoList)
+      );
     };
     getRandomVideo();
-    const clickRondom = async () => {
-      await getRandomVideo();
-      // let tempObj = {
-      //   title: video.value.title,
-      //   imgsrc:
-      //     "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
-      // };
-      // historyVideoList.unshift(tempObj);
-    };
     return {
       updateTime,
       historyVideoList,
       video,
-      clickRondom,
+      getRandomVideo,
     };
   },
 });
@@ -187,7 +163,7 @@ export default defineComponent({
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     justify-content: space-between;
     grid-gap: 10px 20px;
-
+    justify-items: center;
     .history-video-item {
       display: flex;
       height: 26.11vw;
@@ -195,6 +171,7 @@ export default defineComponent({
       margin-bottom: 27px;
       background-color: #f8f8f8;
       max-height: 100px;
+      max-width: 500px;
       border-radius: 2px;
       .video-cover {
         width: 50%;
