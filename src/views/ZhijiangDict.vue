@@ -3,53 +3,40 @@
     <h2 class="title">方言词典</h2>
     <div class="subtitle">
       <h3>你想了解的词条都在这里</h3>
-      <a v-if="showDetail" @click="closeDetail"
+      <a v-if="detail.isShow" @click="closeDetail"
         >返回<span class="ico-return"></span
       ></a>
       <a v-else>详情<span class="ico-vector"></span></a>
     </div>
 
     <div class="page-container" v-if="!loading">
-      <div class="search-page" v-if="!showDetail">
+      <div class="search-page" v-if="!detail.isShow">
         <div class="search-box">
           <input
             type="text"
-            v-model="searchKeyword"
+            v-model="search.keyword"
             placeholder="在此处输入你想了解的词条"
           />
           <input
             type="submit"
             value="查询词条"
-            :class="searchBtnDisabled ? 'submit-disable' : 'submit-enable'"
-            :disabled="searchBtnDisabled"
-            @click="test()"
+            :class="search.isBtnDisabled ? 'submit-disable' : 'submit-enable'"
+            :disabled="search.isBtnDisabled"
           />
         </div>
         <div class="entries-box">
-          <div class="tab-component">
-            <div class="main-tab-list-wrapper">
-              <ul class="main-tab-list">
-                <li
-                  v-for="item in mainTab"
-                  :key="item.cid"
-                  :class="{ active: item.cid === activeTab.main }"
-                  @click="mainTabChange(item.cid)"
-                >
-                  {{ item.name }}
-                </li>
-              </ul>
-            </div>
+          <div class="tab">
             <div
-              class="sub-tab-list-wrapper"
-              v-for="i in [...Array(subTabCount).keys()]"
+              class="tab-list-wrapper"
+              v-for="i in [...Array(tab.tabCount).keys()]"
               :key="i"
             >
-              <ul class="sub-tab-list">
+              <ul :class="i === 0 ? 'main-tab-list' : 'sub-tab-list'">
                 <li
-                  v-for="item in subTab[i]"
+                  v-for="item in tab.tabList[i]"
                   :key="item.cid"
-                  :class="{ active: item.cid === this.activeTab.sub[i] }"
-                  @click="subTabChange(i, item.cid)"
+                  :class="{ active: item.cid === tab.active[i] }"
+                  @click="onTabChanged(i, item.cid)"
                 >
                   {{ item.name }}
                 </li>
@@ -77,16 +64,16 @@
       </div>
       <div class="detail-page" v-else>
         <div class="info">
-          <span class="path">{{ entryDetail["path"].join("/") }}</span>
+          <span class="path">{{ detail.path.join("/") }}</span>
           <span class="update-time"
             ><span class="ico-clock"></span>
             {{
-              ` 最近更新  ${timestampToDate(entryDetail.update_timestamp)}`
+              ` 最近更新  ${timestampToDate(detail.entry.update_timestamp)}`
             }}</span
           >
         </div>
-        <h4 class="title">{{ entryDetail.title }}</h4>
-        <p class="detail yue" v-html="entryDetail.content"></p>
+        <h4 class="title">{{ detail.entry.title }}</h4>
+        <p class="detail yue" v-html="detail.entry.content"></p>
       </div>
     </div>
   </div>
@@ -95,64 +82,77 @@
 <script lang="ts">
 import "../assets/css/yue.css";
 import showdown from "showdown";
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref, reactive } from "vue";
+
+interface CategoryNode {
+  cid: number;
+  parent_cid: number | null;
+  name: string;
+}
+
+interface Entry {
+  aid: number;
+  title: string;
+  content: string;
+  update_timestamp: number;
+}
 
 export default defineComponent({
   name: "ZhijiangDict",
   setup() {
-    type categoryNodeType = {
-      cid: number;
-      parent_cid: number | null;
-      name: string;
-    };
-
-    let searchKeyword = ref("");
-    let searchBtnDisabled = computed(() => {
-      return searchKeyword.value.length === 0;
+    let search: {
+      keyword: string;
+      isBtnDisabled: boolean;
+    } = reactive({
+      keyword: "",
+      get isBtnDisabled() {
+        return this.keyword.length === 0;
+      },
     });
-    let activeCid = 0;
-    let activePath = Array<string>();
 
-    let categories = Array<categoryNodeType>();
-    let entries = Array<unknown>(); // ref
+    let tab: {
+      active: number[];
+      tabList: CategoryNode[][];
+      tabCount: number;
+    } = reactive({
+      active: [],
+      tabList: [],
+      tabCount: 0,
+    });
 
-    let entryDetail = ref({}); //ref
-    let showDetail = ref(false);
+    let detail: {
+      entry: Entry;
+      isShow: boolean;
+      path: string[];
+    } = reactive({
+      entry: {
+        aid: 0,
+        title: "",
+        content: "",
+        update_timestamp: 0,
+      },
+      isShow: false,
+      path: [],
+    });
 
+    let categories = Array<CategoryNode>();
+    let entries = ref(Array<Entry>());
     let loading = ref(true);
 
-    let activeTab = ref({
-      main: 0,
-      sub: Array<number>(),
-    });
-    let mainTab = ref(Array<categoryNodeType>());
-    let subTab = ref(Array<Array<categoryNodeType>>());
-    let subTabCount = 0;
-
     return {
-      searchKeyword, // 双向绑定搜索框
-      searchBtnDisabled, // 计算属性 判断搜索框
-      activeCid, // 目前所在的最末级分类的cid
-      activePath, // 目前所在的分类的名称列表（用于词条详情页面的左上角path）
+      search, //搜索框相关组件数据
+      tab, // tab相关组件数据
+      detail, // 详情页相关组件数据
+
       categories, // 词条分类列表
       entries, // 当前分类下的词条列表
-      entryDetail, // 词条详情
-      showDetail, // 是否展示详情
       loading, // 是否正在加载中（控制请求到内容后在显示
-      activeTab, // 存储目前所在的分类的
-      mainTab, // 主分类列表
-      subTab, // 二维数组 存储当前所在分类每一级的子分类
-      subTabCount, // 存储子分类层数
     };
   },
   mounted() {
-    this.init();
+    this.getCategories();
   },
   methods: {
-    // 初始化
-    init() {
-      this.getCategories();
-    },
     // 时间戳（单位秒）转时间字符串
     timestampToDate(timestamp: number) {
       let d = new Date(timestamp * 1000);
@@ -223,10 +223,7 @@ export default defineComponent({
         },
       ];
 
-      this.mainTab = this.getSubCategories(null);
-      this.activeTab.main = this.mainTab[0].cid;
-      this.mainTabChange(this.mainTab[0].cid);
-
+      this.onTabChanged(-1, null);
       this.loading = false;
     },
     // 获取当前分类下所有的词条
@@ -276,80 +273,45 @@ export default defineComponent({
       });
       this.entries = content;
     },
-    // 当切换tab时 获取当前分类下的文章 并存储当前分类的path列表
-    getSelectedCategoryInfo(data: {
-      cid: number;
-      path: Array<{ cid: number; parent_cid: number | null; name: string }>;
-    }) {
-      const { cid, path } = data;
-      this.getEntries(cid);
-      this.activePath = Array<string>();
-      path.forEach((value) => {
-        this.activePath.push(value.name);
+    //当tab发生改变时
+    onTabChanged(level: number, cid: number | null) {
+      const func = (c: number | null) => {
+        const sub = this.getSubCategories(c);
+        level++;
+        if (sub.length !== 0) {
+          this.tab.tabList[level] = sub;
+          this.tab.active[level] = sub[0].cid;
+          func(sub[0].cid);
+        } else {
+          this.tab.tabCount = level;
+          if (c !== null) this.getEntries(c);
+        }
+      };
+      this.tab.active = this.tab.active.filter((_value, index) => {
+        return index <= level;
       });
+      if (cid !== null) this.tab.active[level] = cid;
+      func(cid);
     },
     // 当查看详情被点击时 获取被点击的item并展示detail
-    openDetail(item: {
-      aid: number;
-      title: string;
-      content: string;
-      update_timestamp: number;
-      path: Array<string | undefined>;
-    }) {
-      item["path"] = this.activePath;
+    openDetail(item: Entry) {
+      this.detail.path = this.categories
+        .filter((value) => {
+          return this.tab.active.includes(value.cid);
+        })
+        .map((value) => {
+          return value.name;
+        });
 
-      this.entryDetail = item;
-      this.showDetail = true;
+      this.detail.entry = item;
+      this.detail.isShow = true;
     },
     // 关闭detail
     closeDetail() {
-      this.showDetail = false;
-    },
-    // 当主分类切换时 递归获取所有子分类
-    mainTabChange(cid: number) {
-      this.activeTab = {
-        main: cid,
-        sub: Array<number>(),
-      };
-      this.subTab = [];
-      this.subTabCount = 0;
-      this.onTabChanged(cid);
-    },
-    // 当子分类切换时 递归获取其以后的所有子分类
-    subTabChange(level: number, cid: number) {
-      this.subTab = this.subTab.filter((_value, index) => {
-        return index <= level;
-      });
-      this.activeTab.sub = this.activeTab.sub.filter((_value, index) => {
-        return index <= level;
-      });
-      this.activeTab.sub[level] = cid;
-      this.subTabCount = level + 1;
-      this.onTabChanged(cid);
-    },
-    // 递归方法
-    onTabChanged(cid: number) {
-      const sub = this.getSubCategories(cid);
-      if (sub.length !== 0) {
-        this.subTab[this.subTabCount] = sub;
-        this.activeTab.sub[this.subTabCount] = sub[0].cid;
-        this.subTabCount++;
-        this.onTabChanged(sub[0].cid);
-      } else {
-        this.getSelectedCategoryInfo({
-          cid: cid,
-          path: this.categories.filter((value) => {
-            return [this.activeTab.main]
-              .concat(this.activeTab.sub)
-              .includes(value.cid);
-          }),
-        });
-      }
+      this.detail.isShow = false;
     },
     // 获取某一分类下的所有子分类
-    getSubCategories(
-      cid: number | null
-    ): Array<{ cid: number; parent_cid: number | null; name: string }> {
+    getSubCategories(cid: number | null): Array<CategoryNode> {
       return this.categories.filter((value) => {
         return value.parent_cid === cid;
       });
@@ -470,14 +432,14 @@ export default defineComponent({
       }
 
       .entries-box {
-        .tab-component {
+        .tab {
           margin-top: 18px;
 
           li {
             white-space: nowrap;
           }
 
-          .main-tab-list-wrapper {
+          .tab-list-wrapper {
             overflow: scroll;
             user-select: none;
 
@@ -500,16 +462,6 @@ export default defineComponent({
               .active {
                 border-bottom: 2px solid #374151;
               }
-            }
-          }
-
-          .sub-tab-list-wrapper {
-            user-select: none;
-            overflow: scroll;
-
-            &::-webkit-scrollbar {
-              width: 0;
-              height: 0;
             }
 
             .sub-tab-list {
