@@ -1,8 +1,8 @@
 <template>
   <div class="result-container">
-    <header>
+    <header class="result-container-header">
       <div class="left">
-        <img src="../assets/icons/bilibili-fill.png" />
+        <img class="bilibili-img" src="../assets/icons/bilibili-fill.png" />
         <span class="username">{{ user.username }}</span>
       </div>
       <div class="right">
@@ -12,17 +12,17 @@
       </div>
     </header>
     <section>
-      <span>{{ user.content }}</span>
+      <span class="user-content">{{ user.content }}</span>
     </section>
-    <footer>
+    <footer class="result-container-footer">
       <div class="left">
-        <img src="../assets/icons/time.png" />
+        <img class="foot-img" src="../assets/icons/time.png" />
         <span>发表日期：{{ user.issuingDate }}</span>
       </div>
       <div class="right">
-        <img src="../assets/icons/link.png" />
+        <img class="foot-img" src="../assets/icons/link.png" />
         <a href="#">
-          <span>查看详情</span>
+          <span class="view-details">查看详情</span>
         </a>
       </div>
     </footer>
@@ -47,55 +47,57 @@ export default {
     box-sizing: border-box;
     margin-top: 40px;
   }
-  header {
+  .result-container-header {
     display: flex;
     justify-content: space-between;
     line-height: 32px;
   }
-  header > .left > img {
+  .result-container-header > .left > img {
     width: 25px;
     height: 25px;
   }
-  header > .left {
+  .result-container-header > .left {
     display: flex;
     align-items: center;
   }
-  header > .left > .username {
+  .result-container-header > .left > .username {
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
     margin-left: 10px;
   }
-  header > .right > span,
-  footer > .right > a > span {
+  .result-container-header > .right > .checking-rate,
+  .result-container-footer > .right .view-details {
     padding-right: 10px;
     color: #6b7280;
   }
   /*超出的内容隐藏*/
-  section span {
-    height: 125px;
+  .user-content {
+    height: 130px;
     width: 100%;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 6;
+    -webkit-line-clamp: 8;
     overflow: hidden;
     color: #6b7280;
   }
-  footer img {
+  .result-container-footer img {
     width: 20px;
     height: 20px;
+    margin-right: 10px;
   }
-  footer {
+  .result-container-footer {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
     color: #6b7280;
   }
-  footer > .left,
-  footer > .right {
+  .result-container-footer > .left,
+  .result-container-footer > .right {
     display: flex;
+    align-items: center;
   }
-  footer > .right > a {
+  .result-container-footer > .right > a {
     text-decoration: none;
     color: #6b7280;
   }
@@ -110,55 +112,57 @@ export default {
     box-sizing: border-box;
     margin-top: 40px;
   }
-  header {
+  .result-container-header {
     display: flex;
     justify-content: space-between;
     line-height: 32px;
   }
-  header > .left > img {
+  .result-container-header > .left > img {
     width: 25px;
     height: 25px;
   }
-  header > .left {
+  .result-container-header > .left {
     display: flex;
     align-items: center;
   }
-  header > .left > .username {
+  .result-container-header > .left > .username {
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
     margin-left: 10px;
   }
-  header > .right > span,
-  footer > .right > a > span {
+  .result-container-header > .right > .checking-rate,
+  .result-container-footer > .right .view-details {
     padding-right: 10px;
     color: #6b7280;
   }
   /*超出的内容隐藏*/
-  section span {
-    height: 125px;
+  .user-content {
+    height: 130px;
     width: 100%;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 6;
+    -webkit-line-clamp: 8;
     overflow: hidden;
     color: #6b7280;
   }
-  footer img {
+  .result-container-footer img {
     width: 20px;
     height: 20px;
+    margin-right: 10px;
   }
-  footer {
+  .result-container-footer {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
     color: #6b7280;
   }
-  footer > .left,
-  footer > .right {
+  .result-container-footer > .left,
+  .result-container-footer > .right {
     display: flex;
+    align-items: center;
   }
-  footer > .right > a {
+  .result-container-footer > .right > a {
     text-decoration: none;
     color: #6b7280;
   }
@@ -167,61 +171,68 @@ export default {
 @media (min-width: 500px) and (min-height: 600px) {
   .result-container {
     background-color: rgb(248, 248, 248);
-    width: 48.5%;
-    height: 200px;
+    width: 950px;
+    height: 210px;
     box-sizing: border-box;
     margin-top: 50px;
-    margin-left: 15%;
+    margin-left: 50px;
+    padding: 10px;
   }
-  header {
+  .result-container-header {
     display: flex;
     justify-content: space-between;
     line-height: 32px;
   }
-  header > .left > img {
+  .bilibili-img {
     width: 25px;
     height: 25px;
   }
-  header > .left {
+  .result-container-header > .left {
     display: flex;
     align-items: center;
+    font-size: 20px;
   }
-  header > .left > .username {
+  .result-container-header > .left > .username {
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
     margin-left: 10px;
   }
-  header > .right > span,
-  footer > .right > a > span {
+  .result-container-header > .right > .checking-rate,
+  .result-container-footer > .right .view-details {
     padding-right: 10px;
     color: #6b7280;
+    font-size: 20px;
   }
   /*超出的内容隐藏*/
-  section span {
+  .user-content {
     height: 125px;
     width: 100%;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 6;
+    -webkit-line-clamp: 4;
     overflow: hidden;
     color: #6b7280;
+    font-size: 24px;
   }
-  footer img {
+  .foot-img {
     width: 20px;
     height: 20px;
+    margin-right: 10px;
   }
-  footer {
+  .result-container-footer {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
     color: #6b7280;
+    font-size: 20px;
   }
-  footer > .left,
-  footer > .right {
+  .result-container-footer .left,
+  .result-container-footer .right {
     display: flex;
+    align-items: center;
   }
-  footer > .right > a {
+  .result-container-footer > .right > a {
     text-decoration: none;
     color: #6b7280;
   }

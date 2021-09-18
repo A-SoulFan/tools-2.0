@@ -1,121 +1,132 @@
 <template>
-  <div class="container">
-    <div class="cover"></div>
-    <div class="icons">
-      <img class="asf-icon" src="../assets/icons/ASF_black.png" />
-      <!--pc端-->
-      <ul class="pc-navigation">
-        <li><a href="#">用户讨论</a></li>
-        <li><a href="#">内容整理</a></li>
-        <li><a href="#">实用工具</a></li>
-        <li><a href="#">新人指南</a></li>
+  <div class="pc-container">
+    <header class="pc-header">
+      <img class="asf-img" src="../assets/icons/ASF_black.png" />
+      <ul class="pc-nav">
+        <li class="pc-nav-option"><a href="#">用户讨论</a></li>
+        <li class="pc-nav-option"><a href="#">内容整理</a></li>
+        <li class="pc-nav-option"><a href="#">实用工具</a></li>
+        <li class="pc-nav-option"><a href="#">新人指南</a></li>
       </ul>
-      <!--pc端-->
-      <a><img class="more-options" src="../assets/icons/moreOptions.png" /></a>
-
-      <!--pc端-->
-      <div class="pc-icon-right">
-        <a href="#"><img src="../assets/icons/search.png" /></a>
-        <a href="#"><img src="../assets/icons/user.png" /></a>
+      <div class="pc-nav-right">
+        <img class="search-img" src="../assets/icons/search.png" />
+        <img class="user-img" src="../assets/icons/user.png" />
       </div>
-      <!--pc端-->
+    </header>
+    <span class="pc-title">枝网查重</span>
+    <span class="pc-introduce">帮你快速识别原创小作文</span>
+    <div class="pc-input-box">
+      <textarea
+        placeholder="在这里输入小作文哦~"
+        @input="hasContent"
+      ></textarea>
+      <span class="total-word-num"
+        >总字数:{{ initialData.contentLength }}/{{
+          initialData.maxLength
+        }}</span
+      >
+      <div class="pc-details">
+        <p class="pc-details-title">功能介绍</p>
+        <div
+          class="pc-content-range"
+          v-for="(content, index) in contents"
+          :key="index"
+        >
+          <span class="content">{{ content.span1 }}</span>
+          <span class="content">{{ content.span2 }}</span>
+        </div>
+        <div class="pc-foot-nav">
+          <div class="left">
+            <img src="../assets/icons/github-outline.png" />
+            <a href="#"><span>查重接口开源仓库</span></a>
+          </div>
+          <div class="right">
+            <img src="../assets/icons/bilibili-fill.png" />
+            <a href="#"><span>查重接口反馈</span></a>
+          </div>
+        </div>
+      </div>
     </div>
-    <span class="title">枝网查重</span>
-    <div class="introduction">
-      <span>帮你快速识别原创小作文</span>
-      <!--<div class="more-details">-->
-      <!--<span>{{foldBtnContent}}</span>-->
-      <!--<a href="#" @click="onUnfoldBtnClick()"><img :class="[foldBtnState?'is-rotated':'recover-rotated']" src="../assets/icons/arrowDown.png"></a>-->
-      <!--</div>-->
+    <span
+      :class="['pc-btn-search', { 'pc-active': flags.isActive }]"
+      @click="search(), onInputBtnContent()"
+      >{{ initialData.btnContent }}</span
+    >
+    <template v-if="flags.isSearched">
+      <DuplicateCheckingResult
+        v-for="(user, idx) in userList"
+        :user="user"
+        :key="idx"
+      ></DuplicateCheckingResult>
+    </template>
+  </div>
+  <!--手机端-->
+  <div class="mobile-container">
+    <div class="mobile-container-header">
+      <img class="asf-img" src="../assets/icons/ASF_black.png" />
+      <img class="more-options-img" src="../assets/icons/moreOptions.png" />
     </div>
     <!--手机端title-->
-    <div class="mobile-title">
-      <header-title
-        Title="枝网查重"
-        subTitle="帮你快速识别原创小作文"
-        buttonType="arrow"
-      >
-      </header-title>
+    <div class="mobile-header">
+      <span class="mobile-title">枝网查重</span>
+      <span class="mobile-subtitle">
+        <span class="left">帮助你快速识别原创小作文</span>
+        <div class="right">
+          <span class="fold-content">{{ initialData.foldBtnContent }}</span>
+          <img
+            class="arrow-img"
+            src="../assets/icons/arrow.svg"
+            @click="onUnfoldBtnClick"
+            :class="[flags.foldBtnState ? 'is-rotated' : 'recover-rotated']"
+          />
+        </div>
+      </span>
     </div>
-
-    <!--详情内容-->
-    <div class="details" v-show="foldBtnState">
+    <div class="mobile-details" v-show="flags.foldBtnState">
       <div
-        class="content-range"
+        class="mobile-content-range"
         v-for="(content, index) in contents"
         :key="index"
       >
-        <span>{{ content.span1 }}</span>
-        <span>{{ content.span2 }}</span>
+        <span class="content">{{ content.span1 }}</span>
+        <span class="content">{{ content.span2 }}</span>
       </div>
     </div>
-
-    <!--输入框以及查重条-->
-    <div class="input-box">
-      <div class="input-zone">
-        <textarea
-          placeholder="在这里输入小作文哦~"
-          @input="hasContent"
-          :maxlength="maxLength"
-        ></textarea>
-        <span class="total-word-num"
-          >总字数:{{ contentLength }}/{{ maxLength }}</span
+    <!--输入区-->
+    <div class="mobile-input-box">
+      <textarea
+        placeholder="在这里输入小作文哦~"
+        @input="hasContent"
+      ></textarea>
+      <span class="total-word-num"
+        >总字数:{{ initialData.contentLength }}/{{
+          initialData.maxLength
+        }}</span
+      >
+      <div class="mobile-copy-percentage">
+        <div class="left">
+          <img class="copy-img" src="../assets/icons/box.png" />
+          <div class="mobile-progress-bar-box">
+            <div class="txt-part">
+              <span>总复制比</span>
+              <span>{{ initialData.totalDuplicateCheckingRate }}%</span>
+            </div>
+            <!--查重占比条-->
+            <div class="progress-bar">
+              <span class="bottom-bar">
+                <span class="top-bar" :style="lineProgress()"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <span
+          :class="['mobile-btn-search', { 'mobile-active': flags.isActive }]"
+          @click="search(), onInputBtnContent()"
+          >{{ initialData.btnContent }}</span
         >
-        <!--pc-详情内容-->
-        <div class="pc-details">
-          <p>功能介绍</p>
-          <div
-            class="content-range"
-            v-for="(content, index) in contents"
-            :key="index"
-          >
-            <span>{{ content.span1 }}</span>
-            <span>{{ content.span2 }}</span>
-          </div>
-          <div class="foot-nav">
-            <div class="left">
-              <img src="../assets/icons/github-outline.png" />
-              <a href="#"><span>查重接口开源仓库</span></a>
-            </div>
-            <div class="right">
-              <img src="../assets/icons/bilibili-fill.png" />
-              <a href="#"><span>查重接口反馈</span></a>
-            </div>
-          </div>
-        </div>
       </div>
-      <div class="copy-percentage">
-        <img src="../assets/icons/box.png" />
-        <div class="progress-bar-box">
-          <div class="txt-part">
-            <span>总复制比</span>
-            <span>{{ totalDuplicateCheckingRate }}%</span>
-          </div>
-          <!--查重占比条-->
-          <div class="progress-bar">
-            <span class="bottom-bar">
-              <span class="top-bar" :style="lineProgress()"></span>
-            </span>
-          </div>
-        </div>
-      </div>
-      <a
-        ><span
-          :class="['btn-search', { active: isActive }]"
-          @click="search(), onInputBtnContent()"
-          >{{ btnContent }}</span
-        ></a
-      >
-      <a
-        ><span
-          :class="['pc-btn-search', { 'pc-active': isActive }]"
-          @click="search(), onInputBtnContent()"
-          >{{ btnContent }}</span
-        ></a
-      >
     </div>
-    <!--查重结果-->
-    <template v-if="isSearched">
+    <template v-if="flags.isSearched">
       <DuplicateCheckingResult
         v-for="(user, idx) in userList"
         :user="user"
@@ -126,603 +137,151 @@
 </template>
 
 <script>
+import { reactive } from "vue";
 import DuplicateCheckingResult from "../components/DuplicateCheckingResult";
 import headerTitle from "../components/headerTitle.vue";
 export default {
   name: "DuplicateChecking",
-  components: { DuplicateCheckingResult, headerTitle },
-  data() {
-    return {
+  components: { DuplicateCheckingResult },
+  setup() {
+    let contents = [
+      {
+        span1: "比对库内容范围:",
+        span2: "B站动态,视频评论区（仅限A-Soul的六个官方账号）",
+      },
+      {
+        span1: "比对库时间范围:",
+        span2: "2020/11/23 21:18:26 至 2021/08/27 11:58:39",
+      },
+      {
+        span1: "参考文献:",
+        span2: "[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学",
+      },
+    ];
+    let userList = [
+      {
+        username: "沃克贰叁",
+        duplicateCheckingRate: 70,
+        issuingDate: "2021年2月31日",
+        content:
+          "内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
+          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
+          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
+          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
+          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容",
+      },
+      {
+        username: "秦心",
+        duplicateCheckingRate: 60,
+        issuingDate: "2021年3月31日",
+        content:
+          "内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
+          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
+          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
+          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
+          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容",
+      },
+    ];
+    let initialData = reactive({
       maxLength: 1000,
       foldBtnContent: "详情",
       btnContent: "查询结果",
-      foldBtnState: false, //展开按钮的状态
-      // btnContentCopy:'复制报告',
-      isActive: false, //按钮是否是激活态
       contentLength: 0, //textarea中的字数
-      isSearched: false, //是否有进行过查询
       totalDuplicateCheckingRate: 0, //总复制比
-      contents: [
-        {
-          span1: "比对库内容范围:",
-          span2: "B站动态,视频评论区（仅限A-Soul的六个官方账号）",
-        },
-        {
-          span1: "比对库时间范围:",
-          span2: "2020/11/23 21:18:26 至 2021/08/27 11:58:39",
-        },
-        {
-          span1: "参考文献:",
-          span2: "[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学",
-        },
-      ],
-      userList: [
-        {
-          username: "沃克贰叁",
-          duplicateCheckingRate: 70,
-          issuingDate: "2021年2月31日",
-          content:
-            "内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-            "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-            "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-            "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-            "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容",
-        },
-        {
-          username: "秦心",
-          duplicateCheckingRate: 60,
-          issuingDate: "2021年3月31日",
-          content:
-            "内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-            "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-            "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-            "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-            "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容",
-        },
-      ],
-    };
-  },
-  methods: {
-    hasContent(e) {
-      this.isActive = e.target.value !== ""; //如果不为空，isActive就是true
-      this.contentLength = e.target.value.length;
+    });
+    let flags = reactive({
+      isSearched: false,
+      isActive: false, //按钮是否是激活态
+      foldBtnState: false, //展开按钮的状态
+    });
+    //方法
+    //检测textarea中是否有内容以及内容长度
+    function hasContent(e) {
+      flags.isActive = e.target.value !== ""; //如果不为空，isActive就是true
+      initialData.contentLength = e.target.value.length;
+      // console.log(e.target.value.length); //无响应，说明没有设置响应式
       //text内容不为空并且已经进行过搜索，那么只要输入东西就算改变内容
-      if (e.target.value !== "" && this.isSearched === true) {
-        this.btnContent = "查询结果";
+      if (e.target.value !== "" && flags.isSearched === true) {
+        initialData.btnContent = "查询结果";
       }
-    },
-    search() {
-      if (this.contentLength != 0) {
-        this.isSearched = true; //只要点击搜索并且内容不为空
-        this.totalDuplicateCheckingRate = this.maxDuplicate(); //设定重复率，值为data数组中重复率最大的一个
+    }
+    //搜索按钮功能
+    function search() {
+      if (initialData.contentLength != 0) {
+        flags.isSearched = true; //只要点击搜索并且内容不为空
+        initialData.totalDuplicateCheckingRate = maxDuplicate(); //设定重复率，值为data数组中重复率最大的一个
       }
-    },
-    lineProgress() {
-      return `width:${this.totalDuplicateCheckingRate}%`;
-    },
-    maxDuplicate() {
+    }
+    //控制查重条长度
+    function lineProgress() {
+      return `width:${initialData.totalDuplicateCheckingRate}%`;
+    }
+    //排序出userList中查重率最高的一个
+    function maxDuplicate() {
       let max = 0;
-      this.userList.map((value) => {
+      userList.map((value) => {
         if (max < value.duplicateCheckingRate) {
           max = value.duplicateCheckingRate;
         }
       });
       return max;
-    },
-    onInputBtnContent(e) {
-      if (this.isSearched === true) {
+    }
+    //点击搜索过后，按钮变成复制报告
+    function onInputBtnContent() {
+      if (flags.isSearched === true) {
         //如果进行过搜索
-        this.btnContent = "复制报告";
+        initialData.btnContent = "复制报告";
       }
-    },
-
-    onUnfoldBtnClick() {
-      this.foldBtnState = !this.foldBtnState; //状态翻转
-      if (this.foldBtnState === true) {
-        this.foldBtnContent = "收起"; //设置内容变为收起
+    }
+    function onUnfoldBtnClick() {
+      flags.foldBtnState = !flags.foldBtnState; //状态翻转
+      if (flags.foldBtnState === true) {
+        initialData.foldBtnContent = "收起"; //设置内容变为收起
       } else {
-        this.foldBtnContent = "详情"; //设置内容变为收起
+        initialData.foldBtnContent = "详情"; //设置内容变为收起
       }
-    },
+    }
+    return {
+      contents,
+      userList,
+      flags,
+      initialData,
+      hasContent,
+      search,
+      lineProgress,
+      maxDuplicate,
+      onInputBtnContent,
+      onUnfoldBtnClick,
+    };
   },
 };
 </script>
 
 <style scoped>
-/*@font-face {*/
-/*font-family: OPPOSans;*/
-/*src: url("../assets/Font-OPPOSans/OPPOSans-M.ttf");*/
-/*}*/
-/*手机端*/
-/*竖屏*/
-@media only screen and (orientation: portrait) and (max-width: 500px) {
-  .container {
-    /*padding: 0 10px;*/
-    width: 100%;
-    font-family: "OPPOSans";
-  }
-
-  .container > span {
-    font-size: 30px;
-    font-weight: 400;
-    padding: 0;
-    /*font-family: 'OPPOSans';*/
-  }
-
-  .icons {
-    height: 50px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box;
-    padding-right: 10px;
-  }
-
-  .icons img {
-    display: inline-block;
-  }
-
-  .icons > .asf-icon {
-    width: 50px;
-    height: 50px;
-  }
-
-  .icons > a > .more-options,
-  .icons > a {
-    width: 25px;
-    height: 25px;
-  }
-
-  .introduction {
-    padding-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .introduction > span {
-    font-weight: 400;
-    font-style: normal;
-  }
-
-  .introduction .more-details {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-  }
-
-  /*翻转展开图标*/
-  .is-rotated {
-    transform: rotate(180deg);
-    transition: linear 0.2s;
-  }
-
-  .recover-rotated {
-    transform: rotate(0);
-    transition: linear 0.2s;
-  }
-
-  .introduction .more-details > span {
-    color: #8a8a8a;
-    padding-right: 5px;
-    /*font-weight: normal;*/
-  }
-
-  .introduction .more-details > a > img {
-    width: 25px;
-    height: 25px;
-  }
-
-  .input-box {
-    margin-top: 0;
-    display: flex;
-    flex-wrap: wrap;
-    box-sizing: border-box;
-    width: 100%;
-    position: relative;
-  }
-
-  .input-box > .input-zone {
-    width: 100%;
-  }
-
-  .input-box textarea {
-    outline: none;
-    border: 1px solid rgb(229, 229, 229);
-    height: 250px;
-    width: 100%;
-    text-indent: 1em;
-    font-size: 14px;
-    /*禁用改变textarea大小*/
-    resize: none;
-    font-family: "OPPOSans";
-  }
-
-  .input-box textarea::placeholder {
-    color: #d1d5db;
-    font-family: "OPPOSans";
-  }
-
-  .input-box > a {
-    /*75*/
-    padding-left: calc(100% - 282px);
-  }
-
-  .input-box .btn-search {
-    display: inline-block;
-    border: 1px solid rgb(229, 229, 229);
-    height: 36px;
-    width: 100px;
-    text-align: center;
-    line-height: 36px;
-    background-color: rgb(156, 163, 175);
-    color: white;
-  }
-
-  .input-box .active {
-    display: inline-block;
-    border: 1px solid rgb(229, 229, 229);
-    height: 36px;
-    width: 100px;
-    text-align: center;
-    line-height: 36px;
-    background-color: rgb(75, 85, 99);
-    color: white;
-  }
-
-  /*显示输入的字数*/
-  .input-zone {
-    position: relative;
-  }
-
-  .input-zone .total-word-num {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    color: #8a8a8a;
-    font-size: 12px;
-  }
-
-  /*查重条*/
-  .copy-percentage {
-    display: flex;
-  }
-
-  .txt-part {
-    text-align: center;
-    display: flex;
-    justify-content: space-between;
-    width: 150px;
-    height: 20px;
-    line-height: 20px;
-  }
-
-  .copy-percentage > img {
-    width: 25px;
-    height: 25px;
-    padding-right: 5px;
-  }
-
-  .progress-bar-box {
-    height: 50px;
-  }
-
-  .progress-bar {
-    height: 5px;
-    width: 150px;
-  }
-
-  .progress-bar > .bottom-bar {
-    display: inline-block;
-    height: 5px;
-    width: 150px;
-    background-color: rgb(229, 229, 229);
-    position: relative;
-  }
-
-  .progress-bar > .bottom-bar > .top-bar {
-    display: inline-block;
-    height: 5px;
-    /*width: 70%;*/
-    background-color: rgb(75, 85, 99);
-    position: absolute;
-    left: 0;
-  }
-
-  /*详情的展开内容*/
-  .container .details {
-    background-color: #f8f8f8;
-    padding: 10px;
-  }
-
-  .container .details > div {
-    margin: 20px 0;
-  }
-
-  .container .details span {
-    display: -webkit-box;
-    max-height: 42px;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-  }
-  /*pc端隐藏元素*/
-  .title,
-  .introduction,
-  .pc-btn-search,
-  .pc-details,
-  .pc-icon-right,
-  .container .pc-navigation {
-    display: none;
-  }
-}
-
-/*横屏*/
-@media only screen and (orientation: landscape) and (min-width: 500px) and (max-height: 600px) {
-  .container {
-    /*padding: 0 10px;*/
-    width: 100%;
-    font-family: "OPPOSans";
-  }
-
-  .container > span {
-    font-size: 30px;
-    font-weight: 400;
-    padding: 0;
-    /*font-family: 'OPPOSans';*/
-  }
-
-  .icons {
-    height: 50px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box;
-    padding-right: 10px;
-  }
-
-  .icons img {
-    display: inline-block;
-  }
-
-  .icons > .asf-icon {
-    width: 50px;
-    height: 50px;
-  }
-
-  .icons > a > .more-options,
-  .icons > a {
-    width: 25px;
-    height: 25px;
-  }
-
-  .introduction {
-    padding-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .introduction > span {
-    font-weight: 400;
-    font-style: normal;
-  }
-
-  .introduction .more-details {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-  }
-
-  /*翻转展开图标*/
-  .is-rotated {
-    transform: rotate(180deg);
-    transition: linear 0.2s;
-  }
-
-  .recover-rotated {
-    transform: rotate(0);
-    transition: linear 0.2s;
-  }
-
-  .introduction .more-details > span {
-    color: #8a8a8a;
-    padding-right: 5px;
-    /*font-weight: normal;*/
-  }
-
-  .introduction .more-details > a > img {
-    width: 25px;
-    height: 25px;
-  }
-
-  .input-box {
-    margin-top: 0;
-    display: flex;
-    flex-wrap: wrap;
-    box-sizing: border-box;
-    width: 100%;
-    position: relative;
-  }
-
-  .input-box > .input-zone {
-    width: 100%;
-  }
-
-  .input-box textarea {
-    outline: none;
-    border: 1px solid rgb(229, 229, 229);
-    height: 250px;
-    width: 100%;
-    text-indent: 1em;
-    font-size: 14px;
-    /*禁用改变textarea大小*/
-    resize: none;
-    font-family: "OPPOSans";
-  }
-
-  .input-box textarea::placeholder {
-    color: #d1d5db;
-    font-family: "OPPOSans";
-  }
-
-  .input-box > a {
-    /*75*/
-    padding-left: calc(100% - 282px);
-  }
-
-  .input-box .btn-search {
-    display: inline-block;
-    border: 1px solid rgb(229, 229, 229);
-    height: 36px;
-    width: 100px;
-    text-align: center;
-    line-height: 36px;
-    background-color: rgb(156, 163, 175);
-    color: white;
-  }
-
-  .input-box .active {
-    display: inline-block;
-    border: 1px solid rgb(229, 229, 229);
-    height: 36px;
-    width: 100px;
-    text-align: center;
-    line-height: 36px;
-    background-color: rgb(75, 85, 99);
-    color: white;
-  }
-
-  /*显示输入的字数*/
-  .input-zone {
-    position: relative;
-  }
-
-  .input-zone .total-word-num {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    color: #8a8a8a;
-    font-size: 12px;
-  }
-
-  /*查重条*/
-  .copy-percentage {
-    display: flex;
-  }
-
-  .txt-part {
-    text-align: center;
-    display: flex;
-    justify-content: space-between;
-    width: 150px;
-    height: 20px;
-    line-height: 20px;
-  }
-
-  .copy-percentage > img {
-    width: 25px;
-    height: 25px;
-    padding-right: 5px;
-  }
-
-  .progress-bar-box {
-    height: 50px;
-  }
-
-  .progress-bar {
-    height: 5px;
-    width: 150px;
-  }
-
-  .progress-bar > .bottom-bar {
-    display: inline-block;
-    height: 5px;
-    width: 150px;
-    background-color: rgb(229, 229, 229);
-    position: relative;
-  }
-
-  .progress-bar > .bottom-bar > .top-bar {
-    display: inline-block;
-    height: 5px;
-    /*width: 70%;*/
-    background-color: rgb(75, 85, 99);
-    position: absolute;
-    left: 0;
-  }
-
-  /*详情的展开内容*/
-  .container .details {
-    background-color: #f8f8f8;
-    padding: 10px;
-  }
-
-  .container .details > div {
-    margin: 20px 0;
-  }
-
-  .container .details span {
-    display: -webkit-box;
-    max-height: 42px;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-  }
-  .pc-btn-search:hover {
-    cursor: pointer;
-  }
-  /*pc端隐藏元素*/
-  .title,
-  .introduction,
-  .pc-btn-search,
-  .pc-details,
-  .pc-icon-right,
-  .container .pc-navigation {
-    display: none;
-  }
-}
-
 /*pc端*/
 @media (min-width: 500px) and (min-height: 600px) {
-  .container {
+  .mobile-container {
+    display: none;
+  }
+  .pc-container {
     width: 1600px;
-    /*margin: 0 auto;*/
-    font-family: "OPPOSans";
   }
-  .container .cover {
-    width: 100%;
-    background-color: rgb(248, 248, 248);
-    height: 100px;
-    position: absolute;
-  }
-  .container > .icons {
-    background-color: rgb(248, 248, 248);
-    height: 100px;
-    width: 1300px;
-    margin: 0 auto;
-    /*display: flex;*/
-    /*justify-content: space-between;*/
-    position: relative;
-  }
-  .pc-navigation {
-    width: 50%;
+  .pc-header {
     display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    position: absolute;
-    left: 35%;
+    background-color: rgb(248, 248, 248);
+    height: 100px;
+    width: 1500px;
+    justify-content: space-between;
+    margin: 0 auto;
   }
-  .pc-navigation li {
-    text-align: center;
-    /*margin-right: 35px;*/
+  .asf-img {
+    width: 126px;
+    height: 100px;
   }
-  .pc-navigation li > a {
+  .pc-nav {
+    display: flex;
+  }
+  .pc-nav .pc-nav-option a {
     text-decoration: none;
     color: #9ca3af;
     font-size: 16px;
@@ -731,82 +290,104 @@ export default {
     justify-content: center;
     padding: 30px;
   }
-  .pc-navigation li:hover {
+  .pc-nav-option:hover {
     background-color: rgb(229, 229, 229);
   }
-  .container > .icons > a > img {
-    /*隐藏more-details图标*/
-    display: none;
+  .pc-nav-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  .container > .icons > .asf-icon {
-    width: 126px;
-    height: 100px;
-    position: absolute;
-    left: 5%;
-  }
-  .container > .icons > .pc-icon-right {
-    position: absolute;
-    right: 0;
-    top: calc(50% - 15px);
-  }
-  .container > .icons > .pc-icon-right > a > img {
+  .pc-nav-right img {
     height: 30px;
     width: 30px;
     padding-left: 50px;
   }
-  .container > span {
+  .pc-title {
     font-size: 48px;
-    padding-left: 15%;
     display: block;
     padding-top: 60px;
+    margin-left: 50px;
   }
-  .introduction .more-details {
-    display: none;
-  }
-  .introduction > span {
-    padding-left: 15%;
+  .pc-introduce {
     padding-top: 9px;
     display: block;
+    font-size: 24px;
+    margin-left: 50px;
   }
-  .input-box {
-    position: relative;
-  }
-  .input-box > .input-zone {
-    margin-top: 25px;
-    width: 1300px;
-    padding-left: 15%;
-    position: relative;
-  }
-  .input-box > .input-zone > textarea {
-    width: 750px;
+  .pc-input-box textarea {
+    width: 950px;
     height: 330px;
     border: 2px solid #d1d5db;
     resize: none;
     outline: none;
     padding: 10px;
-    font-family: "OPPOSans";
     font-size: 18px;
+    box-sizing: border-box;
   }
-  .input-box > .input-zone > textarea::placeholder {
-    color: #d1d5db;
-    font-family: "OPPOSans";
-  }
-  .input-box > .input-zone > span {
-    position: absolute;
-    left: 16%;
-    bottom: 10px;
+  .pc-input-box textarea::placeholder {
     color: #d1d5db;
   }
-  /*隐藏*/
-  .copy-percentage {
-    display: none;
+  .pc-input-box {
+    display: flex;
+    width: 1500px;
+    justify-content: space-between;
+    margin: 0 auto;
+    position: relative;
   }
-  /*隐藏*/
-  .btn-search {
-    display: none;
+  .pc-input-box .pc-details {
+    display: inline-block;
+    height: 330px;
+    width: 500px;
+    background-color: #f8f8f8;
+    padding: 10px;
+    float: right;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+  .pc-input-box .pc-details .pc-details-title {
+    font-weight: 400;
+    font-size: 24px;
+  }
+  .pc-content-range {
+    margin: 25px 0;
+  }
+  .pc-content-range .content {
+    display: -webkit-box;
+    max-height: 42px;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  .pc-foot-nav img {
+    width: 30px;
+    height: 30px;
+  }
+  .pc-foot-nav {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+  }
+  .pc-foot-nav a {
+    text-decoration: none;
+    color: #374151;
+  }
+  .pc-foot-nav > .left {
+    display: flex;
+  }
+  .pc-foot-nav > .right {
+    display: flex;
+  }
+  .pc-foot-nav > .left > img {
+    margin-right: 10px;
+  }
+  .pc-foot-nav > .right > img {
+    margin-right: 10px;
   }
   .pc-btn-search {
     display: inline-block;
+    cursor: pointer;
     border: 1px solid rgb(229, 229, 229);
     height: 36px;
     width: 100px;
@@ -814,82 +395,356 @@ export default {
     line-height: 36px;
     background-color: rgb(156, 163, 175);
     color: white;
+    font-size: 16px;
+    margin-left: 900px;
+  }
+  .total-word-num {
     position: absolute;
-    left: calc(63.5% - 102px);
+    left: 10px;
+    bottom: 30px;
+    color: #d1d5db;
   }
-  /*隐藏手机端details*/
-  .details {
-    display: none;
-  }
-  .pc-details {
-    display: inline-block;
-    height: 100%;
-    width: 450px;
-    background-color: #f8f8f8;
-    padding: 10px;
-    float: right;
-    margin-right: 50px;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-  }
-
-  .pc-details > div {
-    margin: 20px 0;
-  }
-
-  .pc-details span {
-    display: -webkit-box;
-    max-height: 42px;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    /*width: 300px;*/
-  }
-
-  .pc-details p {
-    font-weight: 400;
-    font-size: 24px;
-  }
-  .pc-details > .foot-nav img {
-    width: 30px;
-    height: 30px;
-  }
-  .pc-details > .foot-nav {
-    display: flex;
-    justify-content: space-between;
-    font-size: 20px;
-  }
-  .pc-details > .foot-nav a {
-    text-decoration: none;
-    color: #374151;
-  }
-  .pc-details > .foot-nav > .left {
-    display: flex;
-  }
-  .pc-details > .foot-nav > .left > img {
-    margin-right: 10px;
-  }
-  .pc-details > .foot-nav > .right {
-    display: flex;
-  }
-  .pc-details > .foot-nav > .right > img {
-    margin-right: 10px;
-  }
-  .input-box .pc-active {
+  .pc-active {
     display: inline-block;
     border: 1px solid rgb(229, 229, 229);
     height: 36px;
     width: 100px;
     text-align: center;
     line-height: 36px;
-    background-color: rgb(75, 85, 99);
+    background-color: #4b5563;
     color: white;
   }
-  .mobile-title {
+}
+
+/*手机端*/
+/*竖屏*/
+@media only screen and (orientation: portrait) and (max-width: 500px) {
+  .pc-container {
     display: none;
   }
-  .pc-btn-search:hover {
+  .mobile-container {
+    width: 100%;
+  }
+  .mobile-container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .mobile-container-header .asf-img {
+    width: 75px;
+    height: 75px;
+  }
+  .mobile-container-header .more-options-img {
+    width: 25px;
+    height: 25px;
+  }
+  .mobile-container-header .more-options-img:hover {
     cursor: pointer;
+  }
+  .mobile-details {
+    display: inline-block;
+    height: 210px;
+    width: 100%;
+    background-color: #f8f8f8;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+  .mobile-content-range {
+    margin: 10px 0;
+  }
+  .mobile-content-range .content {
+    display: -webkit-box;
+    max-height: 42px;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  .mobile-title {
+    display: block;
+    font-size: 34px;
+  }
+  .mobile-subtitle {
+    display: flex;
+    justify-content: space-between;
+    font-size: 17px;
+  }
+  .mobile-subtitle .left {
+    display: block;
+  }
+  .mobile-subtitle .right {
+    display: flex;
+    align-items: center;
+  }
+  .mobile-subtitle .arrow-img {
+    width: 25px;
+    height: 25px;
+    margin-left: 5px;
+  }
+  /*翻转展开图标*/
+  .is-rotated {
+    transform: rotate(180deg);
+    transition: linear 0.2s;
+  }
+
+  .recover-rotated {
+    transform: rotate(0);
+    transition: linear 0.2s;
+  }
+  .mobile-input-box {
+    margin-top: 20px;
+    position: relative;
+  }
+  .mobile-input-box textarea {
+    width: 100%;
+    height: 200px;
+    border: 2px solid #d1d5db;
+    resize: none;
+    outline: none;
+    padding: 10px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  .pc-input-box textarea::placeholder {
+    color: #d1d5db;
+  }
+  .total-word-num {
+    position: absolute;
+    left: 10px;
+    bottom: 60px;
+    color: #d1d5db;
+  }
+  /*查重条*/
+  .mobile-copy-percentage {
+    display: flex;
+    justify-content: space-between;
+  }
+  .mobile-copy-percentage .left {
+    display: flex;
+    margin-top: 8px;
+    width: 55%;
+  }
+  .mobile-copy-percentage .copy-img {
+    width: 25px;
+    height: 25px;
+    padding-right: 5px;
+  }
+  .mobile-progress-bar-box {
+    height: 50px;
+    width: 100%;
+  }
+  .mobile-progress-bar-box .txt-part {
+    display: flex;
+    justify-content: space-between;
+  }
+  .progress-bar {
+    height: 5px;
+    width: 100%;
+  }
+
+  .progress-bar > .bottom-bar {
+    display: inline-block;
+    height: 5px;
+    width: 100%;
+    background-color: rgb(229, 229, 229);
+    position: relative;
+  }
+
+  .progress-bar > .bottom-bar > .top-bar {
+    display: inline-block;
+    height: 5px;
+    /*width: 70%;*/
+    background-color: rgb(75, 85, 99);
+    position: absolute;
+    left: 0;
+  }
+  .mobile-btn-search {
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid rgb(229, 229, 229);
+    height: 36px;
+    width: 100px;
+    text-align: center;
+    line-height: 36px;
+    background-color: rgb(156, 163, 175);
+    color: white;
+    font-size: 16px;
+  }
+  .mobile-active {
+    display: inline-block;
+    border: 1px solid rgb(229, 229, 229);
+    height: 36px;
+    width: 100px;
+    text-align: center;
+    line-height: 36px;
+    background-color: #4b5563;
+    color: white;
+  }
+}
+/*横屏*/
+@media only screen and (orientation: landscape) and (min-width: 500px) and (max-height: 600px) {
+  .pc-container {
+    display: none;
+  }
+  .mobile-container {
+    width: 100%;
+  }
+  .mobile-container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .mobile-container-header .asf-img {
+    width: 75px;
+    height: 75px;
+  }
+  .mobile-container-header .more-options-img {
+    width: 25px;
+    height: 25px;
+  }
+  .mobile-container-header .more-options-img:hover {
+    cursor: pointer;
+  }
+  .mobile-details {
+    display: inline-block;
+    height: 210px;
+    width: 100%;
+    background-color: #f8f8f8;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+  .mobile-content-range {
+    margin: 10px 0;
+  }
+  .mobile-content-range .content {
+    display: -webkit-box;
+    max-height: 42px;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: 14px;
+  }
+  .mobile-title {
+    display: block;
+    font-size: 34px;
+  }
+  .mobile-subtitle {
+    display: flex;
+    justify-content: space-between;
+    font-size: 17px;
+  }
+  .mobile-subtitle .left {
+    display: block;
+  }
+  .mobile-subtitle .right {
+    display: flex;
+    align-items: center;
+  }
+  .mobile-subtitle .arrow-img {
+    width: 25px;
+    height: 25px;
+    margin-left: 5px;
+  }
+  /*翻转展开图标*/
+  .is-rotated {
+    transform: rotate(180deg);
+    transition: linear 0.2s;
+  }
+
+  .recover-rotated {
+    transform: rotate(0);
+    transition: linear 0.2s;
+  }
+  .mobile-input-box {
+    margin-top: 20px;
+    position: relative;
+  }
+  .mobile-input-box textarea {
+    width: 100%;
+    height: 200px;
+    border: 2px solid #d1d5db;
+    resize: none;
+    outline: none;
+    padding: 10px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  .pc-input-box textarea::placeholder {
+    color: #d1d5db;
+  }
+  .total-word-num {
+    position: absolute;
+    left: 10px;
+    bottom: 60px;
+    color: #d1d5db;
+  }
+  /*查重条*/
+  .mobile-copy-percentage {
+    display: flex;
+    justify-content: space-between;
+  }
+  .mobile-copy-percentage .left {
+    display: flex;
+    margin-top: 8px;
+    width: 55%;
+  }
+  .mobile-copy-percentage .copy-img {
+    width: 25px;
+    height: 25px;
+    padding-right: 5px;
+  }
+  .mobile-progress-bar-box {
+    height: 50px;
+    width: 100%;
+  }
+  .mobile-progress-bar-box .txt-part {
+    display: flex;
+    justify-content: space-between;
+  }
+  .progress-bar {
+    height: 5px;
+    width: 100%;
+  }
+
+  .progress-bar > .bottom-bar {
+    display: inline-block;
+    height: 5px;
+    width: 100%;
+    background-color: rgb(229, 229, 229);
+    position: relative;
+  }
+
+  .progress-bar > .bottom-bar > .top-bar {
+    display: inline-block;
+    height: 5px;
+    /*width: 70%;*/
+    background-color: rgb(75, 85, 99);
+    position: absolute;
+    left: 0;
+  }
+  .mobile-btn-search {
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid rgb(229, 229, 229);
+    height: 36px;
+    width: 100px;
+    text-align: center;
+    line-height: 36px;
+    background-color: rgb(156, 163, 175);
+    color: white;
+    font-size: 16px;
+  }
+  .mobile-active {
+    display: inline-block;
+    border: 1px solid rgb(229, 229, 229);
+    height: 36px;
+    width: 100px;
+    text-align: center;
+    line-height: 36px;
+    background-color: #4b5563;
+    color: white;
   }
 }
 </style>
