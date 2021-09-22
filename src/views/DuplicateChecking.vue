@@ -259,7 +259,7 @@ export default {
 
 <style scoped>
 /*pc端*/
-@media (min-width: 500px) and (min-height: 600px) {
+@media (min-width: 1000px) {
   .mobile-container {
     display: none;
   }
@@ -417,8 +417,7 @@ export default {
 }
 
 /*手机端*/
-/*竖屏*/
-@media only screen and (orientation: portrait) and (max-width: 500px) {
+@media only screen and (max-width: 1000px) {
   .pc-container {
     display: none;
   }
@@ -512,172 +511,7 @@ export default {
   .total-word-num {
     position: absolute;
     left: 10px;
-    bottom: 60px;
-    color: #d1d5db;
-  }
-  /*查重条*/
-  .mobile-copy-percentage {
-    display: flex;
-    justify-content: space-between;
-  }
-  .mobile-copy-percentage .left {
-    display: flex;
-    margin-top: 8px;
-    width: 55%;
-  }
-  .mobile-copy-percentage .copy-img {
-    width: 25px;
-    height: 25px;
-    padding-right: 5px;
-  }
-  .mobile-progress-bar-box {
-    height: 50px;
-    width: 100%;
-  }
-  .mobile-progress-bar-box .txt-part {
-    display: flex;
-    justify-content: space-between;
-  }
-  .progress-bar {
-    height: 5px;
-    width: 100%;
-  }
-
-  .progress-bar > .bottom-bar {
-    display: inline-block;
-    height: 5px;
-    width: 100%;
-    background-color: rgb(229, 229, 229);
-    position: relative;
-  }
-
-  .progress-bar > .bottom-bar > .top-bar {
-    display: inline-block;
-    height: 5px;
-    /*width: 70%;*/
-    background-color: rgb(75, 85, 99);
-    position: absolute;
-    left: 0;
-  }
-  .mobile-btn-search {
-    display: inline-block;
-    cursor: pointer;
-    border: 1px solid rgb(229, 229, 229);
-    height: 36px;
-    width: 100px;
-    text-align: center;
-    line-height: 36px;
-    background-color: rgb(156, 163, 175);
-    color: white;
-    font-size: 16px;
-  }
-  .mobile-active {
-    display: inline-block;
-    border: 1px solid rgb(229, 229, 229);
-    height: 36px;
-    width: 100px;
-    text-align: center;
-    line-height: 36px;
-    background-color: #4b5563;
-    color: white;
-  }
-}
-/*横屏*/
-@media only screen and (orientation: landscape) and (min-width: 500px) and (max-height: 600px) {
-  .pc-container {
-    display: none;
-  }
-  .mobile-container {
-    width: 100%;
-  }
-  .mobile-container-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .mobile-container-header .asf-img {
-    width: 75px;
-    height: 75px;
-  }
-  .mobile-container-header .more-options-img {
-    width: 25px;
-    height: 25px;
-  }
-  .mobile-container-header .more-options-img:hover {
-    cursor: pointer;
-  }
-  .mobile-details {
-    display: inline-block;
-    height: 210px;
-    width: 100%;
-    background-color: #f8f8f8;
-    padding: 10px;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-  }
-  .mobile-content-range {
-    margin: 10px 0;
-  }
-  .mobile-content-range .content {
-    display: -webkit-box;
-    max-height: 42px;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    font-size: 14px;
-  }
-  .mobile-title {
-    display: block;
-    font-size: 34px;
-  }
-  .mobile-subtitle {
-    display: flex;
-    justify-content: space-between;
-    font-size: 17px;
-  }
-  .mobile-subtitle .left {
-    display: block;
-  }
-  .mobile-subtitle .right {
-    display: flex;
-    align-items: center;
-  }
-  .mobile-subtitle .arrow-img {
-    width: 25px;
-    height: 25px;
-    margin-left: 5px;
-  }
-  /*翻转展开图标*/
-  .is-rotated {
-    transform: rotate(180deg);
-    transition: linear 0.2s;
-  }
-
-  .recover-rotated {
-    transform: rotate(0);
-    transition: linear 0.2s;
-  }
-  .mobile-input-box {
-    margin-top: 20px;
-    position: relative;
-  }
-  .mobile-input-box textarea {
-    width: 100%;
-    height: 200px;
-    border: 2px solid #d1d5db;
-    resize: none;
-    outline: none;
-    padding: 10px;
-    font-size: 14px;
-    box-sizing: border-box;
-  }
-  .pc-input-box textarea::placeholder {
-    color: #d1d5db;
-  }
-  .total-word-num {
-    position: absolute;
-    left: 10px;
-    bottom: 60px;
+    bottom: 70px;
     color: #d1d5db;
   }
   /*查重条*/

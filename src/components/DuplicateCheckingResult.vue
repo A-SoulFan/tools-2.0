@@ -38,8 +38,7 @@ export default {
 
 <style scoped>
 /*手机端*/
-/*竖屏*/
-@media only screen and (orientation: portrait) and (max-width: 500px) {
+@media only screen and (max-width: 1000px) {
   .result-container {
     background-color: rgb(248, 248, 248);
     width: 100%;
@@ -102,73 +101,8 @@ export default {
     color: #6b7280;
   }
 }
-
-/*横屏*/
-@media only screen and (orientation: landscape) and (min-width: 500px) and (max-height: 600px) {
-  .result-container {
-    background-color: rgb(248, 248, 248);
-    width: 100%;
-    height: 200px;
-    box-sizing: border-box;
-    margin-top: 40px;
-  }
-  .result-container-header {
-    display: flex;
-    justify-content: space-between;
-    line-height: 32px;
-  }
-  .result-container-header > .left > img {
-    width: 25px;
-    height: 25px;
-  }
-  .result-container-header > .left {
-    display: flex;
-    align-items: center;
-  }
-  .result-container-header > .left > .username {
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 400;
-    margin-left: 10px;
-  }
-  .result-container-header > .right > .checking-rate,
-  .result-container-footer > .right .view-details {
-    padding-right: 10px;
-    color: #6b7280;
-  }
-  /*超出的内容隐藏*/
-  .user-content {
-    height: 130px;
-    width: 100%;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 8;
-    overflow: hidden;
-    color: #6b7280;
-  }
-  .result-container-footer img {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-  }
-  .result-container-footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-    color: #6b7280;
-  }
-  .result-container-footer > .left,
-  .result-container-footer > .right {
-    display: flex;
-    align-items: center;
-  }
-  .result-container-footer > .right > a {
-    text-decoration: none;
-    color: #6b7280;
-  }
-}
-
-@media (min-width: 500px) and (min-height: 600px) {
+/*pc端*/
+@media (min-width: 1000px) {
   .result-container {
     background-color: rgb(248, 248, 248);
     width: 950px;
