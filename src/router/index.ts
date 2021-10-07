@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
-  // {
-  //   path: "/",
-  //   redirect: "/randomVideo",
-  // },
+  {
+    path: "/",
+    redirect: "/randomVideo",
+  },
   {
     path: "/randomVideo",
     name: "randomVideo",
@@ -14,17 +14,26 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/duplicateChecking",
     name: "duplicateChecking",
-    component: () => import("../views/DuplicateChecking.vue"),
+    component: () =>
+      import(
+        /* webpackChunkName: "DuplicateChecking" */ "../views/DuplicateChecking.vue"
+      ),
   },
   {
     path: "/zhijiangDict",
     name: "zhijiangDict",
-    component: () => import("../views/ZhijiangDict.vue"),
+    component: () =>
+      import(
+        /* webpackChunkName: "ZhijiangDict" */ "../views/ZhijiangDict.vue"
+      ),
   },
   {
     path: "/emojicollect",
     name: "emojicollect",
-    component: () => import("../views/EmojiCollection.vue"),
+    component: () =>
+      import(
+        /* webpackChunkName: "Emojicollect" */ "../views/EmojiCollection.vue"
+      ),
   },
 ];
 
