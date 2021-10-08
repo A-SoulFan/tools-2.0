@@ -54,5 +54,7 @@ export default defineComponent({
 }
 .route-view {
   padding: 0 5.83vw;
+  max-width: 1180px;
+  margin: auto;
 }
 </style>

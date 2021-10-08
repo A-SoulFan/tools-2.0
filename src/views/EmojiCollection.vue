@@ -86,7 +86,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, onMounted } from "vue";
 import headerTitle from "../components/headerTitle.vue";
-import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+// import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 interface waterfallFlow {
   waterfallFlowHeight: Array<number>;
 }
