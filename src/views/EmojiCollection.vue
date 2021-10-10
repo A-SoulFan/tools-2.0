@@ -1,11 +1,15 @@
 <!-- 今天溜什么-->
 <template>
+  <div class="block"></div>
+  <div class="block"></div>
+  <div class="block"></div>
+  <div class="block"></div>
   <div>
     <header-title
       Title="表情包"
       subTitle="你想要的表情包都在这里"
     ></header-title>
-
+    <div class="block"></div>
     <div class="update-time-area">
       <div class="time-left">
         <img class="icon-clock" src="../assets/icons/clock.svg" />
@@ -28,15 +32,18 @@
     <button class="button">E</button>
   </div>
   <div class="block"></div>
-  <div class="row f12" id="app-mains">
-    <div class="col-6">
+  <div class="masonry" id="app-mains">
+    <div class="item">
       <div class="card">
         <div class="card-body">
           <p class="card-text">long</p>
         </div>
       </div>
     </div>
-    <div class="col-6">
+    <div v-for="item in listone" :key="item.data">
+      <a> <img :src="item.img" /> </a>
+    </div>
+    <div class="item">
       <div class="card">
         <div class="card-body">
           <img
@@ -47,7 +54,7 @@
         </div>
       </div>
     </div>
-    <div class="col-6">
+    <div class="item">
       <div class="card">
         <div class="card-body">
           <img class="img" src="../assets/icons/user.png" />
@@ -55,14 +62,14 @@
         </div>
       </div>
     </div>
-    <div class="col-6">
+    <div class="item">
       <div class="card">
         <div class="card-body">
           <p class="card-text">This is a short card.</p>
         </div>
       </div>
     </div>
-    <div class="col-6">
+    <div class="item">
       <div class="card">
         <div class="card-body">
           <img
@@ -73,7 +80,7 @@
         </div>
       </div>
     </div>
-    <div class="col-6">
+    <div class="item">
       <div class="card">
         <div class="card-body">
           <p class="card-text">This is a short card.</p>
@@ -84,12 +91,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, onMounted } from "vue";
+import { defineComponent, ref } from "vue";
 import headerTitle from "../components/headerTitle.vue";
-// import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-interface waterfallFlow {
-  waterfallFlowHeight: Array<number>;
-}
+
 export default defineComponent({
   components: { headerTitle },
   setup() {
@@ -97,31 +101,25 @@ export default defineComponent({
     const subtitle = "你想要的表情包都在这里";
     let updateTime = ref("2021.8.26 15:00");
 
-    const state: waterfallFlow = reactive({
-      waterfallFlowHeight: [300, 300],
-    });
-    const waterfallFlowFun = () => {
-      const dom = document.querySelectorAll(".col");
-      dom.forEach((item: any) => {
-        item.style.position = "absolute";
-        const minIndex = filterMin();
-        item.style.top = state.waterfallFlowHeight[minIndex] + 10 + "px";
-        item.style.left = minIndex * (100 / 2) + "%";
-        state.waterfallFlowHeight[minIndex] +=
-          item.querySelector(".card").offsetHeight + 10;
-      });
-    };
-    const filterMin = () => {
-      const min = Math.min.apply(null, state.waterfallFlowHeight);
-      return state.waterfallFlowHeight.indexOf(min);
-    };
-
-    onMounted(() => waterfallFlowFun());
     return {
       Title,
       subtitle,
       updateTime,
+      listone: [
+        { data: "1", img: require("../assets/icons/user.png") },
+        { data: "1", img: require("../assets/icons/user.png") },
+      ],
     };
+  },
+  mounted() {
+    // 假设apiArr是我们发请求后端返回的数据，里面的imgTitle属性存储的是图片的名字
+    // 通过require关键字引入，会自动到指定路径下的文件中寻找对应的图片文件加载出来
+    this.listone = [
+      {
+        data: "1",
+        img: "../assets/icons/user.png",
+      },
+    ];
   },
 });
 </script>
@@ -194,5 +192,53 @@ export default defineComponent({
 }
 .container {
   display: inline;
+}
+.masonry {
+  width: auto; // 默认宽度
+  margin: 20px auto; // 剧中
+  columns: 4; // 默认列数
+  column-gap: 30px; // 列间距
+}
+
+.item {
+  width: 100%;
+  break-inside: avoid;
+  margin-bottom: 30px;
+}
+
+.item img {
+  width: 100%;
+}
+
+.item h2 {
+  padding: 8px 0;
+}
+
+.item P {
+  color: #555;
+}
+@media screen and (min-width: 1024px) and (max-width: 1439.98px) {
+  .masonry {
+    width: 100%;
+    columns: 3;
+    column-gap: 20px;
+  }
+}
+//ipad:
+
+@media screen and (min-width: 768px) and (max-width: 1023.98px) {
+  .masonry {
+    width: 100%;
+    columns: 2;
+    column-gap: 20px;
+  }
+}
+//mobile:
+
+@media screen and (max-width: 767.98px) {
+  .masonry {
+    width: 100%;
+    columns: 2;
+  }
 }
 </style>

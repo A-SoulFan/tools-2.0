@@ -13,6 +13,7 @@
     "noUnusedParameters": true,            /* 用于检查是否有在函数体中没有使用的参数，这个也可以配合eslint来做检查，默认为false */
     "noFallthroughCasesInSwitch": true,     /* 用于检查switch中是否有case没有使用break跳出switch，默认为false */
     "allowSyntheticDefaultImports": true,
+    "allowJs": true,
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
