@@ -35,6 +35,14 @@ const routes: Array<RouteRecordRaw> = [
         /* webpackChunkName: "Emojicollect" */ "../views/EmojiCollection.vue"
       ),
   },
+  {
+    path: "/ingredientChecking",
+    name: "ingredientChecking",
+    component: () =>
+      import(
+        /* webpackChunkName: "IngredientChecking" */ "../views/IngredientChecking.vue"
+      ),
+  },
 ];
 
 const router = createRouter({

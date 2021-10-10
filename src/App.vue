@@ -25,7 +25,7 @@ export default defineComponent({
       secondaryBars: [
         { name: "枝网查重", link: "/duplicateChecking" },
         { name: "今日溜什么", link: "/randomVideo" },
-        // { name: "成分姬", link: "https://www.baidu.com" },
+        { name: "成分姬", link: "/ingredientChecking" },
         { name: "表情包", link: "/emojicollect" },
         { name: "方言词典", link: "/zhijiangDict" },
       ],
