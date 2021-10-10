@@ -32,8 +32,6 @@ export default defineComponent({
     };
     const callback = (str: string) => {
       route.push(str);
-      // window.open(str);
-      console.log(str);
     };
     return {
       conf,

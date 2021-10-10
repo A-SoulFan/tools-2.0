@@ -63,6 +63,7 @@ export default defineComponent({
       let tempObj = {
         title: video.value.title,
         imgsrc:
+          video.value.cover ||
           "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
         bv: video.value.bv,
       };
@@ -166,11 +167,8 @@ export default defineComponent({
     justify-items: center;
     .history-video-item {
       display: flex;
-      height: 26.11vw;
-      // margin: 0 20px 27px auto;
       margin-bottom: 27px;
       background-color: #f8f8f8;
-      max-height: 100px;
       max-width: 500px;
       border-radius: 2px;
       .video-cover {
