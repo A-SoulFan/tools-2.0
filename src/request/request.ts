@@ -30,6 +30,3 @@ request.interceptors.response.use(
   }
 );
 export default request;
-// Vue.prototype.$request = request;
-// const app = createApp(App);
-// app.config.globalProperties.$request = request;
