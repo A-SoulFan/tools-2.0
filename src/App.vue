@@ -1,7 +1,5 @@
 <template>
   <div class="app">
-    ASF
-
     <div class="route-view">
       <vue-nav-bar
         :config="conf"
@@ -55,4 +53,13 @@ export default defineComponent({
   max-width: 1180px;
   margin: auto;
 }
+/* 待修复后 删除  */
+#navBar {
+  width: 100% !important;
+  position: relative !important;
+}
+#logo {
+  width: auto !important;
+}
+/* 待修复后 删除  */
 </style>

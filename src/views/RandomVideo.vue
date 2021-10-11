@@ -11,18 +11,24 @@
       <div class="iframe-box-button-area">
         <div class="pre-button-area">
           <img class="pre-button-img" src="../assets/icons/cube.svg" />
-          <div class="pre-button-text">回到上一条视频</div>
+          <div class="pre-button-text" @click="preVideo">回到上一条视频</div>
         </div>
         <div class="random-button" @click="getRandomVideo">随便看看</div>
       </div>
     </div>
     <div class="history-video-area">
-      <div class="history-video-title">历史记录</div>
+      <div class="history-video-title-area">
+        <div class="history-video-title">历史记录</div>
+        <!-- <div class="history-video-clear-button" @click="clearHistory">
+          清除历史
+        </div> -->
+      </div>
       <div class="history-video">
         <div
           class="history-video-item"
           v-for="(item, index) in historyVideoList"
           :key="index"
+          @click="selectVideo(item)"
         >
           <div class="video-cover">
             <img :src="item.imgsrc" crossorigin="anonymous" />
@@ -32,7 +38,7 @@
             <div class="video-title">
               {{ item.title }}
             </div>
-            <div class="video-time">BV号：{{ item.bv }}</div>
+            <div class="video-time">观看时间：{{ item.time }}</div>
           </div>
         </div>
       </div>
@@ -44,27 +50,45 @@
 import { defineComponent, ref } from "vue";
 import headerTitle from "../components/headerTitle.vue";
 import useCurrentInstance from "@/hooks/useCurrentInstance";
+
+interface videoObj {
+  title: string;
+  cover: string;
+  time: string;
+  play_url: string;
+  bv: string;
+}
+
 export default defineComponent({
   components: { headerTitle },
   setup() {
-    const historyVideoList: any[] = JSON.parse(
+    let historyVideoList: any[] = JSON.parse(
       localStorage.getItem("historyVideoList") || JSON.stringify([])
     );
     const video = ref({
       title: String,
       cover: String,
+      time: String,
+      play_url: String,
       bv: String,
     });
+    // TODO: 未拿取
     let updateTime = ref("2021.8.26 15:00");
+    let currentVideoIndex = 0;
     const { proxy } = useCurrentInstance();
+
     const getRandomVideo = async () => {
       const res = await proxy.$request("api/stroll/random");
+      res.time = new Date().toLocaleString("chinese", { hour12: false });
+      currentVideoIndex = 0;
       video.value = res;
       let tempObj = {
         title: video.value.title,
         imgsrc:
           video.value.cover ||
           "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
+        time: video.value.time,
+        play_url: "https:" + video.value.play_url,
         bv: video.value.bv,
       };
       // 长度保持在二十条
@@ -77,12 +101,28 @@ export default defineComponent({
         JSON.stringify(historyVideoList)
       );
     };
+    const preVideo = () => {
+      currentVideoIndex++;
+      video.value = historyVideoList[currentVideoIndex];
+    };
+    const selectVideo = (item: videoObj) => {
+      window.open("https://www.bilibili.com/video/" + item.bv);
+    };
+    // TODO: 待做 清除历史有严重bug
+    // const clearHistory = () => {
+    //   localStorage.setItem("historyVideoList", JSON.stringify([]));
+    //   historyVideoList = [];
+    // };
     getRandomVideo();
     return {
       updateTime,
       historyVideoList,
       video,
       getRandomVideo,
+      preVideo,
+      currentVideoIndex,
+      selectVideo,
+      // clearHistory,
     };
   },
 });
@@ -138,6 +178,7 @@ export default defineComponent({
 }
 .pre-button-text {
   color: #4b5563;
+  cursor: pointer;
 }
 .random-button {
   display: flex;
@@ -145,6 +186,7 @@ export default defineComponent({
   align-items: center;
   width: 83px;
   height: 34.34px;
+  font-size: 14.17px;
   color: #fff;
   background-color: #4b5563;
   border-radius: 2px;
@@ -155,6 +197,17 @@ export default defineComponent({
 .history-video-area {
   max-width: 1200px;
   margin: auto;
+  .history-video-title-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .history-video-clear-button {
+    align-self: flex-end;
+    margin-bottom: 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
   .history-video-title {
     font-size: 17px;
     margin: 30px 0 20px 0;
@@ -171,12 +224,13 @@ export default defineComponent({
       background-color: #f8f8f8;
       max-width: 500px;
       border-radius: 2px;
+      cursor: pointer;
       .video-cover {
         width: 50%;
         min-width: 50%;
         height: 100%;
         background-color: #4b5563;
-        margin-right: 2.7vw;
+        margin-right: 1.7vw;
       }
       .video-info {
         margin: 7px 0;
@@ -200,6 +254,5 @@ export default defineComponent({
     }
   }
 }
-
 /* 历史切片区域 */
 </style>
