@@ -160,7 +160,6 @@ export default defineComponent({
       contentLength: 0, //textarea中的字数
       content: "", //textarea中的内容
       totalDuplicateCheckingRate: 0, //总复制比
-      currState: 0, //0代表搜索，1代表复制报告
       copyText: "",
     });
     let flags = reactive({
@@ -222,7 +221,6 @@ export default defineComponent({
       if (flags.isSearched === true) {
         //如果进行过搜索
         initialData.btnContent = "复制报告";
-        initialData.currState = 1;
       }
     }
     function onUnfoldBtnClick() {
