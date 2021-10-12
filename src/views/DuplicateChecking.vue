@@ -1,13 +1,7 @@
-<template xmlns:v-clipboard="http://www.w3.org/1999/xhtml">
+<template>
   <div class="pc-container">
     <header class="pc-header">
       <img class="asf-img" src="../assets/icons/ASF_black.png" />
-      <ul class="pc-nav">
-        <li class="pc-nav-option"><a href="#">用户讨论</a></li>
-        <li class="pc-nav-option"><a href="#">内容整理</a></li>
-        <li class="pc-nav-option"><a href="#">实用工具</a></li>
-        <li class="pc-nav-option"><a href="#">新人指南</a></li>
-      </ul>
       <div class="pc-nav-right">
         <img class="search-img" src="../assets/icons/search.png" />
         <img class="user-img" src="../assets/icons/user.png" />
@@ -145,16 +139,13 @@
 </template>
 
 <script>
-import { reactive, onBeforeUpdate, getCurrentInstance } from "vue";
-import moment from "moment";
-import axios from "axios";
-import VueClipboard from "vue-clipboard2";
+import { reactive, defineComponent } from "vue";
 import DuplicateCheckingResult from "../components/DuplicateCheckingResult";
-export default {
+import useCurrentInstance from "@/hooks/useCurrentInstance";
+export default defineComponent({
   name: "DuplicateChecking",
   components: { DuplicateCheckingResult },
-  setup(props) {
-    // const _this = getCurrentInstance();
+  setup() {
     let contents = [
       {
         span1: "比对库内容范围:",
@@ -188,6 +179,7 @@ export default {
       isActive: false, //按钮是否是激活态
       foldBtnState: false, //展开按钮的状态
     });
+    const { proxy } = useCurrentInstance();
     //方法
     //检测textarea中是否有内容以及内容长度
     function hasContent(e) {
@@ -256,58 +248,47 @@ export default {
         initialData.foldBtnContent = "详情"; //设置内容变为收起
       }
     }
-    function searchResult() {
-      const res = axios({
+    const searchResult = async () => {
+      const res = await proxy.$request({
         method: "post",
         url: "https://asoulcnki.asia/v1/api/check",
         data: {
           text: initialData.content,
         },
-      }).then((ret) => {
-        let result = ret.data.data.related;
-
-        let userdata = [];
-        for (let i in result) {
-          let rate = result[i].rate;
-          let content = result[i].reply.content;
-          let username = result[i].reply.m_name;
-          let date = result[i].reply.ctime;
-          let link = result[i].reply_url;
-          let user = {
-            username,
-            duplicateCheckingRate: parseFloat(rate).toFixed(2) * 100,
-            issuingDate: moment
-              .utc(parseInt(date) * 1000)
-              .format("YYYY-MM-DD  hh:mm:ss"),
-            content,
-            link,
-          };
-          userdata.push(user);
-          // userList.push(user);
-        }
-        userList = userdata;
-        customData.customList = userdata;
-        // console.log("添加前的数组：", userList);
-        //把内容写到剪贴板中
-        if (userList.length !== 0) {
-          initialData.copyText =
-            "枝网文本复制检测报告(简洁)\n" +
-            "查重时间: 2021-10-12 14:52:54\n" +
-            "总文字复制比: " +
-            userList[0].duplicateCheckingRate +
-            "%\n" +
-            "相似小作文: " +
-            userList[0].link +
-            "\n" +
-            "作者: " +
-            userList[0].username +
-            "\n" +
-            "发表时间: 2021-02-18 19:42:23\n" +
-            "查重结果仅作参考，请注意辨别是否为原创";
-          initialData.totalDuplicateCheckingRate = maxDuplicate(); //设定重复率，值为data数组中重复率最大的一个
-        }
       });
-    }
+      let userdata = res.related.map((item) => {
+        return {
+          username: item.reply.m_name,
+          duplicateCheckingRate: parseFloat(item.rate).toFixed(2) * 100,
+          issuingDate: new Date(item.reply.ctime).toLocaleString("chinese", {
+            hour12: false,
+          }),
+          content: item.reply.content,
+          link: item.reply_url,
+        };
+      });
+      userList = userdata;
+      customData.customList = userdata;
+      //把内容写到剪贴板中
+      if (userList.length !== 0) {
+        initialData.copyText =
+          "枝网文本复制检测报告(简洁)\n" +
+          "查重时间: 2021-10-12 14:52:54\n" +
+          "总文字复制比: " +
+          userList[0].duplicateCheckingRate +
+          "%\n" +
+          "相似小作文: " +
+          userList[0].link +
+          "\n" +
+          "作者: " +
+          userList[0].username +
+          "\n" +
+          "发表时间: 2021-02-18 19:42:23\n" +
+          "查重结果仅作参考，请注意辨别是否为原创";
+        initialData.totalDuplicateCheckingRate = maxDuplicate(); //设定重复率，值为data数组中重复率最大的一个
+      }
+      // });
+    };
     return {
       contents,
       userList,
@@ -321,7 +302,7 @@ export default {
       onUnfoldBtnClick,
     };
   },
-};
+});
 </script>
 
 <style scoped>
