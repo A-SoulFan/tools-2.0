@@ -108,11 +108,14 @@ export default {
 @media (min-width: 1000px) {
   .result-container {
     background-color: rgb(248, 248, 248);
-    width: 950px;
+    width: 700px;
     height: 210px;
     box-sizing: border-box;
-    margin-top: 50px;
+    margin-top: 30px;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   .result-container-header {
     display: flex;
@@ -142,15 +145,15 @@ export default {
   }
   /*超出的内容隐藏*/
   .user-content {
-    height: 125px;
+    height: 100px;
     width: 100%;
     display: -webkit-box;
     overflow: scroll;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
+    /*-webkit-box-orient: vertical;*/
+    /*-webkit-line-clamp: 4;*/
     /*overflow: hidden;*/
     color: #6b7280;
-    font-size: 24px;
+    font-size: 20px;
   }
   .user-content::-webkit-scrollbar {
     display: none;

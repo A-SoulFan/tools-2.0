@@ -243,9 +243,12 @@ export default defineComponent({
         return {
           username: item.reply.m_name,
           duplicateCheckingRate: parseFloat(item.rate).toFixed(2) * 100,
-          issuingDate: new Date(item.reply.ctime).toLocaleString("chinese", {
-            hour12: false,
-          }),
+          issuingDate: new Date(item.reply.ctime * 1000).toLocaleString(
+            "chinese",
+            {
+              hour12: false,
+            }
+          ),
           content: item.reply.content,
           link: item.reply_url,
         };
@@ -299,7 +302,7 @@ export default defineComponent({
     display: none;
   }
   .pc-container {
-    width: 1600px;
+    width: 1150px;
   }
   .pc-nav .pc-nav-option a {
     text-decoration: none;
@@ -316,7 +319,7 @@ export default defineComponent({
     padding-left: 50px;
   }
   .pc-title {
-    font-size: 48px;
+    font-size: 40px;
     display: block;
     padding-top: 60px;
   }
@@ -324,10 +327,11 @@ export default defineComponent({
     padding-top: 9px;
     display: block;
     font-size: 24px;
+    padding-bottom: 19px;
   }
   .pc-input-box textarea {
-    width: 950px;
-    height: 330px;
+    width: 700px;
+    height: 250px;
     border: 2px solid #d1d5db;
     resize: none;
     outline: none;
@@ -340,14 +344,14 @@ export default defineComponent({
   }
   .pc-input-box {
     display: flex;
-    width: 1500px;
+    width: 1150px;
     justify-content: space-between;
     position: relative;
   }
   .pc-input-box .pc-details {
     display: inline-block;
-    height: 330px;
-    width: 500px;
+    height: 250px;
+    width: 420px;
     background-color: #f8f8f8;
     padding: 10px;
     float: right;
@@ -359,7 +363,7 @@ export default defineComponent({
     font-size: 24px;
   }
   .pc-content-range {
-    margin: 25px 0;
+    margin: 15px 0;
   }
   .pc-content-range .content {
     display: -webkit-box;
@@ -376,7 +380,7 @@ export default defineComponent({
   .pc-foot-nav {
     display: flex;
     justify-content: space-between;
-    font-size: 20px;
+    font-size: 16px;
   }
   .pc-foot-nav a {
     text-decoration: none;
@@ -405,7 +409,7 @@ export default defineComponent({
     background-color: rgb(156, 163, 175);
     color: white;
     font-size: 16px;
-    margin-left: 850px;
+    margin-left: 600px;
   }
   .total-word-num {
     position: absolute;
