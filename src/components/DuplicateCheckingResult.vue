@@ -21,7 +21,7 @@
       </div>
       <div class="right">
         <img class="foot-img" src="../assets/icons/link.png" />
-        <a href="#">
+        <a :href="user.link">
           <span class="view-details">查看详情</span>
         </a>
       </div>
@@ -77,8 +77,11 @@ export default {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 8;
-    overflow: hidden;
+    overflow: scroll;
     color: #6b7280;
+  }
+  .user-content::-webkit-scrollbar {
+    display: none;
   }
   .result-container-footer img {
     width: 20px;
@@ -143,11 +146,15 @@ export default {
     height: 125px;
     width: 100%;
     display: -webkit-box;
+    overflow: scroll;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4;
-    overflow: hidden;
+    /*overflow: hidden;*/
     color: #6b7280;
     font-size: 24px;
+  }
+  .user-content::-webkit-scrollbar {
+    display: none;
   }
   .foot-img {
     width: 20px;

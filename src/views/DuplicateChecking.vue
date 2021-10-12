@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-clipboard="http://www.w3.org/1999/xhtml">
   <div class="pc-container">
     <header class="pc-header">
       <img class="asf-img" src="../assets/icons/ASF_black.png" />
@@ -38,7 +38,10 @@
         <div class="pc-foot-nav">
           <div class="left">
             <img src="../assets/icons/github-outline.png" />
-            <a href="#"><span>查重接口开源仓库</span></a>
+            <a
+              href="https://github.com/ASoulCnki/ASoulCnkiBackend/blob/master/api.md"
+              ><span>查重接口开源仓库</span></a
+            >
           </div>
           <div class="right">
             <img src="../assets/icons/bilibili-fill.png" />
@@ -54,7 +57,7 @@
     >
     <template v-if="flags.isSearched">
       <DuplicateCheckingResult
-        v-for="(user, idx) in userList"
+        v-for="(user, idx) in customData.customList"
         :user="user"
         :key="idx"
       ></DuplicateCheckingResult>
@@ -128,22 +131,30 @@
     </div>
     <template v-if="flags.isSearched">
       <DuplicateCheckingResult
-        v-for="(user, idx) in userList"
+        v-for="(user, idx) in customData.customList"
         :user="user"
         :key="idx"
       ></DuplicateCheckingResult>
     </template>
   </div>
+  <textarea
+    class="clip-board"
+    v-model="initialData.copyText"
+    id="textArea"
+  ></textarea>
 </template>
 
 <script>
-import { reactive } from "vue";
+import { reactive, onBeforeUpdate, getCurrentInstance } from "vue";
+import moment from "moment";
+import axios from "axios";
+import VueClipboard from "vue-clipboard2";
 import DuplicateCheckingResult from "../components/DuplicateCheckingResult";
-import headerTitle from "../components/headerTitle.vue";
 export default {
   name: "DuplicateChecking",
   components: { DuplicateCheckingResult },
-  setup() {
+  setup(props) {
+    // const _this = getCurrentInstance();
     let contents = [
       {
         span1: "比对库内容范围:",
@@ -158,36 +169,19 @@ export default {
         span2: "[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学",
       },
     ];
-    let userList = [
-      {
-        username: "沃克贰叁",
-        duplicateCheckingRate: 70,
-        issuingDate: "2021年2月31日",
-        content:
-          "内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容",
-      },
-      {
-        username: "秦心",
-        duplicateCheckingRate: 60,
-        issuingDate: "2021年3月31日",
-        content:
-          "内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容\n" +
-          "                内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容",
-      },
-    ];
+    let customData = reactive({
+      customList: [],
+    });
+    let userList = [];
     let initialData = reactive({
       maxLength: 1000,
       foldBtnContent: "详情",
       btnContent: "查询结果",
       contentLength: 0, //textarea中的字数
+      content: "", //textarea中的内容
       totalDuplicateCheckingRate: 0, //总复制比
+      currState: 0, //0代表搜索，1代表复制报告
+      copyText: "",
     });
     let flags = reactive({
       isSearched: false,
@@ -198,18 +192,33 @@ export default {
     //检测textarea中是否有内容以及内容长度
     function hasContent(e) {
       flags.isActive = e.target.value !== ""; //如果不为空，isActive就是true
+      initialData.content = e.target.value;
       initialData.contentLength = e.target.value.length;
       // console.log(e.target.value.length); //无响应，说明没有设置响应式
       //text内容不为空并且已经进行过搜索，那么只要输入东西就算改变内容
       if (e.target.value !== "" && flags.isSearched === true) {
         initialData.btnContent = "查询结果";
+        initialData.currState = 0;
       }
     }
     //搜索按钮功能
     function search() {
-      if (initialData.contentLength != 0) {
-        flags.isSearched = true; //只要点击搜索并且内容不为空
-        initialData.totalDuplicateCheckingRate = maxDuplicate(); //设定重复率，值为data数组中重复率最大的一个
+      if (initialData.btnContent === "查询结果") {
+        if (initialData.contentLength >= 10) {
+          flags.isSearched = true; //只要点击搜索并且内容不为空
+          searchResult(); // 发送请求，查找结果
+        } else {
+          // alert("请输入至少10个字~");
+          // 提示至少输入10个字
+        }
+      } else if (initialData.btnContent === "复制报告") {
+        // alert("复制成功");
+        // initialData.copyText = "复制成功！";
+        let content = document.getElementById("textArea");
+
+        content.select();
+        document.execCommand("copy");
+        alert("Copied!");
       }
     }
     //控制查重条长度
@@ -219,18 +228,24 @@ export default {
     //排序出userList中查重率最高的一个
     function maxDuplicate() {
       let max = 0;
-      userList.map((value) => {
-        if (max < value.duplicateCheckingRate) {
-          max = value.duplicateCheckingRate;
-        }
-      });
-      return max;
+      if (userList.length !== 0) {
+        userList.map((value) => {
+          if (max < value.duplicateCheckingRate) {
+            max = value.duplicateCheckingRate;
+          }
+        });
+        return max;
+      } else {
+        return 0;
+      }
     }
     //点击搜索过后，按钮变成复制报告
     function onInputBtnContent() {
       if (flags.isSearched === true) {
         //如果进行过搜索
         initialData.btnContent = "复制报告";
+        initialData.currState = 1;
+        // userList = [];
       }
     }
     function onUnfoldBtnClick() {
@@ -241,15 +256,67 @@ export default {
         initialData.foldBtnContent = "详情"; //设置内容变为收起
       }
     }
+    function searchResult() {
+      const res = axios({
+        method: "post",
+        url: "https://asoulcnki.asia/v1/api/check",
+        data: {
+          text: initialData.content,
+        },
+      }).then((ret) => {
+        let result = ret.data.data.related;
+
+        let userdata = [];
+        for (let i in result) {
+          let rate = result[i].rate;
+          let content = result[i].reply.content;
+          let username = result[i].reply.m_name;
+          let date = result[i].reply.ctime;
+          let link = result[i].reply_url;
+          let user = {
+            username,
+            duplicateCheckingRate: parseFloat(rate).toFixed(2) * 100,
+            issuingDate: moment
+              .utc(parseInt(date) * 1000)
+              .format("YYYY-MM-DD  hh:mm:ss"),
+            content,
+            link,
+          };
+          userdata.push(user);
+          // userList.push(user);
+        }
+        userList = userdata;
+        customData.customList = userdata;
+        // console.log("添加前的数组：", userList);
+        //把内容写到剪贴板中
+        if (userList.length !== 0) {
+          initialData.copyText =
+            "枝网文本复制检测报告(简洁)\n" +
+            "查重时间: 2021-10-12 14:52:54\n" +
+            "总文字复制比: " +
+            userList[0].duplicateCheckingRate +
+            "%\n" +
+            "相似小作文: " +
+            userList[0].link +
+            "\n" +
+            "作者: " +
+            userList[0].username +
+            "\n" +
+            "发表时间: 2021-02-18 19:42:23\n" +
+            "查重结果仅作参考，请注意辨别是否为原创";
+          initialData.totalDuplicateCheckingRate = maxDuplicate(); //设定重复率，值为data数组中重复率最大的一个
+        }
+      });
+    }
     return {
       contents,
       userList,
+      customData,
       flags,
       initialData,
       hasContent,
       search,
       lineProgress,
-      maxDuplicate,
       onInputBtnContent,
       onUnfoldBtnClick,
     };
@@ -260,6 +327,10 @@ export default {
 <style scoped>
 /*pc端*/
 @media (min-width: 1000px) {
+  .clip-board {
+    width: 0;
+    height: 0;
+  }
   .mobile-container {
     display: none;
   }
@@ -418,6 +489,10 @@ export default {
 
 /*手机端*/
 @media only screen and (max-width: 1000px) {
+  .clip-board {
+    width: 0;
+    height: 0;
+  }
   .pc-container {
     display: none;
   }
