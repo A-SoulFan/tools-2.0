@@ -51,13 +51,13 @@ export default {
     justify-content: space-between;
     line-height: 32px;
   }
-  .result-container-header > .left > img {
-    width: 25px;
-    height: 25px;
-  }
   .result-container-header > .left {
     display: flex;
     align-items: center;
+  }
+  .result-container-header > .left > img {
+    width: 25px;
+    height: 25px;
   }
   .result-container-header > .left > .username {
     font-size: 20px;
