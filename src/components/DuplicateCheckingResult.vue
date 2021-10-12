@@ -112,7 +112,6 @@ export default {
     height: 210px;
     box-sizing: border-box;
     margin-top: 50px;
-    margin-left: 50px;
     padding: 10px;
   }
   .result-container-header {

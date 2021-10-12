@@ -1,12 +1,5 @@
 <template>
   <div class="pc-container">
-    <header class="pc-header">
-      <img class="asf-img" src="../assets/icons/ASF_black.png" />
-      <div class="pc-nav-right">
-        <img class="search-img" src="../assets/icons/search.png" />
-        <img class="user-img" src="../assets/icons/user.png" />
-      </div>
-    </header>
     <span class="pc-title">枝网查重</span>
     <span class="pc-introduce">帮你快速识别原创小作文</span>
     <div class="pc-input-box">
@@ -59,10 +52,6 @@
   </div>
   <!--手机端-->
   <div class="mobile-container">
-    <div class="mobile-container-header">
-      <img class="asf-img" src="../assets/icons/ASF_black.png" />
-      <img class="more-options-img" src="../assets/icons/moreOptions.png" />
-    </div>
     <!--手机端title-->
     <div class="mobile-header">
       <span class="mobile-title">枝网查重</span>
@@ -186,7 +175,6 @@ export default defineComponent({
       flags.isActive = e.target.value !== ""; //如果不为空，isActive就是true
       initialData.content = e.target.value;
       initialData.contentLength = e.target.value.length;
-      // console.log(e.target.value.length); //无响应，说明没有设置响应式
       //text内容不为空并且已经进行过搜索，那么只要输入东西就算改变内容
       if (e.target.value !== "" && flags.isSearched === true) {
         initialData.btnContent = "查询结果";
@@ -204,13 +192,11 @@ export default defineComponent({
           // 提示至少输入10个字
         }
       } else if (initialData.btnContent === "复制报告") {
-        // alert("复制成功");
-        // initialData.copyText = "复制成功！";
         let content = document.getElementById("textArea");
 
         content.select();
         document.execCommand("copy");
-        alert("Copied!");
+        // alert("Copied!");
       }
     }
     //控制查重条长度
@@ -237,7 +223,6 @@ export default defineComponent({
         //如果进行过搜索
         initialData.btnContent = "复制报告";
         initialData.currState = 1;
-        // userList = [];
       }
     }
     function onUnfoldBtnClick() {
@@ -318,21 +303,6 @@ export default defineComponent({
   .pc-container {
     width: 1600px;
   }
-  .pc-header {
-    display: flex;
-    background-color: rgb(248, 248, 248);
-    height: 100px;
-    width: 1500px;
-    justify-content: space-between;
-    margin: 0 auto;
-  }
-  .asf-img {
-    width: 126px;
-    height: 100px;
-  }
-  .pc-nav {
-    display: flex;
-  }
   .pc-nav .pc-nav-option a {
     text-decoration: none;
     color: #9ca3af;
@@ -341,14 +311,6 @@ export default defineComponent({
     line-height: 100px;
     justify-content: center;
     padding: 30px;
-  }
-  .pc-nav-option:hover {
-    background-color: rgb(229, 229, 229);
-  }
-  .pc-nav-right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
   .pc-nav-right img {
     height: 30px;
@@ -359,13 +321,11 @@ export default defineComponent({
     font-size: 48px;
     display: block;
     padding-top: 60px;
-    margin-left: 50px;
   }
   .pc-introduce {
     padding-top: 9px;
     display: block;
     font-size: 24px;
-    margin-left: 50px;
   }
   .pc-input-box textarea {
     width: 950px;
@@ -384,7 +344,6 @@ export default defineComponent({
     display: flex;
     width: 1500px;
     justify-content: space-between;
-    margin: 0 auto;
     position: relative;
   }
   .pc-input-box .pc-details {
@@ -448,7 +407,7 @@ export default defineComponent({
     background-color: rgb(156, 163, 175);
     color: white;
     font-size: 16px;
-    margin-left: 900px;
+    margin-left: 850px;
   }
   .total-word-num {
     position: absolute;
@@ -479,22 +438,6 @@ export default defineComponent({
   }
   .mobile-container {
     width: 100%;
-  }
-  .mobile-container-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .mobile-container-header .asf-img {
-    width: 75px;
-    height: 75px;
-  }
-  .mobile-container-header .more-options-img {
-    width: 25px;
-    height: 25px;
-  }
-  .mobile-container-header .more-options-img:hover {
-    cursor: pointer;
   }
   .mobile-details {
     display: inline-block;
