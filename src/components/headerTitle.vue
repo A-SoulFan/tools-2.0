@@ -79,6 +79,9 @@ export default defineComponent({
   margin-bottom: 7.5px;
   color: #1f2937;
 }
+.title-area {
+  margin-top: 60px;
+}
 .title-area-sub {
   display: flex;
   justify-content: space-between;

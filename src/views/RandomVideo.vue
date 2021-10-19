@@ -19,9 +19,6 @@
     <div class="history-video-area">
       <div class="history-video-title-area">
         <div class="history-video-title">历史记录</div>
-        <!-- <div class="history-video-clear-button" @click="clearHistory">
-          清除历史
-        </div> -->
       </div>
       <div class="history-video">
         <div
@@ -81,6 +78,7 @@ export default defineComponent({
       const res = await proxy.$request("api/stroll/random");
       res.time = new Date().toLocaleString("chinese", { hour12: false });
       currentVideoIndex = 0;
+      res.play_url = "https:" + res.play_url;
       video.value = res;
       let tempObj = {
         title: video.value.title,
@@ -88,7 +86,7 @@ export default defineComponent({
           video.value.cover ||
           "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
         time: video.value.time,
-        play_url: "https:" + video.value.play_url,
+        play_url: video.value.play_url,
         bv: video.value.bv,
       };
       // 长度保持在二十条
@@ -108,11 +106,7 @@ export default defineComponent({
     const selectVideo = (item: videoObj) => {
       window.open("https://www.bilibili.com/video/" + item.bv);
     };
-    // TODO: 待做 清除历史有严重bug
-    // const clearHistory = () => {
-    //   localStorage.setItem("historyVideoList", JSON.stringify([]));
-    //   historyVideoList = [];
-    // };
+    // TODO: 待做 清除历史功能
     getRandomVideo();
     return {
       updateTime,
@@ -122,7 +116,6 @@ export default defineComponent({
       preVideo,
       currentVideoIndex,
       selectVideo,
-      // clearHistory,
     };
   },
 });
@@ -133,7 +126,6 @@ export default defineComponent({
   display: flex;
   margin-top: 23.5px;
   margin-bottom: 25px;
-  /* height: 30px; */
   align-items: center;
 }
 .icon-clock {
