@@ -1,9 +1,5 @@
 <!-- 今天溜什么-->
 <template>
-  <div class="block"></div>
-  <div class="block"></div>
-  <div class="block"></div>
-  <div class="block"></div>
   <div>
     <header-title
       Title="表情包"
@@ -33,59 +29,13 @@
   </div>
   <div class="block"></div>
   <div class="masonry" id="app-mains">
-    <div class="item">
-      <div class="card">
-        <div class="card-body">
-          <p class="card-text">long</p>
-        </div>
-      </div>
-    </div>
-    <div v-for="item in listone" :key="item.data">
-      <a> <img :src="item.img" /> </a>
-    </div>
-    <div class="item">
-      <div class="card">
-        <div class="card-body">
-          <img
-            class="img"
-            src="https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg"
-          />
-          <p class="card-text">This is a short card.</p>
-        </div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="card">
-        <div class="card-body">
-          <img class="img" src="../assets/icons/user.png" />
-          <p class="card-text">long</p>
-        </div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="card">
-        <div class="card-body">
-          <p class="card-text">This is a short card.</p>
-        </div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="card">
-        <div class="card-body">
-          <img
-            class="img"
-            src="https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg"
-          />
-          <p class="card-text">long</p>
-        </div>
-      </div>
-    </div>
-    <div class="item">
-      <div class="card">
-        <div class="card-body">
-          <p class="card-text">This is a short card.</p>
-        </div>
-      </div>
+    <div v-for="item in res" :key="item.id" class="item">
+      <img :src="'https:' + item.url" alt="加载错误" />
+      <span class="item2">
+        <button class="itembutton">
+          <img src="../assets/icons/coolicon.svg" class="cool" />
+        </button>
+      </span>
     </div>
   </div>
 </template>
@@ -93,33 +43,48 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import headerTitle from "../components/headerTitle.vue";
-
+import useCurrentInstance from "@/hooks/useCurrentInstance";
+export interface itemObj {
+  id: string;
+  url: string;
+  height: string;
+  width: string;
+}
 export default defineComponent({
   components: { headerTitle },
+
   setup() {
     const Title = "表情包";
     const subtitle = "你想要的表情包都在这里";
     let updateTime = ref("2021.8.26 15:00");
+    const res = ref<itemObj[]>([]);
+    const loading = ref(false);
+    // 获取列表
 
+    const { proxy } = useCurrentInstance();
+
+    const getItem = async () => {
+      res.value = await proxy.$request({
+        url: "https://tools.asoulfan.com/emoji/",
+        params: {
+          page: 1,
+          limit: 100,
+        },
+      });
+
+      loading.value = true;
+      loading.value = false;
+      console.log(proxy);
+    };
+    getItem();
     return {
       Title,
       subtitle,
       updateTime,
-      listone: [
-        { data: "1", img: require("../assets/icons/user.png") },
-        { data: "1", img: require("../assets/icons/user.png") },
-      ],
+      col: 4,
+      loading,
+      res,
     };
-  },
-  mounted() {
-    // 假设apiArr是我们发请求后端返回的数据，里面的imgTitle属性存储的是图片的名字
-    // 通过require关键字引入，会自动到指定路径下的文件中寻找对应的图片文件加载出来
-    this.listone = [
-      {
-        data: "1",
-        img: "../assets/icons/user.png",
-      },
-    ];
   },
 });
 </script>
@@ -204,8 +169,20 @@ export default defineComponent({
   width: 100%;
   break-inside: avoid;
   margin-bottom: 30px;
+  padding: 1px;
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid; /*防止断点*/
+  background: #ccc;
+  text-align: right;
+  border-radius: 3px/2.7px;
+  position: relative;
 }
 
+.item2 {
+  position: absoulte;
+  left: 90%;
+  top: 0%;
+}
 .item img {
   width: 100%;
 }
@@ -213,14 +190,24 @@ export default defineComponent({
 .item h2 {
   padding: 8px 0;
 }
-
+.itembutton {
+  width: 35px;
+  height: 35px;
+  background: #f8f8f8;
+  border: none;
+}
 .item P {
   color: #555;
+}
+
+.cool {
+  height: 75%;
+  text-align: center;
 }
 @media screen and (min-width: 1024px) and (max-width: 1439.98px) {
   .masonry {
     width: 100%;
-    columns: 3;
+    columns: 4;
     column-gap: 20px;
   }
 }
@@ -229,7 +216,7 @@ export default defineComponent({
 @media screen and (min-width: 768px) and (max-width: 1023.98px) {
   .masonry {
     width: 100%;
-    columns: 2;
+    columns: 3;
     column-gap: 20px;
   }
 }
