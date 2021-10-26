@@ -61,6 +61,9 @@
                 </p>
               </li>
             </ul>
+            <div class="not-found-hint" v-if="entries.length === 0">
+              暂无结果
+            </div>
           </div>
         </div>
       </div>
@@ -182,27 +185,39 @@ export default defineComponent({
     },
     // 获取当前分类下所有的词条
     async getEntries(cid: number) {
-      // 后端返回数据样例
       let content = await this.proxy.$request({
         url: "https://dict.asoulfan.com/api/v1/public/entries",
         params: {
           cid: cid,
         },
       });
-      let converter = new showdown.Converter();
-      content.forEach((value: Entry) => {
-        value.content = converter.makeHtml(value.content);
-      });
-      this.entries = content;
+      if (content.constructor == Array && content.length) {
+        let converter = new showdown.Converter();
+        content.forEach((value: Entry) => {
+          value.content = converter.makeHtml(value.content);
+        });
+        this.entries = content;
+      } else {
+        this.entries = [];
+      }
     },
     async onSearchBtnClicked() {
       if (!this.search.isBtnDisabled) {
-        this.entries = await this.proxy.$request({
+        let content = await this.proxy.$request({
           url: "https://dict.asoulfan.com/api/v1/public/search",
           params: {
             kwd: this.search.keyword,
           },
         });
+        if (content.constructor == Array && content.length) {
+          let converter = new showdown.Converter();
+          content.forEach((value: Entry) => {
+            value.content = converter.makeHtml(value.content);
+          });
+          this.entries = content;
+        } else {
+          this.entries = [];
+        }
         this.tab.active = [];
       }
     },
@@ -489,6 +504,13 @@ export default defineComponent({
                 }
               }
             }
+          }
+
+          .not-found-hint {
+            padding-top: 20px;
+            opacity: 0.5;
+            font-size: 20px;
+            text-align: center;
           }
         }
       }
