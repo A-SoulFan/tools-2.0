@@ -198,7 +198,7 @@ export default defineComponent({
     async onSearchBtnClicked() {
       if (!this.search.isBtnDisabled) {
         this.entries = await this.proxy.$request({
-          url: "http://127.0.0.1:3000/api/v1/public/search",
+          url: "https://dict.asoulfan.com/api/v1/public/search",
           params: {
             kwd: this.search.keyword,
           },
