@@ -15,6 +15,13 @@ module.exports = {
           "^/api": "/",
         },
       },
+      "/cfj": {
+        target: "https://tools.asoulfan.com/api",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/cfj": "/cfj",
+        },
+      },
     },
   },
 };

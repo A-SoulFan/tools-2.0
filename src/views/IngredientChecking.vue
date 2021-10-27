@@ -1,142 +1,85 @@
 <template>
-  <div class="ingredient">
+  <div>
     <headerTitle Title="成分姬" subTitle="帮助你快速分析用户成分"></headerTitle>
-    <div class="search-area">
-      <input
-        type="text"
-        class="search-input"
-        placeholder="请输入B站用户名或UID"
-      />
-      <div class="search-button">{{ buttonText }}</div>
-    </div>
-    <!-- 查询结果展示 -->
-    <div class="search-results-area">
-      <div class="search-results-header-area">
-        <div>TA关注的VUP有:</div>
-        <div class="search-results-header-button">
-          <img class="link-icon" src="../assets/icons/link-icon.svg" />
-          复制结果
-        </div>
-      </div>
-      <div class="serach-result-VupList">
-        <div class="Vup-item">
-          <img
-            src="../assets/icons/user.png"
-            alt=""
-            srcset=""
-            class="Vup-item-face"
+    <div class="introduce-phone">功能介绍</div>
+    <div class="ingredient">
+      <div style="flex-grow: 1">
+        <div class="search-area">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="请输入B站用户名或UID"
           />
-          <div class="Vup-name">mingzi</div>
-          <div class="Vup-describe">
-            描ddasadsdsdsdsdsdsdsdsdsdsdsdsdsdsdasasdasdasddasdsdsdsdsds述
+          <div class="search-button">{{ buttonText }}</div>
+        </div>
+
+        <!-- 查询结果展示 -->
+        <div class="search-results-area">
+          <div class="search-results-header-area">
+            <div>TA关注的VUP有:</div>
+            <div class="search-results-header-button">
+              <img class="link-icon" src="../assets/icons/link-icon.svg" />
+              复制结果
+            </div>
           </div>
-          <div class="divider"></div>
-          <div class="Vup-describe">
-            个人签名个人签名个人签名个人签名个人签名个人签名个人签名个人签名个人签名个人签名个人签名个人签名个人签名个人签名个人签名个人签名个人签名个人签名
+          <div class="serach-result-VupList">
+            <div class="Vup-item" v-for="item in vupList" :key="item.vupUid">
+              <img :src="item.vupFace" alt="" srcset="" class="Vup-item-face" />
+              <div class="Vup-name">{{ item.vupName }}</div>
+              <div class="Vup-describe">
+                {{ item.officalVerify }}
+              </div>
+              <div class="divider"></div>
+              <div class="Vup-sign">
+                {{ item.vupSign }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <div class="introduce-pc">功能介绍</div>
     </div>
   </div>
 </template>
 
-<script>
-import { reactive, defineComponent } from "vue";
-import IngredientCheckingResult from "../components/IngredientCheckingResult";
+<script lang="ts">
+import { defineComponent, ref } from "vue";
 import headerTitle from "../components/headerTitle.vue";
+import useCurrentInstance from "@/hooks/useCurrentInstance";
 export default defineComponent({
   components: { headerTitle },
   setup() {
-    let contents = [
-      {
-        span1: "比对库内容范围:",
-        span2: "B站动态,视频评论区（仅限A-Soul的六个官方账号）",
-      },
-      {
-        span1: "比对库时间范围:",
-        span2: "2020/11/23 21:18:26 至 2021/08/27 11:58:39",
-      },
-      {
-        span1: "参考文献:",
-        span2: "[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学",
-      },
-    ];
-    let userList = [
-      {
-        username: "乃琳Queen",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "喜欢听你说，开心和不开心的，都告诉我吧~",
-        pictureUrl: "/img/link.473ec6ef.png",
-      },
-      {
-        username: "嘉然今天吃什么",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "这里是嘉然！别看我小小的，我超能吃还超可爱的哦~",
-        pictureUrl: "/img/link.473ec6ef.png",
-      },
-      {
-        username: "珈乐Carol",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "嘘，请听我为你歌唱……",
-        pictureUrl: "/img/link.473ec6ef.png",
-      },
-      {
-        username: "贝拉kira",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "元气满满的A-SOUL舞担参上~目标TOP IDOL，一起加油！",
-        pictureUrl: "/img/link.473ec6ef.png",
-      },
-      {
-        username: "向晚大魔王",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "关注...也不是不可以啦！",
-        pictureUrl: "/img/link.473ec6ef.png",
-      },
-      {
-        username: "向晚大魔王",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "关注...也不是不可以啦！",
-        pictureUrl: "/img/link.473ec6ef.png",
-      },
-      {
-        username: "怪味毛玉",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "关注...也不是不可以啦！",
-        pictureUrl: "/img/link.473ec6ef.png",
-      },
-    ];
-    let buttonText = "查询结果";
-    let initialData = reactive({
-      maxLength: 1000,
-      foldBtnContent: "详情",
-      btnContent: "查询结果",
-      contentLength: 0, //textarea中的字数
-      totalIngredientCheckingRate: 0, //总复制比
-    });
-    let flags = reactive({
-      isSearched: false,
-      isActive: false, //按钮是否是激活态
-      foldBtnState: false, //展开按钮的状态
-    });
+    const { proxy } = useCurrentInstance();
+    let vupList = ref([]);
+    let buttonText = ref("查询结果");
+    const getIngredient = async () => {
+      try {
+        const res = await proxy.$request({
+          url: "cfj/",
+          params: {
+            name: "贝拉Kira",
+          },
+        });
+        vupList.value = res.list.map((item) => {
+          return {
+            vupName: item.uname,
+            officalVerify: item.official_verify.desc,
+            vupSign: item.sign,
+            vupUid: item.mid,
+            vupFace: item.face,
+          };
+        });
+        console.log(vupList);
 
-    //搜索按钮功能
-    function search() {
-      if (initialData.contentLength != 0) {
-        flags.isSearched = true; //只要点击搜索并且内容不为空
+        // debugger;
+      } catch (error) {
+        console.log(error);
       }
-    }
-    //控制查重条长度
-    function lineProgress() {
-      return `width:${initialData.totalIngredientCheckingRate}%`;
-    }
-
+    };
+    getIngredient();
     return {
-      contents,
-      userList,
-      flags,
-      initialData,
-      search,
-      lineProgress,
+      getIngredient,
+      vupList,
       buttonText,
     };
   },
@@ -145,15 +88,17 @@ export default defineComponent({
 
 <style scoped lang="less">
 .ingredient {
+  display: flex;
+  padding-top: 30px;
+  width: 100%;
   .search-area {
-    margin-top: 30px;
     display: flex;
     height: 50px;
-    font-size: 18px;
+    font-size: 17px;
     .search-input {
       border: none;
       width: 100%;
-      height: calc(100%-2px);
+      // height: calc(100%-2px);
       padding-left: 10px;
       border: 1px solid #d1d5db;
       border-radius: 2px 0 0 2px;
@@ -196,13 +141,16 @@ export default defineComponent({
     }
     .serach-result-VupList {
       display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      justify-content: space-between;
+      grid-gap: 80px 50px;
+      padding-top: 100px;
       .Vup-item {
         background-color: #f8f8f8;
-        width: 180px;
-        height: 180px;
         padding: 0 10px 20px 10px;
         position: relative;
-        margin-top: 100px;
+        // margin-top: 100px;
+        max-height: 200px;
         display: flex;
         flex-direction: column;
         border-radius: 2px;
@@ -211,9 +159,10 @@ export default defineComponent({
           position: absolute;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 100px;
-          height: 100px;
+          width: 90px;
+          height: 90px;
           border-radius: 50%;
+          border: 1px #d1d5db solid;
         }
         .Vup-name {
           margin-top: 55px;
@@ -234,12 +183,45 @@ export default defineComponent({
         }
         .divider {
           align-self: center;
-          width: 140px;
+          width: 80%;
           border-top: 1px #4b5563 solid;
           margin: 10px 0;
         }
+        .Vup-sign {
+          color: #9ca3af;
+          text-overflow: -o-ellipsis-lastline;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          line-clamp: 3;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          word-break: break-all;
+        }
       }
     }
+  }
+  .introduce-pc {
+    background-color: #f3f4f6;
+    width: 300px;
+    min-width: 200px;
+    height: 280px;
+    margin-left: 20px;
+  }
+}
+.introduce-phone {
+  display: none;
+}
+@media only screen and (max-width: 768px) {
+  .introduce-pc {
+    display: none;
+  }
+  .introduce-phone {
+    display: block;
+    background-color: #f3f4f6;
+    padding: 20px;
+    margin-top: 30px;
+    height: 180px;
   }
 }
 </style>
