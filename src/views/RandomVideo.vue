@@ -106,7 +106,6 @@ export default defineComponent({
     const selectVideo = (item: videoObj) => {
       window.open("https://www.bilibili.com/video/" + item.bv);
     };
-    // TODO: 待做 清除历史功能
     getRandomVideo();
     return {
       updateTime,

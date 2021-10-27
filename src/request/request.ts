@@ -17,8 +17,6 @@ request.interceptors.response.use(
 
     const { data, code, message } = response.data;
 
-    // console.log(data, code,message);
-    // debugger
     if (code == "0") {
       return data;
     } else {
