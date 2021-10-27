@@ -46,7 +46,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const arrowRef: any = ref();
-    const buttonText = ref<string>("");
+    const buttonText = ref<string>("详情");
     if (props.buttonType === "return") {
       buttonText.value = "返回";
     } else if (props.buttonType === "arrow") {
