@@ -50,27 +50,37 @@ export default defineComponent({
   components: { headerTitle },
   setup() {
     const { proxy } = useCurrentInstance();
+
     let vupList = ref([]);
     let buttonText = ref("查询结果");
     const getIngredient = async () => {
       try {
+        proxy.$loading.show("12321312");
         const res = await proxy.$request({
           url: "cfj/",
           params: {
             name: "贝拉Kira",
           },
         });
-        vupList.value = res.list.map((item) => {
-          return {
-            vupName: item.uname,
-            officalVerify: item.official_verify.desc,
-            vupSign: item.sign,
-            vupUid: item.mid,
-            vupFace: item.face,
-          };
-        });
+        vupList.value = res.list.map(
+          (item: {
+            uname: string;
+            official_verify?: any;
+            sign: string;
+            mid: string;
+            face: string;
+          }) => {
+            return {
+              vupName: item.uname,
+              officalVerify: item.official_verify.desc,
+              vupSign: item.sign,
+              vupUid: item.mid,
+              vupFace: item.face,
+            };
+          }
+        );
         console.log(vupList);
-
+        proxy.$loading.hide();
         // debugger;
       } catch (error) {
         console.log(error);
