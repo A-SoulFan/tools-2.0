@@ -35,6 +35,7 @@ const request: any = async ({
         app.config.globalProperties.$loading.hide();
         return result.data.data;
       } else {
+        // TODO: 错误浮窗
         console.log(result.data.message);
       }
     }
