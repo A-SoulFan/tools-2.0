@@ -35,6 +35,7 @@
             class="search-input"
             placeholder="请输入B站用户名或UID"
             v-model="searchText"
+            @keyup.enter="getIngredient()"
           />
           <div
             class="search-button"
@@ -232,6 +233,7 @@ export default defineComponent({
       background-color: #4b5563;
       color: #f1f2f3;
       border-radius: 0 2px 2px 0;
+      cursor: pointer;
     }
   }
 
