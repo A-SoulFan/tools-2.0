@@ -7,7 +7,7 @@
       <div class="update-time-text">{{ "最近更新" + updateTime }}</div>
     </div>
     <div class="iframe-box">
-      <iframe :src="video.play_url"></iframe>
+      <iframe :src="iframeUrl"></iframe>
       <div class="iframe-box-button-area">
         <div class="pre-button-area">
           <img class="pre-button-img" src="../assets/icons/cube.svg" />
@@ -62,58 +62,52 @@ export default defineComponent({
     let historyVideoList: any[] = JSON.parse(
       localStorage.getItem("historyVideoList") || JSON.stringify([])
     );
-    const video = ref({
-      title: String,
-      cover: String,
-      time: String,
-      play_url: String,
-      bv: String,
-    });
+    let iframeUrl = ref("");
     // TODO: 未拿取
     let updateTime = ref("2021.8.26 15:00");
     let currentVideoIndex = 0;
     const { proxy } = useCurrentInstance();
 
     const getRandomVideo = async () => {
-      const res = await proxy.$request("api/stroll/random");
+      const res = await proxy.$request({
+        url: "/api/stroll/random",
+      });
+      // debugger;
       res.time = new Date().toLocaleString("chinese", { hour12: false });
       currentVideoIndex = 0;
       res.play_url = "https:" + res.play_url;
-      video.value = res;
-      let tempObj = {
-        title: video.value.title,
-        imgsrc:
-          video.value.cover ||
-          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
-        time: video.value.time,
-        play_url: video.value.play_url,
-        bv: video.value.bv,
-      };
+      iframeUrl.value = res.play_url;
       // 长度保持在二十条
       if (historyVideoList.length >= 20) {
         historyVideoList.pop();
       }
-      historyVideoList.unshift(tempObj);
+      historyVideoList.unshift({
+        title: res.title,
+        imgsrc: res.cover || "",
+        time: res.time,
+        play_url: res.play_url,
+        bv: res.bv,
+      });
       localStorage.setItem(
         "historyVideoList",
         JSON.stringify(historyVideoList)
       );
     };
-    const preVideo = () => {
+    const preVideo = (): void => {
       currentVideoIndex++;
-      video.value = historyVideoList[currentVideoIndex];
+      iframeUrl.value = historyVideoList[currentVideoIndex].play_url;
     };
-    const selectVideo = (item: videoObj) => {
+    const selectVideo = (item: videoObj): void => {
       window.open("https://www.bilibili.com/video/" + item.bv);
     };
     getRandomVideo();
     return {
       updateTime,
       historyVideoList,
-      video,
+      currentVideoIndex,
+      iframeUrl,
       getRandomVideo,
       preVideo,
-      currentVideoIndex,
       selectVideo,
     };
   },
