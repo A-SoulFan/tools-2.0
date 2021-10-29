@@ -55,7 +55,6 @@ export default defineComponent({
     let buttonText = ref("查询结果");
     const getIngredient = async () => {
       try {
-        proxy.$loading.show("12321312");
         const res = await proxy.$request({
           url: "cfj/",
           params: {
@@ -79,8 +78,6 @@ export default defineComponent({
             };
           }
         );
-        console.log(vupList);
-        proxy.$loading.hide();
         // debugger;
       } catch (error) {
         console.log(error);

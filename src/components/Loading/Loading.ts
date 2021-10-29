@@ -1,10 +1,10 @@
 import { createApp, reactive } from "vue";
 
-import Loading from "@/components/Loading.vue";
+import Loading from "@/components/Loading/Loading.vue";
 
 const msg = reactive({
   loadingShow: false,
-  title: "拼命加载中...",
+  title: "",
 });
 // let loadingShow = true;
 const $loading = createApp(Loading, { msg }).mount(
@@ -22,14 +22,11 @@ const load = {
   hide() {
     // 控制loading隐藏的方法
     msg.loadingShow = false;
-    console.log(msg.loadingShow);
   },
 };
 
 export default {
   install(app: any): void {
-    // console.log(app);
-    // Vue.prototype.$http = axios
     app.config.globalProperties.$loading = load;
   },
 };
