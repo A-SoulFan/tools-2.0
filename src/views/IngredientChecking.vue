@@ -14,16 +14,20 @@
           为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
         </div>
         <div class="introduce-text-content-section">
-          毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅), 所以工具用都用了，速度去b站给
-          <span
+          毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
+          所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
+        </div>
+        <div class="introduce-Asoul">
+          <div
             v-for="item in Asoul"
             :key="item.BzhanUid"
             @click="toBilibiliSpace(item.BzhanUid)"
             :style="'color:' + item.color"
-            class="introduce-text-content-name"
+            class="introduce-Asoul-item"
           >
-            {{ item.name }} </span
-          >点点关注(♡ ὅ ◡ ὅ )ʃ♡
+            <img :src="item.face" class="introduce-Asoul-face" />
+            <div class="introduce-Asoul-name">{{ item.name }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -90,16 +94,20 @@
             为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
           </div>
           <div class="introduce-text-content-section">
-            毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅), 所以工具用都用了，速度去b站给
-            <span
+            毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
+            所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
+          </div>
+          <div class="introduce-Asoul">
+            <div
               v-for="item in Asoul"
               :key="item.BzhanUid"
               @click="toBilibiliSpace(item.BzhanUid)"
               :style="'color:' + item.color"
-              class="introduce-text-content-name"
+              class="introduce-Asoul-item"
             >
-              {{ item.name }} </span
-            >点点关注(♡ ὅ ◡ ὅ )ʃ♡
+              <img :src="item.face" class="introduce-Asoul-face" />
+              <div class="introduce-Asoul-name">{{ item.name }}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -111,6 +119,7 @@
 import { defineComponent, ref } from "vue";
 import headerTitle from "../components/headerTitle.vue";
 import useCurrentInstance from "@/hooks/useCurrentInstance";
+import copyToClipBoard from "@/hooks/useCopyToClipBoard";
 export default defineComponent({
   components: { headerTitle },
   setup() {
@@ -120,31 +129,37 @@ export default defineComponent({
         name: "向晚大魔王",
         color: "#9ac8e2",
         BzhanUid: 672346917,
+        face: "https://i0.hdslb.com/bfs/face/566078c52b408571d8ae5e3bcdf57b2283024c27.jpg@256w_256h_1o.webp",
       },
       {
         name: "贝拉Kira",
         color: "#db7d74",
         BzhanUid: 672353429,
+        face: "https://i2.hdslb.com/bfs/face/668af440f8a8065743d3fa79cfa8f017905d0065.jpg@256w_256h_1o.webp",
       },
       {
         name: "珈乐Carol",
         color: "#b8a6d9",
         BzhanUid: 351609538,
+        face: "https://i2.hdslb.com/bfs/face/a7fea00016a8d3ffb015b6ed8647cc3ed89cbc63.jpg@256w_256h_1o.webp",
       },
       {
         name: "嘉然今天吃什么",
         color: "#e799b0",
         BzhanUid: 672328094,
+        face: "https://i2.hdslb.com/bfs/face/d399d6f5cf7943a996ae96999ba3e6ae2a2988de.jpg@256w_256h_1o.webp",
       },
       {
         name: "乃琳Queen",
         color: "#576690",
         BzhanUid: 672342685,
+        face: "https://i1.hdslb.com/bfs/face/8895c87082beba1355ea4bc7f91f2786ef49e354.jpg@256w_256h_1o.webp",
       },
     ];
     let vupList = ref([]);
     let searchText = ref("");
     let isVuplistEmpty = ref(false);
+    let saveSearchText = "";
     const getIngredient = async () => {
       try {
         if (searchText.value === "") {
@@ -156,6 +171,7 @@ export default defineComponent({
             name: searchText.value,
           },
         });
+        saveSearchText = searchText.value;
         console.log(res, "res");
         if (res.list && res.list.length === 0) {
           isVuplistEmpty.value = true;
@@ -184,6 +200,18 @@ export default defineComponent({
       }
     };
     const copySearchResult = () => {
+      const vupName = vupList.value
+        .map((item: any) => {
+          return `@${item.vupName}`;
+        })
+        .join(",");
+      // console.log(vupName, "vupName");
+      // console.log(vupList.value);
+      // console.log(saveSearchText);
+      const copyTime = new Date().toLocaleString("chinese", { hour12: false });
+      copyToClipBoard(
+        `@${saveSearchText} 关注的VUP有：\r\n${vupName}\r\n查询时间：${copyTime}\r\n数据来源：@ProJectASF`
+      );
       console.log("copySearchResult");
     };
     // getIngredient();
@@ -328,7 +356,7 @@ export default defineComponent({
   }
   .introduce-pc {
     background-color: #f3f4f6;
-    width: 300px;
+    width: 400px;
     min-width: 200px;
     height: 280px;
     margin-left: 20px;
@@ -352,7 +380,25 @@ export default defineComponent({
   margin: 0 10px;
   cursor: pointer;
   text-decoration: underline;
-  // display: block;
+}
+.introduce-Asoul {
+  display: flex;
+  .introduce-Asoul-item {
+    margin: 0 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    word-break: keep-all;
+  }
+  .introduce-Asoul-face {
+    width: 67px;
+    height: 67px;
+    border-radius: 50%;
+  }
+  .introduce-Asoul-name {
+    font-size: 12px;
+  }
 }
 .introduce-phone {
   display: none;
