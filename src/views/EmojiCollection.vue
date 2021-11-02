@@ -169,19 +169,16 @@ export default defineComponent({
   width: 100%;
   break-inside: avoid;
   margin-bottom: 30px;
-  padding: 1px;
   -webkit-column-break-inside: avoid;
   break-inside: avoid; /*防止断点*/
-  background: #ccc;
   text-align: right;
-  border-radius: 3px/2.7px;
   position: relative;
 }
 
 .item2 {
-  position: absoulte;
-  left: 90%;
-  top: 0%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 .item img {
   width: 100%;
