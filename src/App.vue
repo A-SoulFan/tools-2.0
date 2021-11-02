@@ -50,7 +50,7 @@ export default defineComponent({
 }
 .route-view {
   padding: 0 5.83vw;
-  max-width: 1180px;
+  max-width: 1440px;
   margin: auto;
 }
 /* 待修复后 删除  */

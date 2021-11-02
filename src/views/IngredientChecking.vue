@@ -376,20 +376,21 @@ export default defineComponent({
   }
 }
 .introduce-text-content-name {
-  font-size: 16px;
   margin: 0 10px;
   cursor: pointer;
+  color: #666;
   text-decoration: underline;
 }
 .introduce-Asoul {
   display: flex;
   .introduce-Asoul-item {
-    margin: 0 5px;
+    margin: 10px 5px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     word-break: keep-all;
+    cursor: pointer;
   }
   .introduce-Asoul-face {
     width: 67px;
@@ -414,6 +415,10 @@ export default defineComponent({
     padding: 20px;
     margin-top: 30px;
     min-height: 180px;
+  }
+  .introduce-Asoul {
+    flex-wrap: wrap;
+    justify-content: center;
   }
   .serach-result-VupList {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;

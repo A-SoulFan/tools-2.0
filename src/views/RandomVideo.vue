@@ -28,7 +28,7 @@
           @click="selectVideo(item)"
         >
           <div class="video-cover">
-            <img :src="item.imgsrc" crossorigin="anonymous" />
+            <img :src="item.imgsrc" />
           </div>
 
           <div class="video-info">
@@ -134,7 +134,6 @@ export default defineComponent({
 .iframe-box {
   display: flex;
   flex-direction: column;
-  max-width: 1200px;
   margin: auto;
 }
 .iframe-box > iframe {
@@ -180,7 +179,6 @@ export default defineComponent({
 /* iframe区域 */
 /* 历史切片区域 */
 .history-video-area {
-  max-width: 1200px;
   margin: auto;
   .history-video-title-area {
     display: flex;
