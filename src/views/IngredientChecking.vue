@@ -293,7 +293,7 @@ export default defineComponent({
     }
     .serach-result-VupList {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       justify-content: space-between;
       grid-gap: 80px 50px;
       padding-top: 100px;
@@ -312,8 +312,8 @@ export default defineComponent({
           position: absolute;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 90px;
-          height: 90px;
+          width: 85px;
+          height: 85px;
           border-radius: 50%;
           border: 1px #d1d5db solid;
         }
