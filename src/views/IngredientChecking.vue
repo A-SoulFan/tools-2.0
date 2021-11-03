@@ -1,7 +1,11 @@
 <template>
   <div>
-    <headerTitle Title="成分姬" subTitle="帮助你快速分析用户成分"></headerTitle>
-    <div class="introduce-phone">
+    <headerTitle
+      Title="成分姬"
+      subTitle="帮助你快速分析用户成分"
+      @buttonClick="changeIntroduceShow()"
+    ></headerTitle>
+    <div v-show="isShowIntroduce" class="introduce-phone">
       <div class="introduce-title">功能介绍</div>
       <div class="introduce-text-content">
         <div class="introduce-text-content-section">
@@ -159,6 +163,7 @@ export default defineComponent({
     let vupList = ref([]);
     let searchText = ref("");
     let isVuplistEmpty = ref(false);
+    const isShowIntroduce = ref(true);
     let saveSearchText = "";
     const getIngredient = async () => {
       try {
@@ -214,6 +219,9 @@ export default defineComponent({
       );
       console.log("copySearchResult");
     };
+    const changeIntroduceShow = () => {
+      isShowIntroduce.value = !isShowIntroduce.value;
+    };
     // getIngredient();
     const toBilibiliSpace = (uid: number) => {
       window.open("https://space.bilibili.com/" + uid);
@@ -226,6 +234,8 @@ export default defineComponent({
       toBilibiliSpace,
       copySearchResult,
       isVuplistEmpty,
+      changeIntroduceShow,
+      isShowIntroduce,
     };
   },
 });

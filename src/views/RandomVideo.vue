@@ -1,7 +1,11 @@
 <!-- 今天溜什么-->
 <template>
   <div>
-    <header-title Title="今天溜什么" subTitle="相见即是缘份"></header-title>
+    <header-title
+      Title="今天溜什么"
+      subTitle="相见即是缘份"
+      needButton="{{false}}"
+    ></header-title>
     <div class="update-time-area">
       <img class="icon-clock" src="../assets/icons/clock.svg" />
       <div class="update-time-text">{{ "最近更新" + updateTime }}</div>

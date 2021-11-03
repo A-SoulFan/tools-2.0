@@ -6,21 +6,14 @@
       <div class="sub-title">
         {{ subTitle }}
       </div>
-      <div class="button-area" @click="handleClick" v-if="buttonType !== ''">
+      <div class="button-area" @click="handleClick" v-if="needButton">
         <div class="button-text">
           {{ buttonText }}
         </div>
         <img
-          ref="arrowRef"
-          v-if="buttonType === 'arrow'"
           class="button-icon"
+          :class="isTopIcon ? '' : 'rotate-top'"
           src="../assets/icons/arrow.svg"
-        />
-
-        <img
-          v-if="buttonType === 'return'"
-          class="button-icon"
-          src="../assets/icons/return.svg"
         />
       </div>
     </div>
@@ -39,35 +32,29 @@ export default defineComponent({
     subTitle: {
       type: String,
     },
-    buttonType: {
-      type: String,
-      default: "",
+    needButton: {
+      type: Boolean,
+      default: true,
     },
   },
-  setup(props, { emit }) {
-    const arrowRef: any = ref();
-    const buttonText = ref<string>("详情");
-    if (props.buttonType === "return") {
-      buttonText.value = "返回";
-    } else if (props.buttonType === "arrow") {
-      buttonText.value = "详情";
-    }
+  setup(prop, context) {
+    console.log(prop);
+    const buttonText = ref<string>("收起");
+    const isTopIcon = ref(false);
     const handleClick = () => {
-      emit("buttonClick");
-      if (props.buttonType === "arrow") {
-        if (arrowRef.value.style.transform === "") {
-          arrowRef.value.style.transform = "rotateX(180deg)";
-          buttonText.value = "收起";
-        } else {
-          arrowRef.value.style.transform = "";
-          buttonText.value = "详情";
-        }
+      context.emit("buttonClick");
+      // false
+      if (!isTopIcon.value) {
+        buttonText.value = "详情";
+      } else {
+        buttonText.value = "收起";
       }
+      isTopIcon.value = !isTopIcon.value;
     };
     return {
       handleClick,
-      arrowRef,
       buttonText,
+      isTopIcon,
     };
   },
 });
@@ -91,18 +78,29 @@ export default defineComponent({
   color: #374151;
 }
 .button-area {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: 12.41vw;
-  cursor: pointer;
-  .button-text {
-    font-size: 14px;
-    margin-right: 3px;
-  }
-  .button-icon {
-    width: 15px;
-    height: 15px;
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  .button-area {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    cursor: pointer;
+    .button-text {
+      font-size: 14px;
+      margin-right: 3px;
+    }
+    .button-icon {
+      width: 15px;
+      height: 15px;
+      transform: rotate(0);
+      transition: linear 0.2s;
+    }
+    .rotate-top {
+      transform: rotate(180deg) !important;
+      transition: linear 0.2s;
+    }
   }
 }
 </style>
