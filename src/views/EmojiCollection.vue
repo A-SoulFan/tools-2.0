@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import headerTitle from "../components/headerTitle.vue";
+import headerTitle from "../components/HeaderTitle.vue";
 import useCurrentInstance from "@/hooks/useCurrentInstance";
 export interface itemObj {
   id: string;
