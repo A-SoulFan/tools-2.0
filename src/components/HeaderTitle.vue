@@ -39,8 +39,8 @@ export default defineComponent({
   },
   setup(prop, context) {
     console.log(prop);
-    const buttonText = ref<string>("收起");
-    const isTopIcon = ref(false);
+    const buttonText = ref<string>("详情");
+    const isTopIcon = ref(true);
     const handleClick = () => {
       context.emit("buttonClick");
       // false
