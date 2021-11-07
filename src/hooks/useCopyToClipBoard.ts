@@ -1,3 +1,4 @@
+// 辅助到剪切板
 const copyToClipBoard = (text: string): void => {
   const copyElement = document.body.appendChild(
     document.createElement("textarea")
@@ -7,9 +8,6 @@ const copyToClipBoard = (text: string): void => {
   copyElement.setAttribute("readonly", "");
   copyElement.value = text;
   copyElement.select();
-  console.log(text);
-
-  debugger;
   document.execCommand("Copy");
   copyElement.parentElement?.removeChild(copyElement);
 };

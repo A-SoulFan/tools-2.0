@@ -67,10 +67,10 @@
               复制结果
             </div>
           </div>
-          <div v-if="isVuplistEmpty" class="serach-result-tip">
+          <div v-if="isVuplistEmpty" class="search-result-tip">
             该用户没有关注的Vup捏~！
           </div>
-          <div class="serach-result-VupList">
+          <div class="search-result-VupList">
             <div class="Vup-item" v-for="item in vupList" :key="item.vupUid">
               <img :src="item.vupFace" alt="" srcset="" class="Vup-item-face" />
               <div class="Vup-name">{{ item.vupName }}</div>
@@ -121,7 +121,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import headerTitle from "../components/HeaderTitle.vue";
+import headerTitle from "@/components/HeaderTitle.vue";
 import useCurrentInstance from "@/hooks/useCurrentInstance";
 import copyToClipBoard from "@/hooks/useCopyToClipBoard";
 export default defineComponent({
@@ -210,9 +210,6 @@ export default defineComponent({
           return `@${item.vupName}`;
         })
         .join(",");
-      // console.log(vupName, "vupName");
-      // console.log(vupList.value);
-      // console.log(saveSearchText);
       const copyTime = new Date().toLocaleString("chinese", { hour12: false });
       copyToClipBoard(
         `@${saveSearchText} 关注的VUP有：\r\n${vupName}\r\n查询时间：${copyTime}\r\n数据来源：@ProJectASF`
@@ -295,13 +292,13 @@ export default defineComponent({
         }
       }
     }
-    .serach-result-tip {
+    .search-result-tip {
       margin-top: 50px;
       font-size: 20px;
       color: #aa5555;
       text-align: center;
     }
-    .serach-result-VupList {
+    .search-result-VupList {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       justify-content: space-between;
@@ -430,7 +427,7 @@ export default defineComponent({
     flex-wrap: wrap;
     justify-content: center;
   }
-  .serach-result-VupList {
+  .search-result-VupList {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
   }
 }
