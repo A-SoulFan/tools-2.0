@@ -36,7 +36,7 @@
       </div>
     </div>
     <div class="ingredient">
-      <div style="flex-grow: 1">
+      <div class="search-and-results">
         <div class="search-area">
           <input
             type="text"
@@ -56,13 +56,10 @@
           </div>
         </div>
         <!-- 查询结果展示 -->
-        <div class="search-results-area">
-          <div class="search-results-header-area">
+        <div class="results-area">
+          <div class="results-header-area">
             <div>TA关注的VUP有:</div>
-            <div
-              class="search-results-header-button"
-              @click="copySearchResult()"
-            >
+            <div class="results-header-button" @click="copySearchResult()">
               <img class="link-icon" src="../assets/icons/link-icon.svg" />
               复制结果
             </div>
@@ -243,6 +240,9 @@ export default defineComponent({
   display: flex;
   padding-top: 30px;
   width: 100%;
+  .search-and-results {
+    flex: 1;
+  }
   .search-area {
     display: flex;
     height: 50px;
@@ -272,14 +272,14 @@ export default defineComponent({
     }
   }
 
-  .search-results-area {
-    .search-results-header-area {
+  .results-area {
+    .results-header-area {
       margin-top: 30px;
       display: flex;
       justify-content: space-between;
       width: 100%;
       font-size: 20px;
-      .search-results-header-button {
+      .results-header-button {
         display: flex;
         align-items: center;
         justify-content: center;
