@@ -22,6 +22,13 @@ module.exports = {
           "^/cfj": "/cfj",
         },
       },
+      "/dict": {
+        target: "https://dict.asoulfan.com/api",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/dict": "/",
+        },
+      },
     },
   },
 };
