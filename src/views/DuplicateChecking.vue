@@ -8,11 +8,11 @@
     <div class="introduce-title">功能介绍</div>
     <div
       class="introduce-text-content"
-      v-for="(item, index) in contents"
+      v-for="(item, index) in contentList"
       :key="index"
     >
       <div>{{ item.title }}</div>
-      <div>{{ item.span2 }}</div>
+      <div>{{ item.content }}</div>
     </div>
     <div class="introduce-footer">
       <div
@@ -98,11 +98,11 @@
         <div class="introduce-title">功能介绍</div>
         <div
           class="introduce-text-content"
-          v-for="(item, index) in contents"
+          v-for="(item, index) in contentList"
           :key="index"
         >
           <div>{{ item.title }}</div>
-          <div>{{ item.span2 }}</div>
+          <div>{{ item.content }}</div>
         </div>
         <div class="introduce-footer">
           <div
@@ -131,18 +131,18 @@ export default defineComponent({
   name: "DuplicateChecking",
   components: { headerTitle },
   setup() {
-    let contents = [
+    const contentList = [
       {
         title: "比对库内容范围:",
-        span2: "B站动态,视频评论区（仅限A-Soul的六个官方账号）",
+        content: "B站动态,视频评论区（仅限A-Soul的六个官方账号）",
       },
       {
         title: "比对库时间范围:",
-        span2: "2020/11/23 21:18:26 至 2021/08/27 11:58:39",
+        content: "2020/11/23 21:18:26 至 2021/08/27 11:58:39",
       },
       {
         title: "参考文献:",
-        span2: "[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学",
+        content: "[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学",
       },
     ];
     let searchData = reactive({
@@ -202,7 +202,7 @@ export default defineComponent({
       toTargetUrl,
       changeIntroduceShow,
       DuplicateCheckingList,
-      contents,
+      contentList,
       isShowIntroduce,
       searchData,
     };
