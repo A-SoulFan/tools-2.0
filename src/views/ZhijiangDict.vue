@@ -2,8 +2,14 @@
   <headerTitle
     Title="枝江方言词典"
     subTitle="你想了解的词条都在这"
-    :needButton="false"
+    @buttonClick="changeIntroduceShow()"
   ></headerTitle>
+  <div class="introduce-phone" v-show="isShowIntroduce">
+    <div class="introduce-title">功能介绍</div>
+    <div class="introduce-text-content">
+      正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文
+    </div>
+  </div>
   <div class="zhijiang-dict">
     <div class="search-and-results">
       <div class="search-area">
@@ -82,10 +88,14 @@
         </div>
       </div>
     </div>
-    <div class="introduce-pc">
-      <div class="introduce-title">功能介绍</div>
-      <div class="introduce-text-content">
-        正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文
+    <div>
+      <div>
+        <div class="introduce-pc">
+          <div class="introduce-title">功能介绍</div>
+          <div class="introduce-text-content">
+            正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -101,6 +111,7 @@ export default defineComponent({
   setup() {
     const { proxy } = useCurrentInstance();
     const searchText = ref("");
+    const isShowIntroduce = ref(false);
     const data = reactive({
       categoriesList: [] as any[],
       categoriesKey: 0,
@@ -111,7 +122,14 @@ export default defineComponent({
     });
     let result = [] as any[];
     const searchWords = async () => {
-      console.log("searchWords");
+      const res = await proxy.$request({
+        url: "dict/v1/public/search",
+        method: "get",
+        params: {
+          kwd: searchText.value,
+        },
+      });
+      console.log(res);
     };
     const getCategoriesList = async () => {
       result = await proxy.$request({
@@ -168,13 +186,18 @@ export default defineComponent({
       });
     };
 
+    const changeIntroduceShow = () => {
+      isShowIntroduce.value = !isShowIntroduce.value;
+    };
     getCategoriesList();
     return {
       searchWords,
       setChildCategoriesList,
       getContentList,
+      changeIntroduceShow,
       searchText,
       data,
+      isShowIntroduce,
     };
   },
 });
@@ -184,6 +207,7 @@ export default defineComponent({
 .zhijiang-dict {
   display: flex;
   padding-top: 30px;
+  width: 100%;
   .search-and-results {
     flex: 1;
   }
@@ -195,7 +219,6 @@ export default defineComponent({
     .search-input {
       border: none;
       width: 100%;
-      // height: calc(100%-2px);
       padding-left: 10px;
       border: 1px solid #d1d5db;
       border-radius: 2px 0 0 2px;
@@ -218,12 +241,13 @@ export default defineComponent({
   }
 
   .result-area {
+    margin-bottom: 20px;
     .result-categories {
       display: flex;
       justify-content: flex-start;
       margin-bottom: 20px;
       overflow-x: scroll;
-      max-width: calc(88.34vw - 460px); //APP的padding: 0 5.83vw
+      max-width: 53.96vw; //APP的padding: 0 5.83vw
       padding: 10px;
       .result-categories-item {
         display: flex;
@@ -248,7 +272,7 @@ export default defineComponent({
       justify-content: flex-start;
       margin-bottom: 20px;
       overflow-x: scroll;
-      max-width: calc(88.34vw - 460px); //APP的padding: 0 5.83vw
+      max-width: 53.96vw; //APP的padding: 0 5.83vw
       padding: 10px;
       .result-entries-item {
         display: flex;
@@ -272,6 +296,7 @@ export default defineComponent({
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       grid-gap: 10px 20px;
+      justify-items: stretch;
       .result-item {
         background-color: #f8f8f8;
         // margin: 20px 20px;
@@ -301,6 +326,12 @@ export default defineComponent({
           color: #4b5563;
           font-size: 14px;
           margin-bottom: 30px;
+          height: 100px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box; //作为弹性伸缩盒子模型显示。
+          -webkit-box-orient: vertical; //设置伸缩盒子的子元素排列方式--从上到下垂直排列
+          -webkit-line-clamp: 5; //显示的行
         }
         .result-item-footer {
           display: flex;
@@ -317,24 +348,49 @@ export default defineComponent({
       }
     }
   }
+}
+.introduce-pc {
+  background-color: #f3f4f6;
+  width: calc(22.4vw - 40px);
+  min-width: 200px;
+  min-height: 200px;
+  margin-left: 20px;
+  padding: 20px;
+  border-radius: 2px;
+}
+.introduce-title {
+  font-weight: 400;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.introduce-text-content {
+  font-size: 15px;
+  margin: 10px 0;
+}
+.introduce-phone {
+  display: none;
+}
 
+@media only screen and (max-width: 768px) {
   .introduce-pc {
+    display: none;
+  }
+  .introduce-phone {
+    display: block;
     background-color: #f3f4f6;
-    width: 400px;
-    min-width: 200px;
-    height: 300px;
-    margin-left: 20px;
     padding: 20px;
-    border-radius: 2px;
+    margin-top: 30px;
+    min-height: 180px;
   }
-  .introduce-title {
-    font-weight: 400;
-    font-size: 24px;
-    margin-bottom: 20px;
+  .result-categories,
+  .result-entries {
+    max-width: calc(88.34vw - 20px) !important;
   }
-  .introduce-text-content {
-    font-size: 15px;
-    margin: 10px 0;
+  .zhijiang-dict {
+    .search-area {
+      height: 35px;
+      font-size: 15px;
+    }
   }
 }
 </style>
