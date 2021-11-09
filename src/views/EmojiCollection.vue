@@ -30,9 +30,13 @@
   <div class="block"></div>
   <div class="masonry" id="app-mains">
     <div v-for="item in res" :key="item.id" class="item">
-      <img :src="'https:' + item.url" alt="加载错误" />
+      <img
+        :src="'https:' + item.url + '@518w.webp'"
+        alt="加载错误"
+        class="itemimage"
+      />
       <span class="item2">
-        <button class="itembutton">
+        <button class="itembutton" @click="getContent">
           <img src="../assets/icons/coolicon.svg" class="cool" />
         </button>
       </span>
@@ -44,12 +48,14 @@
 import { defineComponent, ref } from "vue";
 import headerTitle from "../components/HeaderTitle.vue";
 import useCurrentInstance from "@/hooks/useCurrentInstance";
+
 export interface itemObj {
   id: string;
   url: string;
   height: string;
   width: string;
 }
+
 export default defineComponent({
   components: { headerTitle },
 
@@ -76,7 +82,12 @@ export default defineComponent({
       loading.value = false;
       console.log(proxy);
     };
+
     getItem();
+
+    function getContent() {
+      window.open("https" + res.value);
+    }
     return {
       Title,
       subtitle,
@@ -84,6 +95,7 @@ export default defineComponent({
       col: 4,
       loading,
       res,
+      getContent,
     };
   },
 });
@@ -180,7 +192,8 @@ export default defineComponent({
   right: 0;
   bottom: 0;
 }
-.item img {
+.itemimage {
+  z-index: 2;
   width: 100%;
 }
 
@@ -190,6 +203,7 @@ export default defineComponent({
 .itembutton {
   width: 35px;
   height: 35px;
+  margin: -700px 0px 0 0;
   background: #f8f8f8;
   border: none;
 }
