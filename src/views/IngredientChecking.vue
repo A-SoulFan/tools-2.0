@@ -67,7 +67,7 @@
           <div v-if="isVuplistEmpty" class="search-result-tip">
             该用户没有关注的Vup捏~！
           </div>
-          <div class="search-result-VupList">
+          <div class="search-result-VupList" v-else>
             <div class="Vup-item" v-for="item in vupList" :key="item.vupUid">
               <img :src="item.vupFace" alt="" srcset="" class="Vup-item-face" />
               <div class="Vup-name">{{ item.vupName }}</div>
@@ -160,7 +160,7 @@ export default defineComponent({
     let vupList = ref([]);
     let searchText = ref("");
     let isVuplistEmpty = ref(false);
-    const isShowIntroduce = ref(true);
+    const isShowIntroduce = ref(false);
     let saveSearchText = "";
     const getIngredient = async () => {
       try {
@@ -175,7 +175,7 @@ export default defineComponent({
         });
         saveSearchText = searchText.value;
         console.log(res, "res");
-        if (res.list && res.list.length === 0) {
+        if (!res || !res.list || res.list.length === 0) {
           isVuplistEmpty.value = true;
           return;
         }
@@ -429,6 +429,12 @@ export default defineComponent({
   }
   .search-result-VupList {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+  }
+  .ingredient {
+    .search-area {
+      height: 35px;
+      font-size: 15px;
+    }
   }
 }
 </style>
