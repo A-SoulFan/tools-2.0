@@ -93,28 +93,29 @@
         </div>
       </div>
     </div>
-
-    <div class="introduce-pc">
-      <div class="introduce-title">功能介绍</div>
-      <div
-        class="introduce-text-content"
-        v-for="(item, index) in contents"
-        :key="index"
-      >
-        <div>{{ item.title }}</div>
-        <div>{{ item.span2 }}</div>
-      </div>
-      <div class="introduce-footer">
+    <div>
+      <div class="introduce-pc">
+        <div class="introduce-title">功能介绍</div>
         <div
-          class="display-center cursor"
-          @click="toTargetUrl('https://github.com/ASoulCnki/')"
+          class="introduce-text-content"
+          v-for="(item, index) in contents"
+          :key="index"
         >
-          <img src="@/assets/icons/githubIcon.svg" />
-          查重接口开源仓库
+          <div>{{ item.title }}</div>
+          <div>{{ item.span2 }}</div>
         </div>
-        <div class="display-center">
-          <img src="@/assets/icons/BilibiliIcon.svg" />
-          查重接口反馈
+        <div class="introduce-footer">
+          <div
+            class="display-center cursor"
+            @click="toTargetUrl('https://github.com/ASoulCnki/')"
+          >
+            <img src="@/assets/icons/githubIcon.svg" />
+            查重接口开源仓库
+          </div>
+          <div class="display-center">
+            <img src="@/assets/icons/BilibiliIcon.svg" />
+            查重接口反馈
+          </div>
         </div>
       </div>
     </div>
@@ -315,9 +316,9 @@ export default defineComponent({
 
 .introduce-pc {
   background-color: #f3f4f6;
-  width: 400px;
+  width: calc(22.4vw - 40px);
   min-width: 200px;
-  height: 300px;
+  min-height: 200px;
   margin-left: 20px;
   padding: 20px;
   border-radius: 2px;

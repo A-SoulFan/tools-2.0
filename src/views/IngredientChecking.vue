@@ -273,6 +273,7 @@ export default defineComponent({
   }
 
   .results-area {
+    margin-bottom: 20px;
     .results-header-area {
       margin-top: 30px;
       display: flex;
@@ -363,9 +364,10 @@ export default defineComponent({
   }
   .introduce-pc {
     background-color: #f3f4f6;
-    width: 400px;
+    width: calc(22.4vw - 40px);
+    max-height: 500px;
     min-width: 200px;
-    height: 280px;
+    min-height: 200px;
     margin-left: 20px;
     padding: 20px;
     border-radius: 2px;
@@ -390,8 +392,10 @@ export default defineComponent({
 }
 .introduce-Asoul {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   .introduce-Asoul-item {
-    margin: 10px 5px;
+    margin: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -422,10 +426,6 @@ export default defineComponent({
     padding: 20px;
     margin-top: 30px;
     min-height: 180px;
-  }
-  .introduce-Asoul {
-    flex-wrap: wrap;
-    justify-content: center;
   }
   .search-result-VupList {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
