@@ -7,7 +7,13 @@
   <div class="introduce-phone" v-show="isShowIntroduce">
     <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
-      正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文
+      <div
+        class="introduce-text-content"
+        v-for="(item, index) in contentList"
+        :key="index"
+      >
+        <div>{{ item.content }}</div>
+      </div>
     </div>
   </div>
   <div class="zhijiang-dict">
@@ -31,7 +37,7 @@
         </div>
       </div>
 
-      <div class="result-area">
+      <div class="result-area" v-show="!isShowDetail">
         <!-- 分类 -->
         <div class="result-categories">
           <div
@@ -74,12 +80,15 @@
           >
             <div class="result-item-header">
               <div class="result-item-title">{{ entry.title }}</div>
-              <div class="result-item-header-right">
+              <div
+                class="result-item-header-right"
+                @click="toShowDetail(entry)"
+              >
                 <img src="@/assets/icons/link-icon.svg" />
                 查看详情
               </div>
             </div>
-            <div class="result-item-content" v-html="entry.content"></div>
+            <div class="result-item-content">{{ entry.content }}</div>
             <div class="result-item-footer">
               <img src="@/assets/icons/clock.svg" />
               更新日期 {{ entry.timeText }}
@@ -87,13 +96,35 @@
           </div>
         </div>
       </div>
+      <div class="entry-detail-area" v-show="isShowDetail">
+        <div class="entry-detail-header" @click="closeDetail">
+          返回
+          <img src="@/assets/icons/return.svg" />
+        </div>
+        <div class="entry-detail-title-time">
+          <div class="entry-detail-title">{{ contentDetailItem.title }}</div>
+          <div class="entry-detail-time">
+            <img src="@/assets/icons/clock.svg" />
+            最近更新 {{ contentDetailItem.timeText }}
+          </div>
+        </div>
+        <v-md-preview :text="contentDetailItem.content"></v-md-preview>
+      </div>
     </div>
     <div>
       <div>
         <div class="introduce-pc">
           <div class="introduce-title">功能介绍</div>
           <div class="introduce-text-content">
-            正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文
+            <div class="introduce-text-content">
+              <div
+                class="introduce-text-content"
+                v-for="(item, index) in contentList"
+                :key="index"
+              >
+                <div>{{ item.content }}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -109,9 +140,32 @@ export default defineComponent({
   name: "ZhijiangDict",
   components: { headerTitle },
   setup() {
+    const contentList = [
+      {
+        content: "ASOUL评论区新梗看不懂?上网冲浪玩不转?亚文化小圈子不了解?",
+      },
+      {
+        content:
+          "看似八竿子打不着的人，能因为ASOUL聚在一起。大家在一起玩着来自不同圈子不同文化的梗，却其乐融融。",
+      },
+      {
+        content:
+          "AU们对不同圈子的包容性极强，你能在ASOUL的评论区看到来自各个圈子的梗。如果你见到了不了解的梗，完全可以以此为契机了解这个圈子;如果你想玩自己圈子的梗，也能够收获同好与共鸣。",
+      },
+      {
+        content:
+          "我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而达到包容万事万物。",
+      },
+    ];
     const { proxy } = useCurrentInstance();
     const searchText = ref("");
     const isShowIntroduce = ref(false);
+    const isShowDetail = ref(false);
+    const contentDetailItem = reactive({
+      title: "",
+      timeText: "",
+      content: "",
+    });
     const data = reactive({
       categoriesList: [] as any[],
       categoriesKey: 0,
@@ -185,7 +239,15 @@ export default defineComponent({
         return item;
       });
     };
-
+    const toShowDetail = (item: any) => {
+      contentDetailItem.title = item.title;
+      contentDetailItem.timeText = item.timeText;
+      contentDetailItem.content = item.content;
+      isShowDetail.value = true;
+    };
+    const closeDetail = () => {
+      isShowDetail.value = false;
+    };
     const changeIntroduceShow = () => {
       isShowIntroduce.value = !isShowIntroduce.value;
     };
@@ -195,9 +257,14 @@ export default defineComponent({
       setChildCategoriesList,
       getContentList,
       changeIntroduceShow,
+      toShowDetail,
+      closeDetail,
       searchText,
       data,
       isShowIntroduce,
+      isShowDetail,
+      contentDetailItem,
+      contentList,
     };
   },
 });
@@ -295,13 +362,11 @@ export default defineComponent({
     .result-item-area {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      grid-gap: 10px 20px;
-      justify-items: stretch;
+      grid-gap: 15px 20px;
       .result-item {
         background-color: #f8f8f8;
         // margin: 20px 20px;
         padding: 20px;
-        max-width: 400px;
         border-radius: 2px;
         .result-item-header {
           display: flex;
@@ -326,7 +391,7 @@ export default defineComponent({
           color: #4b5563;
           font-size: 14px;
           margin-bottom: 30px;
-          height: 100px;
+          height: 94px;
           overflow: hidden;
           text-overflow: ellipsis;
           display: -webkit-box; //作为弹性伸缩盒子模型显示。
@@ -345,6 +410,42 @@ export default defineComponent({
         width: 20px;
         height: 20px;
         margin-right: 10px;
+      }
+    }
+  }
+  .entry-detail-area {
+    background-color: #f3f4f6;
+    padding: 30px 20px;
+    border-radius: 2px;
+    .entry-detail-header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 60px;
+      cursor: pointer;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-left: 5px;
+      }
+    }
+    .entry-detail-title-time {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .entry-detail-title {
+        font-size: 50px;
+        font-weight: bold;
+      }
+      .entry-detail-time {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+          width: 20px;
+          height: 20px;
+          margin-right: 5px;
+        }
       }
     }
   }
