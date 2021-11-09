@@ -1,13 +1,17 @@
 <!-- 今天溜什么-->
 <template>
   <div>
-    <header-title Title="今天溜什么" subTitle="相见即是缘份"></header-title>
+    <header-title
+      Title="今天溜什么"
+      subTitle="相见即是缘份"
+      needButton="{{false}}"
+    ></header-title>
     <div class="update-time-area">
       <img class="icon-clock" src="../assets/icons/clock.svg" />
       <div class="update-time-text">{{ "最近更新" + updateTime }}</div>
     </div>
     <div class="iframe-box">
-      <iframe :src="video.play_url"></iframe>
+      <iframe :src="iframeUrl"></iframe>
       <div class="iframe-box-button-area">
         <div class="pre-button-area">
           <img class="pre-button-img" src="../assets/icons/cube.svg" />
@@ -28,7 +32,7 @@
           @click="selectVideo(item)"
         >
           <div class="video-cover">
-            <img :src="item.imgsrc" crossorigin="anonymous" />
+            <img :src="item.imgsrc" />
           </div>
 
           <div class="video-info">
@@ -45,7 +49,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import headerTitle from "../components/headerTitle.vue";
+import headerTitle from "../components/HeaderTitle.vue";
 import useCurrentInstance from "@/hooks/useCurrentInstance";
 
 interface videoObj {
@@ -62,59 +66,52 @@ export default defineComponent({
     let historyVideoList: any[] = JSON.parse(
       localStorage.getItem("historyVideoList") || JSON.stringify([])
     );
-    const video = ref({
-      title: String,
-      cover: String,
-      time: String,
-      play_url: String,
-      bv: String,
-    });
+    let iframeUrl = ref("");
     // TODO: 未拿取
     let updateTime = ref("2021.8.26 15:00");
     let currentVideoIndex = 0;
     const { proxy } = useCurrentInstance();
 
     const getRandomVideo = async () => {
-      const res = await proxy.$request("api/stroll/random");
+      const res = await proxy.$request({
+        url: "/api/stroll/random",
+      });
+      // debugger;
       res.time = new Date().toLocaleString("chinese", { hour12: false });
       currentVideoIndex = 0;
       res.play_url = "https:" + res.play_url;
-      video.value = res;
-      let tempObj = {
-        title: video.value.title,
-        imgsrc:
-          video.value.cover ||
-          "https://i0.hdslb.com/bfs/archive/98960a5e093927721117219f1caf6362bbd76d22.jpg",
-        time: video.value.time,
-        play_url: video.value.play_url,
-        bv: video.value.bv,
-      };
+      iframeUrl.value = res.play_url;
       // 长度保持在二十条
       if (historyVideoList.length >= 20) {
         historyVideoList.pop();
       }
-      historyVideoList.unshift(tempObj);
+      historyVideoList.unshift({
+        title: res.title,
+        imgsrc: res.cover || "",
+        time: res.time,
+        play_url: res.play_url,
+        bv: res.bv,
+      });
       localStorage.setItem(
         "historyVideoList",
         JSON.stringify(historyVideoList)
       );
     };
-    const preVideo = () => {
+    const preVideo = (): void => {
       currentVideoIndex++;
-      video.value = historyVideoList[currentVideoIndex];
+      iframeUrl.value = historyVideoList[currentVideoIndex].play_url;
     };
-    const selectVideo = (item: videoObj) => {
+    const selectVideo = (item: videoObj): void => {
       window.open("https://www.bilibili.com/video/" + item.bv);
     };
-    // TODO: 待做 清除历史功能
     getRandomVideo();
     return {
       updateTime,
       historyVideoList,
-      video,
+      currentVideoIndex,
+      iframeUrl,
       getRandomVideo,
       preVideo,
-      currentVideoIndex,
       selectVideo,
     };
   },
@@ -141,7 +138,6 @@ export default defineComponent({
 .iframe-box {
   display: flex;
   flex-direction: column;
-  max-width: 1200px;
   margin: auto;
 }
 .iframe-box > iframe {
@@ -187,7 +183,6 @@ export default defineComponent({
 /* iframe区域 */
 /* 历史切片区域 */
 .history-video-area {
-  max-width: 1200px;
   margin: auto;
   .history-video-title-area {
     display: flex;

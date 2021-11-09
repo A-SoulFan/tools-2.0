@@ -1,585 +1,365 @@
 <template>
-  <div class="pc-container">
-    <span class="pc-title">枝网查重</span>
-    <span class="pc-introduce">帮你快速识别原创小作文</span>
-    <div class="pc-input-box">
-      <textarea
-        placeholder="在这里输入小作文哦~"
-        @input="hasContent"
-      ></textarea>
-      <span class="total-word-num"
-        >总字数:{{ initialData.contentLength }}/{{
-          initialData.maxLength
-        }}</span
+  <headerTitle
+    Title="知网查重"
+    subTitle="帮助你快速识别原创小作文"
+    @buttonClick="changeIntroduceShow()"
+  ></headerTitle>
+  <div v-show="isShowIntroduce" class="introduce-phone">
+    <div class="introduce-title">功能介绍</div>
+    <div
+      class="introduce-text-content"
+      v-for="(item, index) in contents"
+      :key="index"
+    >
+      <div>{{ item.title }}</div>
+      <div>{{ item.span2 }}</div>
+    </div>
+    <div class="introduce-footer">
+      <div
+        class="display-center cursor"
+        @click="toTargetUrl('https://github.com/ASoulCnki/')"
       >
-      <div class="pc-details">
-        <p class="pc-details-title">功能介绍</p>
-        <div
-          class="pc-content-range"
-          v-for="(content, index) in contents"
-          :key="index"
-        >
-          <span class="content">{{ content.span1 }}</span>
-          <span class="content">{{ content.span2 }}</span>
+        <img src="@/assets/icons/githubIcon.svg" />
+        查重接口开源仓库
+      </div>
+      <div class="display-center">
+        <img src="@/assets/icons/BilibiliIcon.svg" />
+        查重接口反馈
+      </div>
+    </div>
+  </div>
+  <div class="DuplicateChecking">
+    <div class="search-and-result">
+      <div class="search-area">
+        <textarea
+          placeholder="在这里输入小作文哦"
+          maxlength="1000"
+          class="search-textarea"
+          v-model="searchData.searchValue"
+        ></textarea>
+        <div class="search-text-count">
+          总字数:{{ searchData.searchValue.length }}/{{ searchData.maxLength }}
         </div>
-        <div class="pc-foot-nav">
-          <div class="left">
-            <img src="../assets/icons/github-outline.png" />
-            <a
-              href="https://github.com/ASoulCnki/ASoulCnkiBackend/blob/master/api.md"
-              ><span>查重接口开源仓库</span></a
-            >
+        <div
+          class="search-button"
+          :style="{
+            'background-color':
+              searchData.searchValue.length > 0 ? '#4B5563' : '#9CA3AF',
+          }"
+          @click="getDuplicate()"
+        >
+          查询成分
+        </div>
+      </div>
+
+      <div class="result-area">
+        <div
+          v-for="item in DuplicateCheckingList"
+          :key="item"
+          class="result-item"
+        >
+          <div class="result-item-flex">
+            <div class="display-center">
+              <div
+                class="display-center cursor"
+                @click="
+                  toTargetUrl('https://space.bilibili.com/' + item.authorUid)
+                "
+              >
+                <img src="@/assets/icons/BilibiliIcon.svg" />
+                <div class="result-item-author">{{ item.author }}</div>
+              </div>
+              <div>查重率 {{ item.rate }}%</div>
+            </div>
+            <div class="display-center cursor" @click="copyResult(item)">
+              <img src="@/assets/icons/cube.svg" />
+              复制
+            </div>
           </div>
-          <div class="right">
-            <img src="../assets/icons/bilibili-fill.png" />
-            <a href="#"><span>查重接口反馈</span></a>
+          <div class="result-item-content">{{ item.content }}</div>
+          <div class="result-item-flex">
+            <div class="display-center">
+              <img src="@/assets/icons/clock.svg" />
+              <div>发表时间 {{ item.date }}</div>
+            </div>
+            <div
+              class="display-center cursor"
+              @click="toTargetUrl(item.targetUrl)"
+            >
+              <img src="@/assets/icons/link-icon.svg" />
+              前往评论区
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <span
-      :class="['pc-btn-search', { 'pc-active': flags.isActive }]"
-      @click="search(), onInputBtnContent()"
-      >{{ initialData.btnContent }}</span
-    >
-    <template v-if="flags.isSearched">
-      <DuplicateCheckingResult
-        v-for="(user, idx) in customData.customList"
-        :user="user"
-        :key="idx"
-      ></DuplicateCheckingResult>
-    </template>
-  </div>
-  <!--手机端-->
-  <div class="mobile-container">
-    <!--手机端title-->
-    <div class="mobile-header">
-      <span class="mobile-title">枝网查重</span>
-      <span class="mobile-subtitle">
-        <span class="left">帮助你快速识别原创小作文</span>
-        <div class="right">
-          <span class="fold-content">{{ initialData.foldBtnContent }}</span>
-          <img
-            class="arrow-img"
-            src="../assets/icons/arrow.svg"
-            @click="onUnfoldBtnClick"
-            :class="[flags.foldBtnState ? 'is-rotated' : 'recover-rotated']"
-          />
-        </div>
-      </span>
-    </div>
-    <div class="mobile-details" v-show="flags.foldBtnState">
+
+    <div class="introduce-pc">
+      <div class="introduce-title">功能介绍</div>
       <div
-        class="mobile-content-range"
-        v-for="(content, index) in contents"
+        class="introduce-text-content"
+        v-for="(item, index) in contents"
         :key="index"
       >
-        <span class="content">{{ content.span1 }}</span>
-        <span class="content">{{ content.span2 }}</span>
+        <div>{{ item.title }}</div>
+        <div>{{ item.span2 }}</div>
       </div>
-    </div>
-    <!--输入区-->
-    <div class="mobile-input-box">
-      <textarea
-        placeholder="在这里输入小作文哦~"
-        @input="hasContent"
-      ></textarea>
-      <span class="total-word-num"
-        >总字数:{{ initialData.contentLength }}/{{
-          initialData.maxLength
-        }}</span
-      >
-      <div class="mobile-copy-percentage">
-        <div class="left">
-          <img class="copy-img" src="../assets/icons/box.png" />
-          <div class="mobile-progress-bar-box">
-            <div class="txt-part">
-              <span>总复制比</span>
-              <span>{{ initialData.totalDuplicateCheckingRate }}%</span>
-            </div>
-            <!--查重占比条-->
-            <div class="progress-bar">
-              <span class="bottom-bar">
-                <span class="top-bar" :style="lineProgress()"></span>
-              </span>
-            </div>
-          </div>
-        </div>
-        <span
-          :class="['mobile-btn-search', { 'mobile-active': flags.isActive }]"
-          @click="search(), onInputBtnContent()"
-          >{{ initialData.btnContent }}</span
+      <div class="introduce-footer">
+        <div
+          class="display-center cursor"
+          @click="toTargetUrl('https://github.com/ASoulCnki/')"
         >
+          <img src="@/assets/icons/githubIcon.svg" />
+          查重接口开源仓库
+        </div>
+        <div class="display-center">
+          <img src="@/assets/icons/BilibiliIcon.svg" />
+          查重接口反馈
+        </div>
       </div>
     </div>
-    <template v-if="flags.isSearched">
-      <DuplicateCheckingResult
-        v-for="(user, idx) in customData.customList"
-        :user="user"
-        :key="idx"
-      ></DuplicateCheckingResult>
-    </template>
   </div>
-  <textarea
-    class="clip-board"
-    v-model="initialData.copyText"
-    id="textArea"
-  ></textarea>
 </template>
 
-<script>
-import { reactive, defineComponent } from "vue";
-import DuplicateCheckingResult from "../components/DuplicateCheckingResult";
+<script lang="ts">
+import { reactive, defineComponent, ref } from "vue";
 import useCurrentInstance from "@/hooks/useCurrentInstance";
+import headerTitle from "@/components/HeaderTitle.vue";
+import copyToClipBoard from "@/hooks/useCopyToClipBoard";
 export default defineComponent({
   name: "DuplicateChecking",
-  components: { DuplicateCheckingResult },
+  components: { headerTitle },
   setup() {
     let contents = [
       {
-        span1: "比对库内容范围:",
+        title: "比对库内容范围:",
         span2: "B站动态,视频评论区（仅限A-Soul的六个官方账号）",
       },
       {
-        span1: "比对库时间范围:",
+        title: "比对库时间范围:",
         span2: "2020/11/23 21:18:26 至 2021/08/27 11:58:39",
       },
       {
-        span1: "参考文献:",
+        title: "参考文献:",
         span2: "[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学",
       },
     ];
-    let customData = reactive({
-      customList: [],
-    });
-    let userList = [];
-    let initialData = reactive({
+    let searchData = reactive({
       maxLength: 1000,
-      foldBtnContent: "详情",
+      searchValue: "",
       btnContent: "查询结果",
-      contentLength: 0, //textarea中的字数
-      content: "", //textarea中的内容
-      totalDuplicateCheckingRate: 0, //总复制比
-      copyText: "",
     });
-    let flags = reactive({
-      isSearched: false,
-      isActive: false, //按钮是否是激活态
-      foldBtnState: false, //展开按钮的状态
-    });
+    let DuplicateCheckingList = ref([]);
+    let isShowIntroduce = ref(false);
     const { proxy } = useCurrentInstance();
     //方法
-    //检测textarea中是否有内容以及内容长度
-    function hasContent(e) {
-      flags.isActive = e.target.value !== ""; //如果不为空，isActive就是true
-      initialData.content = e.target.value;
-      initialData.contentLength = e.target.value.length;
-      //text内容不为空并且已经进行过搜索，那么只要输入东西就算改变内容
-      if (e.target.value !== "" && flags.isSearched === true) {
-        initialData.btnContent = "查询结果";
-        initialData.currState = 0;
-      }
-    }
-    //搜索按钮功能
-    function search() {
-      if (initialData.btnContent === "查询结果") {
-        if (initialData.contentLength >= 10) {
-          flags.isSearched = true; //只要点击搜索并且内容不为空
-          searchResult(); // 发送请求，查找结果
-        } else {
-          // alert("请输入至少10个字~");
-          // 提示至少输入10个字
-        }
-      } else if (initialData.btnContent === "复制报告") {
-        let content = document.getElementById("textArea");
-
-        content.select();
-        document.execCommand("copy");
-        // alert("Copied!");
-      }
-    }
-    //控制查重条长度
-    function lineProgress() {
-      return `width:${initialData.totalDuplicateCheckingRate}%`;
-    }
-    //排序出userList中查重率最高的一个
-    function maxDuplicate() {
-      let max = 0;
-      if (userList.length !== 0) {
-        userList.map((value) => {
-          if (max < value.duplicateCheckingRate) {
-            max = value.duplicateCheckingRate;
-          }
-        });
-        return max;
-      } else {
-        return 0;
-      }
-    }
-    //点击搜索过后，按钮变成复制报告
-    function onInputBtnContent() {
-      if (flags.isSearched === true) {
-        //如果进行过搜索
-        initialData.btnContent = "复制报告";
-      }
-    }
-    function onUnfoldBtnClick() {
-      flags.foldBtnState = !flags.foldBtnState; //状态翻转
-      if (flags.foldBtnState === true) {
-        initialData.foldBtnContent = "收起"; //设置内容变为收起
-      } else {
-        initialData.foldBtnContent = "详情"; //设置内容变为收起
-      }
-    }
-    const searchResult = async () => {
+    const getDuplicate = async () => {
       const res = await proxy.$request({
         method: "post",
         url: "https://asoulcnki.asia/v1/api/check",
         data: {
-          text: initialData.content,
+          text: searchData.searchValue,
         },
       });
-      let userdata = res.related.map((item) => {
+      DuplicateCheckingList.value = res.related.map((item: any) => {
         return {
-          username: item.reply.m_name,
-          duplicateCheckingRate: parseFloat(item.rate).toFixed(2) * 100,
-          issuingDate: new Date(item.reply.ctime * 1000).toLocaleString(
-            "chinese",
-            {
-              hour12: false,
-            }
-          ),
+          targetUrl: item.reply_url,
           content: item.reply.content,
-          link: item.reply_url,
+          author: item.reply.m_name,
+          authorUid: item.reply.mid,
+          // 将10位时间戳转成13位
+          date: new Date(item.reply.ctime * 1000).toLocaleString("chinese", {
+            hour12: false,
+          }),
+          rate: (item.rate * 100).toFixed(2),
         };
       });
-      userList = userdata;
-      customData.customList = userdata;
-      //把内容写到剪贴板中
-      if (userList.length !== 0) {
-        initialData.copyText =
-          "枝网文本复制检测报告(简洁)\n" +
-          "查重时间: 2021-10-12 14:52:54\n" +
-          "总文字复制比: " +
-          userList[0].duplicateCheckingRate +
-          "%\n" +
-          "相似小作文: " +
-          userList[0].link +
-          "\n" +
-          "作者: " +
-          userList[0].username +
-          "\n" +
-          "发表时间: 2021-02-18 19:42:23\n" +
-          "查重结果仅作参考，请注意辨别是否为原创";
-        initialData.totalDuplicateCheckingRate = maxDuplicate(); //设定重复率，值为data数组中重复率最大的一个
-      }
-      // });
+    };
+    const changeIntroduceShow = () => {
+      isShowIntroduce.value = !isShowIntroduce.value;
+    };
+    const copyResult = (item: any) => {
+      const Time = new Date().toLocaleString("chinese", {
+        hour12: false,
+      });
+      const copyText = `枝网文本复制检测报告(简洁)
+      查重时间:${Time}
+      总文字复制比:${item.rate}%
+      相似小作文：${item.targetUrl}
+      作者：${item.author}
+      发表时间：${item.rate}
+      查重结果仅作参考，请注意辨别是否为原创
+      `;
+      copyToClipBoard(copyText);
+    };
+    const toTargetUrl = (url: string) => {
+      window.open(url);
     };
     return {
+      getDuplicate,
+      copyResult,
+      toTargetUrl,
+      changeIntroduceShow,
+      DuplicateCheckingList,
       contents,
-      userList,
-      customData,
-      flags,
-      initialData,
-      hasContent,
-      search,
-      lineProgress,
-      onInputBtnContent,
-      onUnfoldBtnClick,
+      isShowIntroduce,
+      searchData,
     };
   },
 });
 </script>
 
-<style scoped>
-/*pc端*/
-@media (min-width: 1000px) {
-  .clip-board {
-    width: 0;
-    height: 0;
+<style scoped lang="less">
+@font-face {
+  font-family: "OPPOSan-M";
+  src: url("../assets/font/OPPOSans-M.woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+.display-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cursor {
+  cursor: pointer;
+}
+.DuplicateChecking {
+  display: flex;
+  margin-top: 20px;
+  color: #374151;
+  .search-and-result {
+    flex: 1;
   }
-  .mobile-container {
-    display: none;
-  }
-  .pc-container {
-    width: 1150px;
-  }
-  .pc-nav .pc-nav-option a {
-    text-decoration: none;
-    color: #9ca3af;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 100px;
-    justify-content: center;
-    padding: 30px;
-  }
-  .pc-nav-right img {
-    height: 30px;
-    width: 30px;
-    padding-left: 50px;
-  }
-  .pc-title {
-    font-size: 40px;
-    display: block;
-    padding-top: 60px;
-  }
-  .pc-introduce {
-    padding-top: 9px;
-    display: block;
-    font-size: 24px;
-    padding-bottom: 19px;
-  }
-  .pc-input-box textarea {
-    width: 700px;
-    height: 250px;
-    border: 2px solid #d1d5db;
-    resize: none;
-    outline: none;
-    padding: 10px;
-    font-size: 18px;
-    box-sizing: border-box;
-  }
-  .pc-input-box textarea::placeholder {
-    color: #d1d5db;
-  }
-  .pc-input-box {
-    display: flex;
-    width: 1150px;
-    justify-content: space-between;
+  .search-area {
     position: relative;
-  }
-  .pc-input-box .pc-details {
-    display: inline-block;
-    height: 250px;
-    width: 420px;
-    background-color: #f8f8f8;
-    padding: 10px;
-    float: right;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-  }
-  .pc-input-box .pc-details .pc-details-title {
-    font-weight: 400;
-    font-size: 24px;
-  }
-  .pc-content-range {
-    margin: 15px 0;
-  }
-  .pc-content-range .content {
-    display: -webkit-box;
-    max-height: 42px;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    font-size: 14px;
-  }
-  .pc-foot-nav img {
-    width: 30px;
-    height: 30px;
-  }
-  .pc-foot-nav {
+    margin-right: 20px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    .search-textarea {
+      width: 100%;
+      min-width: 400px;
+      max-width: 1000px;
+      min-height: 300px;
+      max-height: 600px;
+      resize: none;
+      padding: 10px 10px 40px 10px;
+      font-size: 18px;
+      font-family: "OPPOSan-M", Microsoft Yahei, Times, serif;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      border-radius: 2px;
+    }
+    textarea:focus {
+      outline: none;
+      border: 1px solid #000;
+    }
+    textarea[class="search-textarea"]::-webkit-input-placeholder {
+      font-size: 20px;
+      color: #d1d5db;
+      font-family: "OPPOSan-M", Microsoft Yahei, Times, serif;
+    }
+    .search-text-count {
+      position: absolute;
+      bottom: 70px;
+      right: 10px;
+    }
+    .search-button {
+      width: 138px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #4b5563;
+      color: #f1f2f3;
+      border-radius: 0 2px 2px 0;
+      cursor: pointer;
+      align-self: flex-end;
+      margin: 20px -20px 0 0;
+    }
+  }
+  .result-area {
+    width: 100%;
+
     font-size: 16px;
-  }
-  .pc-foot-nav a {
-    text-decoration: none;
-    color: #374151;
-  }
-  .pc-foot-nav > .left {
-    display: flex;
-  }
-  .pc-foot-nav > .right {
-    display: flex;
-  }
-  .pc-foot-nav > .left > img {
-    margin-right: 10px;
-  }
-  .pc-foot-nav > .right > img {
-    margin-right: 10px;
-  }
-  .pc-btn-search {
-    display: inline-block;
-    cursor: pointer;
-    border: 1px solid rgb(229, 229, 229);
-    height: 36px;
-    width: 100px;
-    text-align: center;
-    line-height: 36px;
-    background-color: rgb(156, 163, 175);
-    color: white;
-    font-size: 16px;
-    margin-left: 600px;
-  }
-  .total-word-num {
-    position: absolute;
-    left: 10px;
-    bottom: 30px;
-    color: #d1d5db;
-  }
-  .pc-active {
-    display: inline-block;
-    border: 1px solid rgb(229, 229, 229);
-    height: 36px;
-    width: 100px;
-    text-align: center;
-    line-height: 36px;
-    background-color: #4b5563;
-    color: white;
+    .result-item {
+      margin: 20px 0;
+      padding: 5px 10px;
+      background-color: #f8f8f8;
+
+      .result-item-flex {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0;
+
+        .result-item-author {
+          margin-right: 10px;
+        }
+
+        .result-item-date {
+          display: flex;
+        }
+      }
+      .result-item-content {
+        color: #6b7280;
+      }
+
+      img {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+      }
+    }
   }
 }
 
-/*手机端*/
-@media only screen and (max-width: 1000px) {
-  .clip-board {
-    width: 0;
-    height: 0;
-  }
-  .pc-container {
-    display: none;
-  }
-  .mobile-container {
-    width: 100%;
-  }
-  .mobile-details {
-    display: inline-block;
-    height: 210px;
-    width: 100%;
-    background-color: #f8f8f8;
-    padding: 10px;
-    box-sizing: border-box;
+.introduce-pc {
+  background-color: #f3f4f6;
+  width: 400px;
+  min-width: 200px;
+  height: 300px;
+  margin-left: 20px;
+  padding: 20px;
+  border-radius: 2px;
+}
+.introduce-phone {
+  display: none;
+}
+.introduce-title {
+  font-weight: 400;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.introduce-text-content {
+  font-size: 15px;
+  margin: 10px 0;
+  .introduce-text-content-section {
     margin-bottom: 20px;
   }
-  .mobile-content-range {
-    margin: 10px 0;
+}
+.introduce-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  font-size: 20px;
+  img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
   }
-  .mobile-content-range .content {
-    display: -webkit-box;
-    max-height: 42px;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    font-size: 14px;
+}
+
+@media only screen and (max-width: 768px) {
+  .introduce-pc {
+    display: none;
   }
-  .mobile-title {
+  .introduce-phone {
     display: block;
-    font-size: 34px;
-  }
-  .mobile-subtitle {
-    display: flex;
-    justify-content: space-between;
-    font-size: 17px;
-  }
-  .mobile-subtitle .left {
-    display: block;
-  }
-  .mobile-subtitle .right {
-    display: flex;
-    align-items: center;
-  }
-  .mobile-subtitle .arrow-img {
-    width: 25px;
-    height: 25px;
-    margin-left: 5px;
-  }
-  /*翻转展开图标*/
-  .is-rotated {
-    transform: rotate(180deg);
-    transition: linear 0.2s;
-  }
-
-  .recover-rotated {
-    transform: rotate(0);
-    transition: linear 0.2s;
-  }
-  .mobile-input-box {
-    margin-top: 20px;
-    position: relative;
-  }
-  .mobile-input-box textarea {
-    width: 100%;
-    height: 200px;
-    border: 2px solid #d1d5db;
-    resize: none;
-    outline: none;
-    padding: 10px;
-    font-size: 14px;
-    box-sizing: border-box;
-  }
-  .pc-input-box textarea::placeholder {
-    color: #d1d5db;
-  }
-  .total-word-num {
-    position: absolute;
-    left: 10px;
-    bottom: 70px;
-    color: #d1d5db;
-  }
-  /*查重条*/
-  .mobile-copy-percentage {
-    display: flex;
-    justify-content: space-between;
-  }
-  .mobile-copy-percentage .left {
-    display: flex;
-    margin-top: 8px;
-    width: 55%;
-  }
-  .mobile-copy-percentage .copy-img {
-    width: 25px;
-    height: 25px;
-    padding-right: 5px;
-  }
-  .mobile-progress-bar-box {
-    height: 50px;
-    width: 100%;
-  }
-  .mobile-progress-bar-box .txt-part {
-    display: flex;
-    justify-content: space-between;
-  }
-  .progress-bar {
-    height: 5px;
-    width: 100%;
-  }
-
-  .progress-bar > .bottom-bar {
-    display: inline-block;
-    height: 5px;
-    width: 100%;
-    background-color: rgb(229, 229, 229);
-    position: relative;
-  }
-
-  .progress-bar > .bottom-bar > .top-bar {
-    display: inline-block;
-    height: 5px;
-    /*width: 70%;*/
-    background-color: rgb(75, 85, 99);
-    position: absolute;
-    left: 0;
-  }
-  .mobile-btn-search {
-    display: inline-block;
-    cursor: pointer;
-    border: 1px solid rgb(229, 229, 229);
-    height: 36px;
-    width: 100px;
-    text-align: center;
-    line-height: 36px;
-    background-color: rgb(156, 163, 175);
-    color: white;
-    font-size: 16px;
-  }
-  .mobile-active {
-    display: inline-block;
-    border: 1px solid rgb(229, 229, 229);
-    height: 36px;
-    width: 100px;
-    text-align: center;
-    line-height: 36px;
-    background-color: #4b5563;
-    color: white;
+    background-color: #f3f4f6;
+    padding: 20px;
+    margin-top: 30px;
+    min-height: 180px;
   }
 }
 </style>

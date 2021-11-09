@@ -1,611 +1,434 @@
 <template>
-  <div class="pc-container">
-    <header class="pc-header">
-      <img class="asf-img" src="../assets/icons/ASF_black.png" />
-      <ul class="pc-nav">
-        <li class="pc-nav-option"><a href="#">用户讨论</a></li>
-        <li class="pc-nav-option"><a href="#">内容整理</a></li>
-        <li class="pc-nav-option"><a href="#">实用工具</a></li>
-        <li class="pc-nav-option"><a href="#">新人指南</a></li>
-      </ul>
-      <div class="pc-nav-right">
-        <img class="search-img" src="../assets/icons/search.png" />
-        <img class="user-img" src="../assets/icons/user.png" />
-      </div>
-    </header>
-    <span class="pc-title">成分姬</span>
-    <span class="pc-introduce">帮助你快速分析用户成分</span>
-    <div class="pc-component-box">
-      <div class="pc-content-box">
-        <div class="pc-input-box">
-          <input placeholder="请输入B站用户名或者UID~" @input="hasContent" />
+  <div>
+    <headerTitle
+      Title="成分姬"
+      subTitle="帮助你快速分析用户成分"
+      @buttonClick="changeIntroduceShow()"
+    ></headerTitle>
+    <div v-show="isShowIntroduce" class="introduce-phone">
+      <div class="introduce-title">功能介绍</div>
+      <div class="introduce-text-content">
+        <div class="introduce-text-content-section">
+          成分姬是由
           <span
-            :class="['pc-btn-search', { 'pc-active': flags.isActive }]"
-            @click="search(), onInputBtnContent()"
-            >{{ initialData.btnContent }}</span
+            @click="toBilibiliSpace(32957695)"
+            class="introduce-text-content-name"
+            >晓轩iMIKU老师</span
           >
+          为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
         </div>
-        <div class="pc-tips-box" v-if="flags.isSearched">
-          <span class="pc-tips-font">TA关注的VUP有</span>
-          <span class="pc-tips-button">
-            <img class="pc-tips-img" src="/img/link.473ec6ef.png" />
-            复制结果
-          </span>
+        <div class="introduce-text-content-section">
+          毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
+          所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
         </div>
-        <div class="pc-result-box">
-          <template v-if="flags.isSearched">
-            <IngredientCheckingResult
-              v-for="(user, idx) in userList"
-              :user="user"
-              :key="idx"
-            ></IngredientCheckingResult>
-          </template>
-        </div>
-      </div>
-      <div class="pc-details">
-        <p class="pc-details-title">功能介绍</p>
-        <div
-          class="pc-content-range"
-          v-for="(content, index) in contents"
-          :key="index"
-        >
-          <span class="content">{{ content.span1 }}</span>
-          <span class="content">{{ content.span2 }}</span>
-        </div>
-        <div class="pc-foot-nav">
-          <div class="left">
-            <img src="../assets/icons/github-outline.png" />
-            <a href="#"><span>查重接口开源仓库</span></a>
-          </div>
-          <div class="right">
-            <img src="../assets/icons/bilibili-fill.png" />
-            <a href="#"><span>查重接口反馈</span></a>
+        <div class="introduce-Asoul">
+          <div
+            v-for="item in Asoul"
+            :key="item.BzhanUid"
+            @click="toBilibiliSpace(item.BzhanUid)"
+            :style="'color:' + item.color"
+            class="introduce-Asoul-item"
+          >
+            <img :src="item.face" class="introduce-Asoul-face" />
+            <div class="introduce-Asoul-name">{{ item.name }}</div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!--手机端-->
-  <div class="mobile-container">
-    <div class="mobile-container-header">
-      <img class="asf-img" src="../assets/icons/ASF_black.png" />
-      <img class="more-options-img" src="../assets/icons/moreOptions.png" />
-    </div>
-    <!--手机端title-->
-    <div class="mobile-header">
-      <span class="mobile-title">成分姬</span>
-      <span class="mobile-subtitle">
-        <span class="left">帮助你快速分析用户成分</span>
-        <div class="right">
-          <span class="fold-content">{{ initialData.foldBtnContent }}</span>
-          <img
-            class="arrow-img"
-            src="../assets/icons/arrow.svg"
-            @click="onUnfoldBtnClick"
-            :class="[flags.foldBtnState ? 'is-rotated' : 'recover-rotated']"
+    <div class="ingredient">
+      <div class="search-and-results">
+        <div class="search-area">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="请输入B站用户名或UID"
+            v-model="searchText"
+            @keyup.enter="getIngredient()"
           />
+          <div
+            class="search-button"
+            :style="{
+              'background-color': searchText.length > 0 ? '#4B5563' : '#9CA3AF',
+            }"
+            @click="getIngredient()"
+          >
+            查询成分
+          </div>
         </div>
-      </span>
-    </div>
-    <div class="mobile-details" v-show="flags.foldBtnState">
-      <div
-        class="mobile-content-range"
-        v-for="(content, index) in contents"
-        :key="index"
-      >
-        <span class="content">{{ content.span1 }}</span>
-        <span class="content">{{ content.span2 }}</span>
+        <!-- 查询结果展示 -->
+        <div class="results-area">
+          <div class="results-header-area">
+            <div>TA关注的VUP有:</div>
+            <div class="results-header-button" @click="copySearchResult()">
+              <img class="link-icon" src="../assets/icons/link-icon.svg" />
+              复制结果
+            </div>
+          </div>
+          <div v-if="isVuplistEmpty" class="search-result-tip">
+            该用户没有关注的Vup捏~！
+          </div>
+          <div class="search-result-VupList">
+            <div class="Vup-item" v-for="item in vupList" :key="item.vupUid">
+              <img :src="item.vupFace" alt="" srcset="" class="Vup-item-face" />
+              <div class="Vup-name">{{ item.vupName }}</div>
+              <div class="Vup-describe">
+                {{ item.officalVerify }}
+              </div>
+              <div class="divider"></div>
+              <div class="Vup-sign">
+                {{ item.vupSign }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <!--输入区-->
-    <div class="mobile-input-box">
-      <input placeholder="A-SOUL_Official" @input="hasContent" />
-      <div class="mobile-copy-percentage">
-        <span
-          :class="['mobile-btn-search', { 'mobile-active': flags.isActive }]"
-          @click="search(), onInputBtnContent()"
-          >{{ initialData.btnContent }}</span
-        >
+      <div class="introduce-pc">
+        <div class="introduce-title">功能介绍</div>
+        <div class="introduce-text-content">
+          <div class="introduce-text-content-section">
+            成分姬是由
+            <span
+              @click="toBilibiliSpace(32957695)"
+              class="introduce-text-content-name"
+              >晓轩iMIKU老师</span
+            >
+            为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
+          </div>
+          <div class="introduce-text-content-section">
+            毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
+            所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
+          </div>
+          <div class="introduce-Asoul">
+            <div
+              v-for="item in Asoul"
+              :key="item.BzhanUid"
+              @click="toBilibiliSpace(item.BzhanUid)"
+              :style="'color:' + item.color"
+              class="introduce-Asoul-item"
+            >
+              <img :src="item.face" class="introduce-Asoul-face" />
+              <div class="introduce-Asoul-name">{{ item.name }}</div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="mobile-tips-box" v-if="flags.isSearched">
-      <span class="mobile-tips-font">TA关注的VUP有</span>
-      <span class="mobile-tips-button">
-        <img class="mobile-tips-img" src="/img/link.473ec6ef.png" />
-        复制结果
-      </span>
-    </div>
-    <div class="mobile-result-box">
-      <template v-if="flags.isSearched">
-        <IngredientCheckingResult
-          v-for="(user, idx) in userList"
-          :user="user"
-          :key="idx"
-        ></IngredientCheckingResult>
-      </template>
     </div>
   </div>
 </template>
 
-<script>
-import { reactive } from "vue";
-import IngredientCheckingResult from "../components/IngredientCheckingResult";
-import headerTitle from "../components/headerTitle.vue";
-export default {
-  name: "IngredientChecking",
-  components: { IngredientCheckingResult },
+<script lang="ts">
+import { defineComponent, ref } from "vue";
+import headerTitle from "@/components/HeaderTitle.vue";
+import useCurrentInstance from "@/hooks/useCurrentInstance";
+import copyToClipBoard from "@/hooks/useCopyToClipBoard";
+export default defineComponent({
+  components: { headerTitle },
   setup() {
-    let contents = [
+    const { proxy } = useCurrentInstance();
+    const Asoul = [
       {
-        span1: "比对库内容范围:",
-        span2: "B站动态,视频评论区（仅限A-Soul的六个官方账号）",
+        name: "向晚大魔王",
+        color: "#9ac8e2",
+        BzhanUid: 672346917,
+        face: "https://i0.hdslb.com/bfs/face/566078c52b408571d8ae5e3bcdf57b2283024c27.jpg@256w_256h_1o.webp",
       },
       {
-        span1: "比对库时间范围:",
-        span2: "2020/11/23 21:18:26 至 2021/08/27 11:58:39",
+        name: "贝拉Kira",
+        color: "#db7d74",
+        BzhanUid: 672353429,
+        face: "https://i2.hdslb.com/bfs/face/668af440f8a8065743d3fa79cfa8f017905d0065.jpg@256w_256h_1o.webp",
       },
       {
-        span1: "参考文献:",
-        span2: "[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学",
-      },
-    ];
-    let userList = [
-      {
-        username: "乃琳Queen",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "喜欢听你说，开心和不开心的，都告诉我吧~",
-        pictureUrl: "/img/link.473ec6ef.png",
+        name: "珈乐Carol",
+        color: "#b8a6d9",
+        BzhanUid: 351609538,
+        face: "https://i2.hdslb.com/bfs/face/a7fea00016a8d3ffb015b6ed8647cc3ed89cbc63.jpg@256w_256h_1o.webp",
       },
       {
-        username: "嘉然今天吃什么",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "这里是嘉然！别看我小小的，我超能吃还超可爱的哦~",
-        pictureUrl: "/img/link.473ec6ef.png",
+        name: "嘉然今天吃什么",
+        color: "#e799b0",
+        BzhanUid: 672328094,
+        face: "https://i2.hdslb.com/bfs/face/d399d6f5cf7943a996ae96999ba3e6ae2a2988de.jpg@256w_256h_1o.webp",
       },
       {
-        username: "珈乐Carol",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "嘘，请听我为你歌唱……",
-        pictureUrl: "/img/link.473ec6ef.png",
-      },
-      {
-        username: "贝拉kira",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "元气满满的A-SOUL舞担参上~目标TOP IDOL，一起加油！",
-        pictureUrl: "/img/link.473ec6ef.png",
-      },
-      {
-        username: "向晚大魔王",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "关注...也不是不可以啦！",
-        pictureUrl: "/img/link.473ec6ef.png",
-      },
-      {
-        username: "向晚大魔王",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "关注...也不是不可以啦！",
-        pictureUrl: "/img/link.473ec6ef.png",
-      },
-      {
-        username: "怪味毛玉",
-        description: "虚拟偶像团体A-SOUL 所属艺人",
-        sign: "关注...也不是不可以啦！",
-        pictureUrl: "/img/link.473ec6ef.png",
+        name: "乃琳Queen",
+        color: "#576690",
+        BzhanUid: 672342685,
+        face: "https://i1.hdslb.com/bfs/face/8895c87082beba1355ea4bc7f91f2786ef49e354.jpg@256w_256h_1o.webp",
       },
     ];
-    let initialData = reactive({
-      maxLength: 1000,
-      foldBtnContent: "详情",
-      btnContent: "查询结果",
-      contentLength: 0, //textarea中的字数
-      totalIngredientCheckingRate: 0, //总复制比
-    });
-    let flags = reactive({
-      isSearched: false,
-      isActive: false, //按钮是否是激活态
-      foldBtnState: false, //展开按钮的状态
-    });
-    //方法
-    //检测textarea中是否有内容以及内容长度
-    function hasContent(e) {
-      flags.isActive = e.target.value !== ""; //如果不为空，isActive就是true
-      initialData.contentLength = e.target.value.length;
-      // console.log(e.target.value.length); //无响应，说明没有设置响应式
-      //text内容不为空并且已经进行过搜索，那么只要输入东西就算改变内容
-      if (e.target.value !== "" && flags.isSearched === true) {
-        initialData.btnContent = "查询结果";
-      }
-    }
-    //搜索按钮功能
-    function search() {
-      if (initialData.contentLength != 0) {
-        flags.isSearched = true; //只要点击搜索并且内容不为空
-        initialData.totalIngredientCheckingRate = maxDuplicate(); //设定重复率，值为data数组中重复率最大的一个
-      }
-    }
-    //控制查重条长度
-    function lineProgress() {
-      return `width:${initialData.totalIngredientCheckingRate}%`;
-    }
-    //排序出userList中查重率最高的一个
-    function maxDuplicate() {
-      let max = 0;
-      userList.map((value) => {
-        if (max < value.duplicateCheckingRate) {
-          max = value.duplicateCheckingRate;
+    let vupList = ref([]);
+    let searchText = ref("");
+    let isVuplistEmpty = ref(false);
+    const isShowIntroduce = ref(true);
+    let saveSearchText = "";
+    const getIngredient = async () => {
+      try {
+        if (searchText.value === "") {
+          return;
         }
-      });
-      return max;
-    }
-    //点击搜索过后，按钮变成复制报告
-    function onInputBtnContent() {
-      if (flags.isSearched === true) {
-        //如果进行过搜索
-        initialData.btnContent = "复制报告";
+        const res = await proxy.$request({
+          url: "cfj/",
+          params: {
+            name: searchText.value,
+          },
+        });
+        saveSearchText = searchText.value;
+        console.log(res, "res");
+        if (res.list && res.list.length === 0) {
+          isVuplistEmpty.value = true;
+          return;
+        }
+        vupList.value = res.list.map(
+          (item: {
+            uname: string;
+            official_verify?: any;
+            sign: string;
+            mid: string;
+            face: string;
+          }) => {
+            return {
+              vupName: item.uname,
+              officalVerify: item.official_verify.desc,
+              vupSign: item.sign,
+              vupUid: item.mid,
+              vupFace: item.face,
+            };
+          }
+        );
+        // debugger;
+      } catch (error) {
+        console.log(error);
       }
-    }
-    function onUnfoldBtnClick() {
-      flags.foldBtnState = !flags.foldBtnState; //状态翻转
-      if (flags.foldBtnState === true) {
-        initialData.foldBtnContent = "收起"; //设置内容变为收起
-      } else {
-        initialData.foldBtnContent = "详情"; //设置内容变为收起
-      }
-    }
+    };
+    const copySearchResult = () => {
+      const vupName = vupList.value
+        .map((item: any) => {
+          return `@${item.vupName}`;
+        })
+        .join(",");
+      const copyTime = new Date().toLocaleString("chinese", { hour12: false });
+      copyToClipBoard(
+        `@${saveSearchText} 关注的VUP有：\r\n${vupName}\r\n查询时间：${copyTime}\r\n数据来源：@ProJectASF`
+      );
+      console.log("copySearchResult");
+    };
+    const changeIntroduceShow = () => {
+      isShowIntroduce.value = !isShowIntroduce.value;
+    };
+    // getIngredient();
+    const toBilibiliSpace = (uid: number) => {
+      window.open("https://space.bilibili.com/" + uid);
+    };
     return {
-      contents,
-      userList,
-      flags,
-      initialData,
-      hasContent,
-      search,
-      lineProgress,
-      maxDuplicate,
-      onInputBtnContent,
-      onUnfoldBtnClick,
+      getIngredient,
+      vupList,
+      searchText,
+      Asoul,
+      toBilibiliSpace,
+      copySearchResult,
+      isVuplistEmpty,
+      changeIntroduceShow,
+      isShowIntroduce,
     };
   },
-};
+});
 </script>
 
-<style scoped>
-/*pc端*/
-@media (min-width: 1000px) {
-  .mobile-container {
-    display: none;
-  }
-  .pc-container {
-    width: 1600px;
-  }
-  .pc-header {
-    display: flex;
-    background-color: rgb(248, 248, 248);
-    height: 100px;
-    width: 1500px;
-    justify-content: space-between;
-    margin: 0 auto;
-  }
-  .asf-img {
-    width: 126px;
-    height: 100px;
-  }
-  .pc-nav {
-    display: flex;
-  }
-  .pc-nav .pc-nav-option a {
-    text-decoration: none;
-    color: #9ca3af;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 100px;
-    justify-content: center;
-    padding: 30px;
-  }
-  .pc-nav-option:hover {
-    background-color: rgb(229, 229, 229);
-  }
-  .pc-nav-right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .pc-nav-right img {
-    height: 30px;
-    width: 30px;
-    padding-left: 50px;
-  }
-  .pc-title {
-    font-size: 48px;
-    display: block;
-    padding-top: 60px;
-    margin-left: 50px;
-  }
-  .pc-introduce {
-    padding-top: 9px;
-    display: block;
-    font-size: 24px;
-    margin-left: 50px;
-  }
-  .pc-component-box {
-    display: flex;
-    margin: 0 auto;
-    position: relative;
-    justify-content: flex-start;
-  }
-  .pc-content-box {
-    display: flex;
-    margin: 0 auto;
-    position: relative;
-    flex-direction: column;
-  }
-  .pc-input-box input {
-    width: 950px;
-    height: 50px;
-    border: 2px solid #d1d5db;
-    resize: none;
-    outline: none;
-    padding: 10px;
-    font-size: 18px;
-    box-sizing: border-box;
-  }
-  .pc-input-box input::placeholder {
-    color: #d1d5db;
-  }
-  .pc-input-box {
-    display: flex;
-    margin: 0 auto;
-    position: relative;
-    justify-content: flex-start;
-    margin-left: 50px;
-  }
-  .pc-tips-box {
-    display: flex;
-    width: 1050px;
-    margin-left: 50px;
-    margin-right: auto;
-  }
-  .pc-tips-font {
-    font-size: 24px;
-    display: flex;
-    justify-content: flex-start;
-  }
-  .pc-tips-box img {
-    height: 30px;
-    width: 30px;
-  }
-  .pc-tips-button {
-    font-size: 20px;
+<style scoped lang="less">
+.ingredient {
+  display: flex;
+  padding-top: 30px;
+  width: 100%;
+  .search-and-results {
     flex: 1;
+  }
+  .search-area {
     display: flex;
-    justify-content: flex-end;
-  }
-  .pc-result-box {
-    display: flex;
-    margin: 0 auto;
-    flex-flow: row wrap;
-  }
-  .pc-details {
-    display: flex;
-    flex-flow: column wrap;
-    height: 330px;
-    width: 500px;
-    background-color: #f8f8f8;
-    padding: 10px;
-    float: right;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-  }
-  .pc-details .pc-details-title {
-    font-weight: 400;
-    font-size: 24px;
-  }
-  .pc-content-range {
-    margin: 15px 0;
-  }
-  .pc-content-range .content {
-    display: -webkit-box;
-    max-height: 42px;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    font-size: 14px;
-  }
-  .pc-foot-nav img {
-    width: 30px;
-    height: 30px;
-  }
-  .pc-foot-nav {
-    font-size: 20px;
-  }
-  .pc-foot-nav a {
-    text-decoration: none;
-    color: #374151;
-  }
-  .pc-foot-nav {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-  }
-  .pc-foot-nav > .left > img {
-    margin-right: 10px;
-  }
-  .pc-foot-nav > .right > img {
-    margin-right: 10px;
-  }
-  .pc-btn-search {
-    display: inline-block;
-    cursor: pointer;
-    border: 1px solid rgb(229, 229, 229);
     height: 50px;
-    width: 100px;
-    text-align: center;
-    line-height: 50px;
-    background-color: rgb(156, 163, 175);
-    color: white;
-    font-size: 18px;
+    font-size: 17px;
+    .search-input {
+      border: none;
+      width: 100%;
+      // height: calc(100%-2px);
+      padding-left: 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 2px 0 0 2px;
+    }
+    input:focus {
+      outline: none;
+      border: 1px solid #000;
+    }
+    .search-button {
+      width: 138px;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #4b5563;
+      color: #f1f2f3;
+      border-radius: 0 2px 2px 0;
+      cursor: pointer;
+    }
   }
-  .pc-active {
-    display: inline-block;
-    border: 1px solid rgb(229, 229, 229);
-    height: 50px;
-    width: 100px;
-    text-align: center;
-    line-height: 50px;
-    background-color: #4b5563;
-    color: white;
+
+  .results-area {
+    .results-header-area {
+      margin-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 20px;
+      .results-header-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        cursor: pointer;
+        .link-icon {
+          width: 24px;
+          height: 24px;
+          margin-right: 10px;
+        }
+      }
+    }
+    .search-result-tip {
+      margin-top: 50px;
+      font-size: 20px;
+      color: #aa5555;
+      text-align: center;
+    }
+    .search-result-VupList {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      justify-content: space-between;
+      grid-gap: 80px 50px;
+      padding-top: 100px;
+      .Vup-item {
+        background-color: #f8f8f8;
+        padding: 0 10px 20px 10px;
+        position: relative;
+        // margin-top: 100px;
+        max-height: 200px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 2px;
+        word-break: break-all;
+        .Vup-item-face {
+          background-color: #d1d5db;
+          position: absolute;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 85px;
+          height: 85px;
+          border-radius: 50%;
+          border: 1px #d1d5db solid;
+        }
+        .Vup-name {
+          margin-top: 55px;
+          font-size: 18px;
+          font-weight: bold;
+          align-self: center;
+        }
+        .Vup-describe {
+          color: #9ca3af;
+          text-overflow: -o-ellipsis-lastline;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          line-clamp: 2;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          word-break: break-all;
+        }
+        .divider {
+          align-self: center;
+          width: 80%;
+          border-top: 1px #4b5563 solid;
+          margin: 10px 0;
+        }
+        .Vup-sign {
+          color: #9ca3af;
+          text-overflow: -o-ellipsis-lastline;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          line-clamp: 3;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          word-break: break-all;
+        }
+      }
+    }
+  }
+  .introduce-pc {
+    background-color: #f3f4f6;
+    width: 400px;
+    min-width: 200px;
+    height: 280px;
+    margin-left: 20px;
+    padding: 20px;
+    border-radius: 2px;
   }
 }
-
-/*手机端*/
-@media only screen and (max-width: 1000px) {
-  .pc-container {
-    display: none;
-  }
-  .mobile-container {
-    width: 100%;
-  }
-  .mobile-container-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .mobile-container-header .asf-img {
-    width: 75px;
-    height: 75px;
-  }
-  .mobile-container-header .more-options-img {
-    width: 25px;
-    height: 25px;
-  }
-  .mobile-container-header .more-options-img:hover {
-    cursor: pointer;
-  }
-  .mobile-details {
-    display: inline-block;
-    height: 210px;
-    width: 100%;
-    background-color: #f8f8f8;
-    padding: 10px;
-    box-sizing: border-box;
+.introduce-title {
+  font-weight: 400;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.introduce-text-content {
+  font-size: 15px;
+  .introduce-text-content-section {
     margin-bottom: 20px;
   }
-  .mobile-content-range {
-    margin: 10px 0;
-  }
-  .mobile-content-range .content {
-    display: -webkit-box;
-    max-height: 42px;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    font-size: 14px;
-  }
-  .mobile-title {
-    display: block;
-    font-size: 34px;
-  }
-  .mobile-subtitle {
+}
+.introduce-text-content-name {
+  margin: 0 10px;
+  cursor: pointer;
+  color: #666;
+  text-decoration: underline;
+}
+.introduce-Asoul {
+  display: flex;
+  .introduce-Asoul-item {
+    margin: 10px 5px;
     display: flex;
-    justify-content: space-between;
-    font-size: 17px;
-  }
-  .mobile-subtitle .left {
-    display: block;
-  }
-  .mobile-subtitle .right {
-    display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-  }
-  .mobile-subtitle .arrow-img {
-    width: 25px;
-    height: 25px;
-    margin-left: 5px;
-  }
-  /*翻转展开图标*/
-  .is-rotated {
-    transform: rotate(180deg);
-    transition: linear 0.2s;
-  }
-
-  .recover-rotated {
-    transform: rotate(0);
-    transition: linear 0.2s;
-  }
-  .mobile-input-box {
-    margin-top: 20px;
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-  }
-  .mobile-input-box input {
-    width: 65%;
-    height: 40px;
-    border: 2px solid #d1d5db;
-    resize: none;
-    outline: none;
-    padding: 10px;
-    font-size: 14px;
-    box-sizing: border-box;
-  }
-  .mobile-tips-box {
-    display: flex;
-  }
-  .mobile-tips-font {
-    display: flex;
-    justify-content: flex-start;
-  }
-  .mobile-tips-img {
-    width: 15px;
-    height: 15px;
-  }
-  .mobile-tips-button {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 15px;
-  }
-  .pc-input-box textarea::placeholder {
-    color: #d1d5db;
-  }
-  /*查重条*/
-  .mobile-copy-percentage {
-    width: 35%;
-    height: 40px;
-  }
-  .mobile-btn-search {
-    display: inline-block;
+    word-break: keep-all;
     cursor: pointer;
-    border: 1px solid rgb(229, 229, 229);
-    height: 38px;
-    width: 100px;
-    text-align: center;
-    line-height: 38px;
-    background-color: rgb(156, 163, 175);
-    color: white;
-    font-size: 16px;
   }
-  .progress-bar > .bottom-bar > .top-bar {
-    display: inline-block;
-    height: 5px;
-    /*width: 70%;*/
-    background-color: rgb(75, 85, 99);
-    position: absolute;
-    left: 0;
+  .introduce-Asoul-face {
+    width: 67px;
+    height: 67px;
+    border-radius: 50%;
   }
-  .mobile-active {
-    display: inline-block;
-    border: 1px solid rgb(229, 229, 229);
-    height: 36px;
-    width: 100px;
-    text-align: center;
-    line-height: 36px;
-    background-color: #4b5563;
-    color: white;
+  .introduce-Asoul-name {
+    font-size: 12px;
   }
-  .mobile-result-box {
-    display: flex;
-    flex-flow: row wrap;
-    margin: 0 auto;
+}
+.introduce-phone {
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  .introduce-pc {
+    display: none;
+  }
+  .introduce-phone {
+    display: block;
+    background-color: #f3f4f6;
+    padding: 20px;
+    margin-top: 30px;
+    min-height: 180px;
+  }
+  .introduce-Asoul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .search-result-VupList {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
   }
 }
 </style>

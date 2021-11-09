@@ -1,11 +1,11 @@
 <template>
   <div class="app">
     <div class="route-view">
-      <vue-nav-bar
+      <!-- <vue-nav-bar
         :config="conf"
         :proj="'实用工具'"
         :activate-call-back="callback"
-      ></vue-nav-bar>
+      ></vue-nav-bar> -->
       <router-view />
     </div>
   </div>
@@ -13,9 +13,9 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
-import { VueNavBar } from "asf-navbar";
+
 export default defineComponent({
-  components: { VueNavBar },
+  // components: { VueNavBar },
   setup() {
     const route = useRouter();
     const conf = {
@@ -50,7 +50,7 @@ export default defineComponent({
 }
 .route-view {
   padding: 0 5.83vw;
-  max-width: 1180px;
+  max-width: 1440px;
   margin: auto;
 }
 /* 待修复后 删除  */
