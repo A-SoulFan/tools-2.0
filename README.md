@@ -46,7 +46,7 @@ npm run build
 
 ##### 命名规范
 ```
-1.文件名使用大驼峰式命名 即类如  RandomVideo.vue
+1.vue文件名使用大驼峰式命名 即类如  RandomVideo.vue
 2.变量命名使用小驼峰命名 即类如	firstVideo
 3.class类名使用"-"连接 类如  video-box-footer
 ```
