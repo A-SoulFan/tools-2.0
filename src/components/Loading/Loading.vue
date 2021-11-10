@@ -30,8 +30,8 @@ export default defineComponent({
   align-items: center;
   z-index: 10000;
   .loading-icon {
-    width: 20px;
-    height: 20px;
+    width: 100px;
+    height: 100px;
   }
   .loading-text {
     background-color: rgba(0, 0, 0, 0.8);

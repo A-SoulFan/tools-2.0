@@ -1,11 +1,7 @@
 <template>
   <div class="app">
+    <asfNavbar :navList="navList"></asfNavbar>
     <div class="route-view">
-      <!-- <vue-nav-bar
-        :config="conf"
-        :proj="'实用工具'"
-        :activate-call-back="callback"
-      ></vue-nav-bar> -->
       <router-view />
     </div>
   </div>
@@ -13,9 +9,9 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
-
+import asfNavbar from "@/components/Navbar.vue";
 export default defineComponent({
-  // components: { VueNavBar },
+  components: { asfNavbar },
   setup() {
     const route = useRouter();
     const conf = {
@@ -28,12 +24,49 @@ export default defineComponent({
         { name: "方言词典", link: "/zhijiangDict" },
       ],
     };
+    const navList = [
+      {
+        name: "用户讨论",
+        secondaryList: [
+          {
+            name: "用户讨论二级导航",
+          },
+        ],
+      },
+      {
+        name: "内容整理",
+        secondaryList: [
+          {
+            name: "内容整理二级导航",
+          },
+        ],
+      },
+      {
+        name: "实用工具",
+        secondaryList: [
+          { name: "枝网查重", methods: "router", link: "/duplicateChecking" },
+          { name: "今日溜什么", methods: "router", link: "/randomVideo" },
+          { name: "成分姬", methods: "router", link: "/ingredientChecking" },
+          { name: "表情包", methods: "router", link: "/emojicollect" },
+          { name: "方言词典", methods: "router", link: "/zhijiangDict" },
+        ],
+      },
+      {
+        name: "新人指南",
+        secondaryList: [
+          {
+            name: "新人指南二级导航",
+          },
+        ],
+      },
+    ];
     const callback = (str: string) => {
       route.push(str);
     };
     return {
       conf,
       callback,
+      navList,
     };
   },
 });
@@ -53,13 +86,4 @@ export default defineComponent({
   max-width: 1440px;
   margin: auto;
 }
-/* 待修复后 删除  */
-#navBar {
-  width: 100% !important;
-  position: relative !important;
-}
-#logo {
-  width: auto !important;
-}
-/* 待修复后 删除  */
 </style>

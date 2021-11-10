@@ -8,15 +8,16 @@
     <div class="introduce-title">功能介绍</div>
     <div
       class="introduce-text-content"
-      v-for="(item, index) in contents"
+      v-for="(item, index) in contentList"
       :key="index"
     >
       <div>{{ item.title }}</div>
-      <div>{{ item.span2 }}</div>
+      <div>{{ item.content }}</div>
     </div>
     <div class="introduce-footer">
       <div
         class="display-center cursor"
+        style="margin-right: 20px"
         @click="toTargetUrl('https://github.com/ASoulCnki/')"
       >
         <img src="@/assets/icons/githubIcon.svg" />
@@ -93,28 +94,30 @@
         </div>
       </div>
     </div>
-
-    <div class="introduce-pc">
-      <div class="introduce-title">功能介绍</div>
-      <div
-        class="introduce-text-content"
-        v-for="(item, index) in contents"
-        :key="index"
-      >
-        <div>{{ item.title }}</div>
-        <div>{{ item.span2 }}</div>
-      </div>
-      <div class="introduce-footer">
+    <div>
+      <div class="introduce-pc">
+        <div class="introduce-title">功能介绍</div>
         <div
-          class="display-center cursor"
-          @click="toTargetUrl('https://github.com/ASoulCnki/')"
+          class="introduce-text-content"
+          v-for="(item, index) in contentList"
+          :key="index"
         >
-          <img src="@/assets/icons/githubIcon.svg" />
-          查重接口开源仓库
+          <div>{{ item.title }}</div>
+          <div>{{ item.content }}</div>
         </div>
-        <div class="display-center">
-          <img src="@/assets/icons/BilibiliIcon.svg" />
-          查重接口反馈
+        <div class="introduce-footer">
+          <div
+            class="display-center cursor"
+            style="margin-right: 20px"
+            @click="toTargetUrl('https://github.com/ASoulCnki/')"
+          >
+            <img src="@/assets/icons/githubIcon.svg" />
+            查重接口开源仓库
+          </div>
+          <div class="display-center">
+            <img src="@/assets/icons/BilibiliIcon.svg" />
+            查重接口反馈
+          </div>
         </div>
       </div>
     </div>
@@ -130,18 +133,18 @@ export default defineComponent({
   name: "DuplicateChecking",
   components: { headerTitle },
   setup() {
-    let contents = [
+    const contentList = [
       {
         title: "比对库内容范围:",
-        span2: "B站动态,视频评论区（仅限A-Soul的六个官方账号）",
+        content: "B站动态,视频评论区（仅限A-Soul的六个官方账号）",
       },
       {
         title: "比对库时间范围:",
-        span2: "2020/11/23 21:18:26 至 2021/08/27 11:58:39",
+        content: "2020/11/23 21:18:26 至 2021/08/27 11:58:39",
       },
       {
         title: "参考文献:",
-        span2: "[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学",
+        content: "[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学",
       },
     ];
     let searchData = reactive({
@@ -201,7 +204,7 @@ export default defineComponent({
       toTargetUrl,
       changeIntroduceShow,
       DuplicateCheckingList,
-      contents,
+      contentList,
       isShowIntroduce,
       searchData,
     };
@@ -316,8 +319,8 @@ export default defineComponent({
 .introduce-pc {
   background-color: #f3f4f6;
   width: 400px;
-  min-width: 200px;
-  height: 300px;
+  // min-width: 200px;
+  min-height: 200px;
   margin-left: 20px;
   padding: 20px;
   border-radius: 2px;
@@ -339,7 +342,6 @@ export default defineComponent({
 }
 .introduce-footer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-top: 40px;
   font-size: 20px;

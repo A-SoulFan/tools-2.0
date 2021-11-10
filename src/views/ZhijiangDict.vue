@@ -2,8 +2,25 @@
   <headerTitle
     Title="枝江方言词典"
     subTitle="你想了解的词条都在这"
-    :needButton="false"
+    @buttonClick="changeIntroduceShow()"
   ></headerTitle>
+  <div class="introduce-phone" v-show="isShowIntroduce">
+    <div class="introduce-title">功能介绍</div>
+    <div class="introduce-text-content">
+      <div class="introduce-text-content">
+        本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
+      </div>
+      <div class="introduce-text-content">
+        如果有新词条或者对词条的内容方面有建议的欢迎联系:
+        <span
+          class="introduce-targetUrl"
+          @click="toTargetUrl('https://space.bilibili.com/1442421278')"
+        >
+          &nbsp;&nbsp;@ProJectASF</span
+        >
+      </div>
+    </div>
+  </div>
   <div class="zhijiang-dict">
     <div class="search-and-results">
       <div class="search-area">
@@ -25,7 +42,7 @@
         </div>
       </div>
 
-      <div class="result-area">
+      <div class="result-area" v-show="!isShowDetail">
         <!-- 分类 -->
         <div class="result-categories">
           <div
@@ -68,12 +85,15 @@
           >
             <div class="result-item-header">
               <div class="result-item-title">{{ entry.title }}</div>
-              <div class="result-item-header-right">
+              <div
+                class="result-item-header-right"
+                @click="toShowDetail(entry)"
+              >
                 <img src="@/assets/icons/link-icon.svg" />
                 查看详情
               </div>
             </div>
-            <div class="result-item-content" v-html="entry.content"></div>
+            <div class="result-item-content">{{ entry.content }}</div>
             <div class="result-item-footer">
               <img src="@/assets/icons/clock.svg" />
               更新日期 {{ entry.timeText }}
@@ -81,11 +101,46 @@
           </div>
         </div>
       </div>
+      <div class="entry-detail-area" v-show="isShowDetail">
+        <div class="entry-detail-header" @click="closeDetail">
+          返回
+          <img src="@/assets/icons/return.svg" />
+        </div>
+        <div class="entry-detail-title-time">
+          <div class="entry-detail-title">{{ contentDetailItem.title }}</div>
+          <div class="entry-detail-time">
+            <img src="@/assets/icons/clock.svg" />
+            最近更新 {{ contentDetailItem.timeText }}
+          </div>
+        </div>
+        <v-md-preview :text="contentDetailItem.content"></v-md-preview>
+      </div>
     </div>
-    <div class="introduce-pc">
-      <div class="introduce-title">功能介绍</div>
-      <div class="introduce-text-content">
-        正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文
+    <div>
+      <div>
+        <div class="introduce-pc">
+          <div class="introduce-title">功能介绍</div>
+          <div class="introduce-text-content">
+            <div class="introduce-text-content">
+              <div class="introduce-text-content">
+                <div class="introduce-text-content">
+                  本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
+                </div>
+                <div class="introduce-text-content">
+                  如果有新词条或者对词条的内容方面有建议的欢迎联系:
+                  <span
+                    class="introduce-targetUrl"
+                    @click="
+                      toTargetUrl('https://space.bilibili.com/1442421278')
+                    "
+                  >
+                    &nbsp;&nbsp;@ProJectASF</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -101,6 +156,13 @@ export default defineComponent({
   setup() {
     const { proxy } = useCurrentInstance();
     const searchText = ref("");
+    const isShowIntroduce = ref(false);
+    const isShowDetail = ref(false);
+    const contentDetailItem = reactive({
+      title: "",
+      timeText: "",
+      content: "",
+    });
     const data = reactive({
       categoriesList: [] as any[],
       categoriesKey: 0,
@@ -111,7 +173,14 @@ export default defineComponent({
     });
     let result = [] as any[];
     const searchWords = async () => {
-      console.log("searchWords");
+      const res = await proxy.$request({
+        url: "dict/v1/public/search",
+        method: "get",
+        params: {
+          kwd: searchText.value,
+        },
+      });
+      console.log(res);
     };
     const getCategoriesList = async () => {
       result = await proxy.$request({
@@ -167,14 +236,37 @@ export default defineComponent({
         return item;
       });
     };
+    const toShowDetail = (item: any) => {
+      contentDetailItem.title = item.title;
+      contentDetailItem.timeText = item.timeText;
+      contentDetailItem.content = item.content;
+      isShowDetail.value = true;
+    };
+    const closeDetail = () => {
+      isShowDetail.value = false;
+    };
+    const changeIntroduceShow = () => {
+      isShowIntroduce.value = !isShowIntroduce.value;
+    };
+
+    const toTargetUrl = (url: string) => {
+      window.open(url);
+    };
 
     getCategoriesList();
     return {
       searchWords,
       setChildCategoriesList,
       getContentList,
+      changeIntroduceShow,
+      toShowDetail,
+      closeDetail,
+      toTargetUrl,
       searchText,
       data,
+      isShowIntroduce,
+      isShowDetail,
+      contentDetailItem,
     };
   },
 });
@@ -184,6 +276,7 @@ export default defineComponent({
 .zhijiang-dict {
   display: flex;
   padding-top: 30px;
+  width: 100%;
   .search-and-results {
     flex: 1;
   }
@@ -195,7 +288,6 @@ export default defineComponent({
     .search-input {
       border: none;
       width: 100%;
-      // height: calc(100%-2px);
       padding-left: 10px;
       border: 1px solid #d1d5db;
       border-radius: 2px 0 0 2px;
@@ -218,12 +310,13 @@ export default defineComponent({
   }
 
   .result-area {
+    margin-bottom: 20px;
     .result-categories {
       display: flex;
       justify-content: flex-start;
       margin-bottom: 20px;
       overflow-x: scroll;
-      max-width: calc(88.34vw - 460px); //APP的padding: 0 5.83vw
+      max-width: 53.96vw; //APP的padding: 0 5.83vw
       padding: 10px;
       .result-categories-item {
         display: flex;
@@ -248,7 +341,7 @@ export default defineComponent({
       justify-content: flex-start;
       margin-bottom: 20px;
       overflow-x: scroll;
-      max-width: calc(88.34vw - 460px); //APP的padding: 0 5.83vw
+      max-width: 53.96vw; //APP的padding: 0 5.83vw
       padding: 10px;
       .result-entries-item {
         display: flex;
@@ -271,12 +364,11 @@ export default defineComponent({
     .result-item-area {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      grid-gap: 10px 20px;
+      grid-gap: 15px 20px;
       .result-item {
         background-color: #f8f8f8;
         // margin: 20px 20px;
         padding: 20px;
-        max-width: 400px;
         border-radius: 2px;
         .result-item-header {
           display: flex;
@@ -301,6 +393,12 @@ export default defineComponent({
           color: #4b5563;
           font-size: 14px;
           margin-bottom: 30px;
+          height: 94px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box; //作为弹性伸缩盒子模型显示。
+          -webkit-box-orient: vertical; //设置伸缩盒子的子元素排列方式--从上到下垂直排列
+          -webkit-line-clamp: 5; //显示的行
         }
         .result-item-footer {
           display: flex;
@@ -317,24 +415,89 @@ export default defineComponent({
       }
     }
   }
-
-  .introduce-pc {
+  .entry-detail-area {
     background-color: #f3f4f6;
-    width: 400px;
-    min-width: 200px;
-    height: 300px;
-    margin-left: 20px;
-    padding: 20px;
+    padding: 30px 20px;
     border-radius: 2px;
+    .entry-detail-header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 60px;
+      cursor: pointer;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-left: 5px;
+      }
+    }
+    .entry-detail-title-time {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .entry-detail-title {
+        font-size: 50px;
+        font-weight: bold;
+      }
+      .entry-detail-time {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+          width: 20px;
+          height: 20px;
+          margin-right: 5px;
+        }
+      }
+    }
   }
-  .introduce-title {
-    font-weight: 400;
-    font-size: 24px;
-    margin-bottom: 20px;
+}
+.introduce-pc {
+  background-color: #f3f4f6;
+  width: calc(22.4vw - 40px);
+  min-width: 200px;
+  min-height: 200px;
+  margin-left: 20px;
+  padding: 20px;
+  border-radius: 2px;
+}
+.introduce-title {
+  font-weight: 400;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.introduce-text-content {
+  font-size: 15px;
+  margin: 10px 0;
+}
+.introduce-targetUrl {
+  cursor: pointer;
+  color: #4e4eb6;
+}
+.introduce-phone {
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  .introduce-pc {
+    display: none;
   }
-  .introduce-text-content {
-    font-size: 15px;
-    margin: 10px 0;
+  .introduce-phone {
+    display: block;
+    background-color: #f3f4f6;
+    padding: 20px;
+    margin-top: 30px;
+    min-height: 180px;
+  }
+  .result-categories,
+  .result-entries {
+    max-width: calc(88.34vw - 20px) !important;
+  }
+  .zhijiang-dict {
+    .search-area {
+      height: 35px;
+      font-size: 15px;
+    }
   }
 }
 </style>
