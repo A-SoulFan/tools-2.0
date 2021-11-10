@@ -1,4 +1,4 @@
-import { createApp, reactive } from "vue";
+import { createApp, reactive, App } from "vue";
 
 import Loading from "@/components/Loading/Loading.vue";
 
@@ -26,7 +26,7 @@ const load = {
 };
 
 export default {
-  install(app: any): void {
+  install(app: App): void {
     app.config.globalProperties.$loading = load;
   },
 };
