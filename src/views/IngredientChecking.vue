@@ -60,7 +60,7 @@
           <div class="results-header-area">
             <div>TA关注的VUP有:</div>
             <div class="results-header-button" @click="copySearchResult()">
-              <img class="link-icon" src="../assets/icons/link-icon.svg" />
+              <img class="link-icon" src="@/assets/icons/link-icon.svg" />
               复制结果
             </div>
           </div>

@@ -13,7 +13,7 @@
         <img
           class="button-icon"
           :class="isTopIcon ? '' : 'rotate-top'"
-          src="../assets/icons/arrow.svg"
+          src="@/assets/icons/arrow.svg"
         />
       </div>
     </div>

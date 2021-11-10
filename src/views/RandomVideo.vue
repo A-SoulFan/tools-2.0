@@ -7,14 +7,14 @@
       needButton="{{false}}"
     ></header-title>
     <div class="update-time-area">
-      <img class="icon-clock" src="../assets/icons/clock.svg" />
+      <img class="icon-clock" src="@/assets/icons/clock.svg" />
       <div class="update-time-text">{{ "最近更新" + updateTime }}</div>
     </div>
     <div class="iframe-box">
       <iframe :src="iframeUrl"></iframe>
       <div class="iframe-box-button-area">
         <div class="pre-button-area">
-          <img class="pre-button-img" src="../assets/icons/cube.svg" />
+          <img class="pre-button-img" src="@/assets/icons/cube.svg" />
           <div class="pre-button-text" @click="preVideo">回到上一条视频</div>
         </div>
         <div class="random-button" @click="getRandomVideo">随便看看</div>
@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import headerTitle from "../components/HeaderTitle.vue";
+import headerTitle from "@/components/HeaderTitle.vue";
 import useCurrentInstance from "@/hooks/useCurrentInstance";
 
 interface videoObj {
