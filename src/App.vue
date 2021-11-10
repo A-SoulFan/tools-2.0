@@ -47,7 +47,7 @@ export default defineComponent({
           { name: "枝网查重", methods: "router", link: "/duplicateChecking" },
           { name: "今日溜什么", methods: "router", link: "/randomVideo" },
           { name: "成分姬", methods: "router", link: "/ingredientChecking" },
-          { name: "表情包", methods: "router", link: "/emojicollect" },
+          // { name: "表情包", methods: "router", link: "/emojicollect" },
           { name: "方言词典", methods: "router", link: "/zhijiangDict" },
         ],
       },

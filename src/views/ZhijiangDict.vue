@@ -23,7 +23,7 @@
   </div>
   <div class="zhijiang-dict">
     <div class="search-and-results">
-      <div class="search-area">
+      <!-- <div class="search-area">
         <input
           type="text"
           class="search-input"
@@ -40,7 +40,7 @@
         >
           查询词条
         </div>
-      </div>
+      </div> -->
 
       <div class="result-area" v-show="!isShowDetail">
         <!-- 分类 -->
