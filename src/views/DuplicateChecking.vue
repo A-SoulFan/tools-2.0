@@ -17,6 +17,7 @@
     <div class="introduce-footer">
       <div
         class="display-center cursor"
+        style="margin-right: 20px"
         @click="toTargetUrl('https://github.com/ASoulCnki/')"
       >
         <img src="@/assets/icons/githubIcon.svg" />
@@ -107,6 +108,7 @@
         <div class="introduce-footer">
           <div
             class="display-center cursor"
+            style="margin-right: 20px"
             @click="toTargetUrl('https://github.com/ASoulCnki/')"
           >
             <img src="@/assets/icons/githubIcon.svg" />
@@ -316,8 +318,8 @@ export default defineComponent({
 
 .introduce-pc {
   background-color: #f3f4f6;
-  width: calc(22.4vw - 40px);
-  min-width: 200px;
+  width: 400px;
+  // min-width: 200px;
   min-height: 200px;
   margin-left: 20px;
   padding: 20px;
@@ -340,7 +342,6 @@ export default defineComponent({
 }
 .introduce-footer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-top: 40px;
   font-size: 20px;

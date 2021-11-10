@@ -7,12 +7,17 @@
   <div class="introduce-phone" v-show="isShowIntroduce">
     <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
-      <div
-        class="introduce-text-content"
-        v-for="(item, index) in contentList"
-        :key="index"
-      >
-        <div>{{ item.content }}</div>
+      <div class="introduce-text-content">
+        本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
+      </div>
+      <div class="introduce-text-content">
+        如果有新词条或者对词条的内容方面有建议的欢迎联系:
+        <span
+          class="introduce-targetUrl"
+          @click="toTargetUrl('https://space.bilibili.com/1442421278')"
+        >
+          &nbsp;&nbsp;@ProJectASF</span
+        >
       </div>
     </div>
   </div>
@@ -117,12 +122,21 @@
           <div class="introduce-title">功能介绍</div>
           <div class="introduce-text-content">
             <div class="introduce-text-content">
-              <div
-                class="introduce-text-content"
-                v-for="(item, index) in contentList"
-                :key="index"
-              >
-                <div>{{ item.content }}</div>
+              <div class="introduce-text-content">
+                <div class="introduce-text-content">
+                  本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
+                </div>
+                <div class="introduce-text-content">
+                  如果有新词条或者对词条的内容方面有建议的欢迎联系:
+                  <span
+                    class="introduce-targetUrl"
+                    @click="
+                      toTargetUrl('https://space.bilibili.com/1442421278')
+                    "
+                  >
+                    &nbsp;&nbsp;@ProJectASF</span
+                  >
+                </div>
               </div>
             </div>
           </div>
@@ -140,23 +154,6 @@ export default defineComponent({
   name: "ZhijiangDict",
   components: { headerTitle },
   setup() {
-    const contentList = [
-      {
-        content: "ASOUL评论区新梗看不懂?上网冲浪玩不转?亚文化小圈子不了解?",
-      },
-      {
-        content:
-          "看似八竿子打不着的人，能因为ASOUL聚在一起。大家在一起玩着来自不同圈子不同文化的梗，却其乐融融。",
-      },
-      {
-        content:
-          "AU们对不同圈子的包容性极强，你能在ASOUL的评论区看到来自各个圈子的梗。如果你见到了不了解的梗，完全可以以此为契机了解这个圈子;如果你想玩自己圈子的梗，也能够收获同好与共鸣。",
-      },
-      {
-        content:
-          "我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而达到包容万事万物。",
-      },
-    ];
     const { proxy } = useCurrentInstance();
     const searchText = ref("");
     const isShowIntroduce = ref(false);
@@ -251,6 +248,11 @@ export default defineComponent({
     const changeIntroduceShow = () => {
       isShowIntroduce.value = !isShowIntroduce.value;
     };
+
+    const toTargetUrl = (url: string) => {
+      window.open(url);
+    };
+
     getCategoriesList();
     return {
       searchWords,
@@ -259,12 +261,12 @@ export default defineComponent({
       changeIntroduceShow,
       toShowDetail,
       closeDetail,
+      toTargetUrl,
       searchText,
       data,
       isShowIntroduce,
       isShowDetail,
       contentDetailItem,
-      contentList,
     };
   },
 });
@@ -467,6 +469,10 @@ export default defineComponent({
 .introduce-text-content {
   font-size: 15px;
   margin: 10px 0;
+}
+.introduce-targetUrl {
+  cursor: pointer;
+  color: #4e4eb6;
 }
 .introduce-phone {
   display: none;
