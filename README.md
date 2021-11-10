@@ -5,7 +5,7 @@
 
 
 #### 介绍
-A-soul Fans 工具页2.0前端代码
+A-soul Fans 工具页2.0前端代码 
 #### 项目安装
 
 ```
@@ -21,12 +21,14 @@ npm run serve  热启动 -默认浏览器打开
 ```
 npm run build
 ```
-#### VScode插件
-##### 必备
-1. Vuter                    vue代码补全
+#### 推荐使用VsCode进行开发
+
+#### VScode插件(可忽略)
+##### 重要
+1. Vuter                    vue代码补全、代码高亮等
 2. EsLint                   代码规范
 3. Prettier                 代码格式化
-4. 代码保存时检测
+4. 代码保存时检测配置
 ```
   vscode中，在文件->首选项->设置-> settings.json加入下面设置，能在保存时eslint
   "editor.codeActionsOnSave": {
@@ -38,7 +40,6 @@ npm run build
 1. Path intellisense        文件路径智能识别
 2. Git  History             git可视化
 
-####
 
 
 #### 开发规范
@@ -51,8 +52,8 @@ npm run build
 ```
 ##### 注意事项
 ```
-1.  禁止使用行内样式
-2.  禁止使用如同 <br/>等html元素对页面解决视觉设计问题
+1.  禁止使用大量行内样式；如超过两个属性，请使用class选择器编写css
+2.  禁止使用如同 <br/>等html元素对页面解决视觉设计问题；
 3.  禁止使用eval()
 
 4.  禁止使用嵌套的三元表达式，对于较复杂的判断，请使用if else语句
@@ -73,9 +74,9 @@ npm run build
 
 ###### type 用于说明提交的类型： 
 
-1. feat：增加**新**功能
+1. feat：增加**新页面**
 2. style：只修改了**样式**，即不影响业务逻辑功能等
-3. update :  更新修改原有代码逻辑，例如优化性能、 需求变更、修复bug等
+3. update :  更新修改代码逻辑，例如优化性能、 需求变更、修复bug等
 4. doc :  更新文档相关
 
 ###### subject 用于说明提交内容：
@@ -85,7 +86,7 @@ npm run build
 
 ###### subject 示例
 
-feat: XX页面新增某功能 （具体文字描述无硬性要求，简要概括即可）
+update: XX页面更新某功能 （具体文字描述无硬性要求，简要概括即可）
 
 #### 文件夹结构
 
@@ -112,7 +113,6 @@ feat: XX页面新增某功能 （具体文字描述无硬性要求，简要概�
     ├─hooks				公用函数
     ├─views				页面
     └─router			路由
-            index.ts
 
 ```
 
