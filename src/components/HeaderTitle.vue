@@ -61,13 +61,19 @@ export default defineComponent({
 </script>
 
 <style scoped lang="less">
+// @import "@/assets/css/keyframes.css";
+@import "../../src/assets/css/keyframes.css";
+
 .main-title {
   font-size: 34px;
   margin-bottom: 7.5px;
   color: #1f2937;
 }
 .title-area {
+  position: relative;
   margin-top: 60px;
+  // animation: herderTitle 1s;
+  animation: herderTitle 1s;
 }
 .title-area-sub {
   display: flex;

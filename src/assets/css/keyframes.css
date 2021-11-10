@@ -1,0 +1,42 @@
+@keyframes introduce-pc {
+  0% {
+    right: -300px;
+  }
+  100% {
+    right: 0px;
+  }
+}
+
+@keyframes herderTitle {
+  0% {
+    top: -200px;
+  }
+  20%{
+      top: 0px;
+  }
+  40%{
+    top: -100px;
+  }
+  60%{
+      top:0px;
+  }
+  80%{
+    top:-30px;
+
+  }
+  100% {
+    top: 0px;
+  }
+}
+
+@keyframes Navbar-opacity {
+  0% {
+    opacity: 0;
+  }
+  33% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

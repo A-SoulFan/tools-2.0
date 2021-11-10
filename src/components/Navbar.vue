@@ -92,11 +92,14 @@ export default defineComponent({
 </script>
 
 <style scoped lang="less">
+@import "../../src/assets/css/keyframes.css";
+
 .nav-area {
   background-color: #f8f8f8;
   // max-width: 1440px;
   padding: 0 5.83vw;
   // margin: auto;
+
   .elementary-nav-area {
     max-width: 1440px;
     margin: auto;
@@ -131,6 +134,7 @@ export default defineComponent({
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: Navbar-opacity 0.6s;
     .secondary-nav-content-item {
       padding: 20px 5px;
       margin: 0 30px;
