@@ -192,7 +192,7 @@ export default defineComponent({
               officalVerify: item.official_verify.desc,
               vupSign: item.sign,
               vupUid: item.mid,
-              vupFace: item.face,
+              vupFace: item.face.replace("http://", "https://"),
             };
           }
         );
