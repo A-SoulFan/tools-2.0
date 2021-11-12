@@ -192,7 +192,7 @@ export default defineComponent({
               officalVerify: item.official_verify.desc,
               vupSign: item.sign,
               vupUid: item.mid,
-              vupFace: item.face,
+              vupFace: item.face.replace("http://", "https://"),
             };
           }
         );
@@ -409,6 +409,7 @@ export default defineComponent({
     border-radius: 50%;
   }
   .introduce-Asoul-name {
+    margin-top: 5px;
     font-size: 12px;
   }
 }

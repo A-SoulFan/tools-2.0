@@ -185,12 +185,12 @@ export default defineComponent({
       const Time = new Date().toLocaleString("chinese", {
         hour12: false,
       });
-      const copyText = `枝网文本复制检测报告(简洁)
+      const copyText = `枝网文本复制检测报告(ProJectASF)
       查重时间:${Time}
       总文字复制比:${item.rate}%
       相似小作文：${item.targetUrl}
       作者：${item.author}
-      发表时间：${item.rate}
+      发表时间：${item.date}
       查重结果仅作参考，请注意辨别是否为原创
       `;
       copyToClipBoard(copyText);
@@ -362,6 +362,12 @@ export default defineComponent({
     padding: 20px;
     margin-top: 30px;
     min-height: 180px;
+  }
+  .search-textarea {
+    min-width: 0 !important;
+  }
+  .result-area {
+    font-size: 12.4px !important;
   }
 }
 </style>
