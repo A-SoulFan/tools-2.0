@@ -1,11 +1,7 @@
 <!-- 今天溜什么-->
 <template>
   <div>
-    <header-title
-      Title="今天溜什么"
-      subTitle="相见即是缘份"
-      needButton="{{false}}"
-    ></header-title>
+    <header-title title="今天溜什么" subTitle="相见即是缘份"></header-title>
     <div class="update-time-area">
       <img class="icon-clock" src="@/assets/icons/clock.svg" />
       <div class="update-time-text">{{ "最近更新" + updateTime }}</div>
@@ -36,9 +32,7 @@
           </div>
 
           <div class="video-info">
-            <div class="video-title">
-              {{ item.title }}
-            </div>
+            <div class="video-title">{{ item.title }}</div>
             <div class="video-time">观看时间：{{ item.time }}</div>
           </div>
         </div>
@@ -74,7 +68,7 @@ export default defineComponent({
 
     const getRandomVideo = async () => {
       const res = await proxy.$request({
-        url: "/api/stroll/random",
+        url: import.meta.env.VITE_API_RANDOMVIDEO,
       });
       // debugger;
       res.time = new Date().toLocaleString("chinese", { hour12: false });

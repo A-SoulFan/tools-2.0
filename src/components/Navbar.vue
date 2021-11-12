@@ -10,12 +10,10 @@
           :class="
             data.navIndex === index ? 'elementary-nav-content-item-active' : ''
           "
-          v-for="(elementary, index) in navList"
+          v-for="(elementary, index) in navList as { name: string }[]"
           :key="elementary.name"
           @click="selectElementary(elementary, index)"
-        >
-          {{ elementary.name }}
-        </div>
+        >{{ elementary.name }}</div>
       </div>
       <div>
         <img src="@/assets/icons/personIcon.svg" />
@@ -27,9 +25,7 @@
         v-for="secondary in data.secondaryList"
         :key="secondary"
         @click="selectSecondary(secondary)"
-      >
-        {{ secondary.name }}
-      </div>
+      >{{ secondary.name }}</div>
     </div>
   </div>
 </template>
@@ -42,7 +38,7 @@ export default defineComponent({
     navList: {
       type: Array,
     },
-    Title: {
+    title: {
       type: String,
       require: true,
     },

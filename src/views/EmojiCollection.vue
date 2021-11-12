@@ -1,10 +1,7 @@
 <!-- 今天溜什么-->
 <template>
   <div>
-    <header-title
-      Title="表情包"
-      subTitle="你想要的表情包都在这里"
-    ></header-title>
+    <header-title title="表情包" subTitle="你想要的表情包都在这里"></header-title>
     <div class="block"></div>
     <div class="update-time-area">
       <div class="time-left">
@@ -30,11 +27,7 @@
   <div class="block"></div>
   <div class="masonry" id="app-mains">
     <div v-for="item in res" :key="item.id" class="item">
-      <img
-        :src="'https:' + item.url + '@518w.webp'"
-        alt="加载错误"
-        class="itemimage"
-      />
+      <img :src="'https:' + item.url + '@518w.webp'" alt="加载错误" class="itemimage" />
       <span class="item2">
         <button class="itembutton" @click="getContent">
           <img src="../assets/icons/coolicon.svg" class="cool" />
@@ -71,7 +64,7 @@ export default defineComponent({
 
     const getItem = async () => {
       res.value = await proxy.$request({
-        url: "https://tools.asoulfan.com/emoji/",
+        url: import.meta.env.VITE_API_EMOJI,
         params: {
           page: 1,
           limit: 100,
@@ -207,7 +200,7 @@ export default defineComponent({
   background: #f8f8f8;
   border: none;
 }
-.item P {
+.item p {
   color: #555;
 }
 

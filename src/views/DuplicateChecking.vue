@@ -1,16 +1,8 @@
 <template>
-  <headerTitle
-    Title="知网查重"
-    subTitle="帮助你快速识别原创小作文"
-    @buttonClick="changeIntroduceShow()"
-  ></headerTitle>
+  <headerTitle title="知网查重" subTitle="帮助你快速识别原创小作文" @buttonClick="changeIntroduceShow()"></headerTitle>
   <div v-show="isShowIntroduce" class="introduce-phone">
     <div class="introduce-title">功能介绍</div>
-    <div
-      class="introduce-text-content"
-      v-for="(item, index) in contentList"
-      :key="index"
-    >
+    <div class="introduce-text-content" v-for="(item, index) in contentList" :key="index">
       <div>{{ item.title }}</div>
       <div>{{ item.content }}</div>
     </div>
@@ -38,9 +30,9 @@
           class="search-textarea"
           v-model="searchData.searchValue"
         ></textarea>
-        <div class="search-text-count">
-          总字数:{{ searchData.searchValue.length }}/{{ searchData.maxLength }}
-        </div>
+        <div
+          class="search-text-count"
+        >总字数:{{ searchData.searchValue.length }}/{{ searchData.maxLength }}</div>
         <div
           class="search-button"
           :style="{
@@ -48,17 +40,11 @@
               searchData.searchValue.length > 0 ? '#4B5563' : '#9CA3AF',
           }"
           @click="getDuplicate()"
-        >
-          查询成分
-        </div>
+        >查询成分</div>
       </div>
 
       <div class="result-area">
-        <div
-          v-for="item in DuplicateCheckingList"
-          :key="item"
-          class="result-item"
-        >
+        <div v-for="item in DuplicateCheckingList" :key="item.date" class="result-item">
           <div class="result-item-flex">
             <div class="display-center">
               <div
@@ -83,10 +69,7 @@
               <img src="@/assets/icons/clock.svg" />
               <div>发表时间 {{ item.date }}</div>
             </div>
-            <div
-              class="display-center cursor"
-              @click="toTargetUrl(item.targetUrl)"
-            >
+            <div class="display-center cursor" @click="toTargetUrl(item.targetUrl)">
               <img src="@/assets/icons/link-icon.svg" />
               前往评论区
             </div>
@@ -97,11 +80,7 @@
     <div>
       <div class="introduce-pc">
         <div class="introduce-title">功能介绍</div>
-        <div
-          class="introduce-text-content"
-          v-for="(item, index) in contentList"
-          :key="index"
-        >
+        <div class="introduce-text-content" v-for="(item, index) in contentList" :key="index">
           <div>{{ item.title }}</div>
           <div>{{ item.content }}</div>
         </div>
@@ -129,6 +108,17 @@ import { reactive, defineComponent, ref } from "vue";
 import useCurrentInstance from "@/hooks/useCurrentInstance";
 import headerTitle from "@/components/HeaderTitle.vue";
 import copyToClipBoard from "@/hooks/useCopyToClipBoard";
+
+interface DuplicateCheckingItem {
+  targetUrl: string
+  content: string
+  author: string
+  authorUid: string
+  // 将10位时间戳转成13位
+  date: string
+  rate: string
+}
+
 export default defineComponent({
   name: "DuplicateChecking",
   components: { headerTitle },
@@ -152,14 +142,14 @@ export default defineComponent({
       searchValue: "",
       btnContent: "查询结果",
     });
-    let DuplicateCheckingList = ref([]);
+    let DuplicateCheckingList = ref([] as DuplicateCheckingItem[]);
     let isShowIntroduce = ref(false);
     const { proxy } = useCurrentInstance();
     //方法
     const getDuplicate = async () => {
       const res = await proxy.$request({
         method: "post",
-        url: "https://asoulcnki.asia/v1/api/check",
+        url: import.meta.env.VITE_API_DUPLICATECHECKING,
         data: {
           text: searchData.searchValue,
         },
@@ -175,7 +165,7 @@ export default defineComponent({
             hour12: false,
           }),
           rate: (item.rate * 100).toFixed(2),
-        };
+        } as DuplicateCheckingItem;
       });
     };
     const changeIntroduceShow = () => {
