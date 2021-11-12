@@ -403,6 +403,7 @@ export default defineComponent({
     border-radius: 50%;
   }
   .introduce-Asoul-name {
+    margin-top: 5px;
     font-size: 12px;
   }
 }
