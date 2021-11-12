@@ -2,7 +2,9 @@
   <div class="app">
     <asfNavbar :navList="navList"></asfNavbar>
     <div class="route-view">
-      <router-view />
+      <div class="componts-box">
+        <router-view />
+      </div>
     </div>
   </div>
 </template>
@@ -83,6 +85,8 @@ export default defineComponent({
 }
 .route-view {
   padding: 0 5.83vw;
+}
+.componts-box {
   max-width: 1440px;
   margin: auto;
 }
