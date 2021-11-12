@@ -89,5 +89,6 @@ export default defineComponent({
 .componts-box {
   max-width: 1440px;
   margin: auto;
+  border-top: 1px #dda19f solid;
 }
 </style>
