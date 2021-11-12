@@ -1,10 +1,6 @@
 <template>
   <div>
-    <headerTitle
-      Title="成分姬"
-      subTitle="帮助你快速分析用户成分"
-      @buttonClick="changeIntroduceShow()"
-    ></headerTitle>
+    <headerTitle title="成分姬" subTitle="帮助你快速分析用户成分" @buttonClick="changeIntroduceShow()"></headerTitle>
     <div v-show="isShowIntroduce" class="introduce-phone">
       <div class="introduce-title">功能介绍</div>
       <div class="introduce-text-content">
@@ -13,8 +9,7 @@
           <span
             @click="toBilibiliSpace(32957695)"
             class="introduce-text-content-name"
-            >晓轩iMIKU老师</span
-          >
+          >晓轩iMIKU老师</span>
           为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
         </div>
         <div class="introduce-text-content-section">
@@ -51,9 +46,7 @@
               'background-color': searchText.length > 0 ? '#4B5563' : '#9CA3AF',
             }"
             @click="getIngredient()"
-          >
-            查询成分
-          </div>
+          >查询成分</div>
         </div>
         <!-- 查询结果展示 -->
         <div class="results-area">
@@ -64,20 +57,14 @@
               复制结果
             </div>
           </div>
-          <div v-if="isVuplistEmpty" class="search-result-tip">
-            该用户没有关注的Vup捏~！
-          </div>
+          <div v-if="isVuplistEmpty" class="search-result-tip">该用户没有关注的Vup捏~！</div>
           <div class="search-result-VupList" v-else>
             <div class="Vup-item" v-for="item in vupList" :key="item.vupUid">
-              <img :src="item.vupFace" alt="" srcset="" class="Vup-item-face" />
+              <img :src="item.vupFace" class="Vup-item-face" />
               <div class="Vup-name">{{ item.vupName }}</div>
-              <div class="Vup-describe">
-                {{ item.officalVerify }}
-              </div>
+              <div class="Vup-describe">{{ item.officalVerify }}</div>
               <div class="divider"></div>
-              <div class="Vup-sign">
-                {{ item.vupSign }}
-              </div>
+              <div class="Vup-sign">{{ item.vupSign }}</div>
             </div>
           </div>
         </div>
@@ -90,8 +77,7 @@
             <span
               @click="toBilibiliSpace(32957695)"
               class="introduce-text-content-name"
-              >晓轩iMIKU老师</span
-            >
+            >晓轩iMIKU老师</span>
             为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
           </div>
           <div class="introduce-text-content-section">
@@ -121,6 +107,14 @@ import { defineComponent, ref } from "vue";
 import headerTitle from "@/components/HeaderTitle.vue";
 import useCurrentInstance from "@/hooks/useCurrentInstance";
 import copyToClipBoard from "@/hooks/useCopyToClipBoard";
+
+interface vupItem {
+  vupName: string
+  officalVerify: string
+  vupSign: string
+  vupUid: string
+  vupFace: string
+}
 export default defineComponent({
   components: { headerTitle },
   setup() {
@@ -157,7 +151,7 @@ export default defineComponent({
         face: "https://i1.hdslb.com/bfs/face/8895c87082beba1355ea4bc7f91f2786ef49e354.jpg@256w_256h_1o.webp",
       },
     ];
-    let vupList = ref([]);
+    let vupList = ref([] as vupItem[]);
     let searchText = ref("");
     let isVuplistEmpty = ref(false);
     const isShowIntroduce = ref(false);
@@ -168,7 +162,7 @@ export default defineComponent({
           return;
         }
         const res = await proxy.$request({
-          url: "cfj/",
+          url: import.meta.env.VITE_API_CFJ,
           params: {
             name: searchText.value,
           },
@@ -193,7 +187,7 @@ export default defineComponent({
               vupSign: item.sign,
               vupUid: item.mid,
               vupFace: item.face.replace("http://", "https://"),
-            };
+            } as vupItem;
           }
         );
         // debugger;

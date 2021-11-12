@@ -1,24 +1,13 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import Loading from "@/components/Loading/Loading";
 import { createApp } from "vue";
 import App from "../App.vue";
 const app = createApp(App);
 app.use(Loading);
-interface AxiosRequest {
-  baseURL?: string;
-  url: string;
-  data?: any;
-  params?: any;
-  method?: string;
-  loading?: string;
-}
-const request: any = async ({
-  url,
-  data,
-  params,
-  method = "get",
-  loading = "拼命加载中...",
-}: AxiosRequest) => {
+
+const request: any = async (config: AxiosRequestConfig,
+  loading = "拼命加载中...",) => {
+  const { url, data, params, method = "get" } = config
   console.log(url, data, params, method, loading);
   console.log("url,data, params, method, loading");
   try {

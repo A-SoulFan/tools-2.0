@@ -1,15 +1,11 @@
 <template>
   <div class="title-area">
-    <div class="main-title">{{ Title }}</div>
+    <div class="main-title">{{ title }}</div>
 
     <div class="title-area-sub">
-      <div class="sub-title">
-        {{ subTitle }}
-      </div>
+      <div class="sub-title">{{ subTitle }}</div>
       <div class="button-area" @click="handleClick" v-if="needButton">
-        <div class="button-text">
-          {{ buttonText }}
-        </div>
+        <div class="button-text">{{ buttonText }}</div>
         <img
           class="button-icon"
           :class="isTopIcon ? '' : 'rotate-top'"
@@ -25,7 +21,7 @@ import { defineComponent, ref } from "vue";
 
 export default defineComponent({
   props: {
-    Title: {
+    title: {
       type: String,
       require: true,
     },

@@ -1,23 +1,22 @@
 <template>
   <headerTitle
-    Title="枝江方言词典"
+    title="枝江方言词典"
     subTitle="你想了解的词条都在这"
+    :needButton="false"
     @buttonClick="changeIntroduceShow()"
   ></headerTitle>
   <div class="introduce-phone" v-show="isShowIntroduce">
     <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
-      <div class="introduce-text-content">
-        本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
-      </div>
+      <div
+        class="introduce-text-content"
+      >本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。</div>
       <div class="introduce-text-content">
         如果有新词条或者对词条的内容方面有建议的欢迎联系:
         <span
           class="introduce-targetUrl"
           @click="toTargetUrl('https://space.bilibili.com/1442421278')"
-        >
-          &nbsp;&nbsp;@ProJectASF</span
-        >
+        >&nbsp;&nbsp;@ProJectASF</span>
       </div>
     </div>
   </div>
@@ -40,7 +39,7 @@
         >
           查询词条
         </div>
-      </div> -->
+      </div>-->
 
       <div class="result-area" v-show="!isShowDetail">
         <!-- 分类 -->
@@ -55,9 +54,7 @@
             v-for="item in data.categoriesList"
             :key="item.cid"
             @click="setChildCategoriesList(item.cid)"
-          >
-            {{ item.name }}
-          </div>
+          >{{ item.name }}</div>
           <!-- 二级分类 -->
         </div>
         <div class="result-entries">
@@ -71,24 +68,15 @@
             v-for="item in data.childCategoriesList"
             :key="item.cid"
             @click="getContentList(item.cid)"
-          >
-            {{ item.name }}
-          </div>
+          >{{ item.name }}</div>
         </div>
 
         <!-- 结果 -->
         <div class="result-item-area">
-          <div
-            class="result-item"
-            v-for="entry in data.entryList"
-            :key="entry.eid"
-          >
+          <div class="result-item" v-for="entry in data.entryList" :key="entry.eid">
             <div class="result-item-header">
               <div class="result-item-title">{{ entry.title }}</div>
-              <div
-                class="result-item-header-right"
-                @click="toShowDetail(entry)"
-              >
+              <div class="result-item-header-right" @click="toShowDetail(entry)">
                 <img src="@/assets/icons/link-icon.svg" />
                 查看详情
               </div>
@@ -113,7 +101,7 @@
             最近更新 {{ contentDetailItem.timeText }}
           </div>
         </div>
-        <v-md-preview :text="contentDetailItem.content"></v-md-preview>
+        <div>{{ marked(contentDetailItem.content) }}</div>
       </div>
     </div>
     <div>
@@ -123,9 +111,9 @@
           <div class="introduce-text-content">
             <div class="introduce-text-content">
               <div class="introduce-text-content">
-                <div class="introduce-text-content">
-                  本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
-                </div>
+                <div
+                  class="introduce-text-content"
+                >本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。</div>
                 <div class="introduce-text-content">
                   如果有新词条或者对词条的内容方面有建议的欢迎联系:
                   <span
@@ -133,9 +121,7 @@
                     @click="
                       toTargetUrl('https://space.bilibili.com/1442421278')
                     "
-                  >
-                    &nbsp;&nbsp;@ProJectASF</span
-                  >
+                  >&nbsp;&nbsp;@ProJectASF</span>
                 </div>
               </div>
             </div>
@@ -150,6 +136,7 @@
 import { defineComponent, ref, reactive } from "vue";
 import headerTitle from "@/components/HeaderTitle.vue";
 import useCurrentInstance from "@/hooks/useCurrentInstance";
+import { marked } from "marked";
 export default defineComponent({
   name: "ZhijiangDict",
   components: { headerTitle },
@@ -174,7 +161,7 @@ export default defineComponent({
     let result = [] as any[];
     const searchWords = async () => {
       const res = await proxy.$request({
-        url: "dict/v1/public/search",
+        url: import.meta.env.VITE_API_DICT_SEARCH,
         method: "get",
         params: {
           kwd: searchText.value,
@@ -184,7 +171,7 @@ export default defineComponent({
     };
     const getCategoriesList = async () => {
       result = await proxy.$request({
-        url: "dict/v1/public/categories",
+        url: import.meta.env.VITE_API_DICT_CATEGORIES,
         method: "get",
       });
       let tempCategoriesList = [] as any[];
@@ -219,7 +206,7 @@ export default defineComponent({
     const getContentList = async (cid: number) => {
       data.childCategorieskey = cid;
       const res = await proxy.$request({
-        url: "dict/v1/public/entries",
+        url: import.meta.env.VITE_API_DICT_ENTRIES,
         method: "get",
         params: {
           cid,
@@ -267,6 +254,7 @@ export default defineComponent({
       isShowIntroduce,
       isShowDetail,
       contentDetailItem,
+      marked
     };
   },
 });
