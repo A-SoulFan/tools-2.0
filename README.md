@@ -24,10 +24,15 @@ pnpm i
 4. 启动开发服务器
 
 ```
-pnpm run dev
-// or 
-pnpm run serve
+pnpm dev
 ```
+
+5. lint（with fix）
+
+```
+pnpm lint
+```
+
 
 `VS Code` 用户请使用 `Vue Language Features (Volar)`插件, 并禁用所有其他 `vue` 相关插件如 `vetur`等.
 
@@ -39,13 +44,13 @@ pnpm run serve
 2. 打包
 
 ```
-pnpm run build
+pnpm build
 ```
 
 3. 可以预览当前打包的版本
 
 ```
-pnpm run preview
+pnpm preview
 ```
 
 ## Commit提交规范
