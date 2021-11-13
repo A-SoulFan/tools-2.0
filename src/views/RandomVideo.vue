@@ -1,34 +1,38 @@
 <!-- 今天溜什么-->
 <template>
   <div>
-    <header-title
-      Title="今天溜什么"
-      subTitle="相见即是缘份"
-      needButton="{{false}}"
-    ></header-title>
+    <header-title title="今天溜什么" sub-title="相见即是缘份"></header-title>
     <div class="update-time-area">
       <img class="icon-clock" src="@/assets/icons/clock.svg" />
-      <div class="update-time-text">{{ "最近更新" + updateTime }}</div>
+      <div class="update-time-text">
+        {{ "最近更新" + updateTime }}
+      </div>
     </div>
     <div class="iframe-box">
       <iframe :src="iframeUrl"></iframe>
       <div class="iframe-box-button-area">
         <div class="pre-button-area">
           <img class="pre-button-img" src="@/assets/icons/cube.svg" />
-          <div class="pre-button-text" @click="preVideo">回到上一条视频</div>
+          <div class="pre-button-text" @click="preVideo">
+            回到上一条视频
+          </div>
         </div>
-        <div class="random-button" @click="getRandomVideo">随便看看</div>
+        <div class="random-button" @click="getRandomVideo">
+          随便看看
+        </div>
       </div>
     </div>
     <div class="history-video-area">
       <div class="history-video-title-area">
-        <div class="history-video-title">历史记录</div>
+        <div class="history-video-title">
+          历史记录
+        </div>
       </div>
       <div class="history-video">
         <div
-          class="history-video-item"
           v-for="(item, index) in historyVideoList"
           :key="index"
+          class="history-video-item"
           @click="selectVideo(item)"
         >
           <div class="video-cover">
@@ -39,7 +43,9 @@
             <div class="video-title">
               {{ item.title }}
             </div>
-            <div class="video-time">观看时间：{{ item.time }}</div>
+            <div class="video-time">
+              观看时间：{{ item.time }}
+            </div>
           </div>
         </div>
       </div>
@@ -48,63 +54,63 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import headerTitle from "@/components/HeaderTitle.vue";
-import useCurrentInstance from "@/hooks/useCurrentInstance";
+import { defineComponent, ref } from 'vue'
+import headerTitle from '@/components/HeaderTitle.vue'
+import useCurrentInstance from '@/hooks/useCurrentInstance'
 
 interface videoObj {
-  title: string;
-  cover: string;
-  time: string;
-  play_url: string;
-  bv: string;
+  title: string
+  cover: string
+  time: string
+  play_url: string
+  bv: string
 }
 
 export default defineComponent({
   components: { headerTitle },
   setup() {
-    let historyVideoList: any[] = JSON.parse(
-      localStorage.getItem("historyVideoList") || JSON.stringify([])
-    );
-    let iframeUrl = ref("");
+    const historyVideoList: any[] = JSON.parse(
+      localStorage.getItem('historyVideoList') || JSON.stringify([]),
+    )
+    const iframeUrl = ref('')
     // TODO: 未拿取
-    let updateTime = ref("2021.8.26 15:00");
-    let currentVideoIndex = 0;
-    const { proxy } = useCurrentInstance();
+    const updateTime = ref('2021.8.26 15:00')
+    let currentVideoIndex = 0
+    const { proxy } = useCurrentInstance()
 
-    const getRandomVideo = async () => {
+    const getRandomVideo = async() => {
       const res = await proxy.$request({
-        url: "/api/stroll/random",
-      });
+        url: import.meta.env.VITE_API_RANDOMVIDEO,
+      })
       // debugger;
-      res.time = new Date().toLocaleString("chinese", { hour12: false });
-      currentVideoIndex = 0;
-      res.play_url = "https:" + res.play_url;
-      iframeUrl.value = res.play_url;
+      res.time = new Date().toLocaleString('chinese', { hour12: false })
+      currentVideoIndex = 0
+      res.play_url = `https:${res.play_url}`
+      iframeUrl.value = res.play_url
       // 长度保持在二十条
-      if (historyVideoList.length >= 20) {
-        historyVideoList.pop();
-      }
+      if (historyVideoList.length >= 20)
+        historyVideoList.pop()
+
       historyVideoList.unshift({
         title: res.title,
-        imgsrc: res.cover || "",
+        imgsrc: res.cover || '',
         time: res.time,
         play_url: res.play_url,
         bv: res.bv,
-      });
+      })
       localStorage.setItem(
-        "historyVideoList",
-        JSON.stringify(historyVideoList)
-      );
-    };
+        'historyVideoList',
+        JSON.stringify(historyVideoList),
+      )
+    }
     const preVideo = (): void => {
-      currentVideoIndex++;
-      iframeUrl.value = historyVideoList[currentVideoIndex].play_url;
-    };
+      currentVideoIndex++
+      iframeUrl.value = historyVideoList[currentVideoIndex].play_url
+    }
     const selectVideo = (item: videoObj): void => {
-      window.open("https://www.bilibili.com/video/" + item.bv);
-    };
-    getRandomVideo();
+      window.open(`https://www.bilibili.com/video/${item.bv}`)
+    }
+    getRandomVideo()
     return {
       updateTime,
       historyVideoList,
@@ -113,9 +119,9 @@ export default defineComponent({
       getRandomVideo,
       preVideo,
       selectVideo,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

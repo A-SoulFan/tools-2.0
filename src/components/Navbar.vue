@@ -6,12 +6,12 @@
       </div>
       <div class="elementary-nav-content-area">
         <div
+          v-for="(elementary, index) in navList as { name: string }[]"
+          :key="elementary.name"
           class="elementary-nav-content-item"
           :class="
             data.navIndex === index ? 'elementary-nav-content-item-active' : ''
           "
-          v-for="(elementary, index) in navList"
-          :key="elementary.name"
           @click="selectElementary(elementary, index)"
         >
           {{ elementary.name }}
@@ -21,11 +21,11 @@
         <img src="@/assets/icons/personIcon.svg" />
       </div>
     </div>
-    <div class="secondary-nav-area" v-show="data.isShowSecondary">
+    <div v-show="data.isShowSecondary" class="secondary-nav-area">
       <div
-        class="secondary-nav-content-item"
         v-for="secondary in data.secondaryList"
         :key="secondary"
+        class="secondary-nav-content-item"
         @click="selectSecondary(secondary)"
       >
         {{ secondary.name }}
@@ -35,14 +35,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
-import { useRouter } from "vue-router";
+import { defineComponent, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 export default defineComponent({
   props: {
     navList: {
       type: Array,
     },
-    Title: {
+    title: {
       type: String,
       require: true,
     },
@@ -55,40 +55,41 @@ export default defineComponent({
     },
   },
   setup(prop) {
-    console.log(prop);
-    const route = useRouter();
+    console.log(prop)
+    const route = useRouter()
     const data = reactive({
-      navIndex: new Number(),
+      navIndex: 0,
       secondaryList: [] as any,
       isShowSecondary: false,
-    });
+    })
     const selectElementary = (item: any, index: number) => {
       if (data.isShowSecondary && data.navIndex === index) {
-        data.isShowSecondary = false;
-        return;
+        data.isShowSecondary = false
+        return
       }
-      console.log(item);
-      console.log(data);
-      data.secondaryList = item.secondaryList;
-      data.navIndex = index;
-      data.isShowSecondary = true;
-    };
+      console.log(item)
+      console.log(data)
+      data.secondaryList = item.secondaryList
+      data.navIndex = index
+      data.isShowSecondary = true
+    }
     const selectSecondary = (item: any) => {
-      if (item.methods === "router") {
-        route.push(item.link);
-        data.isShowSecondary = false;
-      } else {
-        // TODO:外链跳转
-        console.log(item);
+      if (item.methods === 'router') {
+        route.push(item.link)
+        data.isShowSecondary = false
       }
-    };
+      else {
+        // TODO:外链跳转
+        console.log(item)
+      }
+    }
     return {
       selectElementary,
       selectSecondary,
       data,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

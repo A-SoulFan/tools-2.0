@@ -1,40 +1,47 @@
 <!-- 今天溜什么-->
 <template>
   <div>
-    <header-title
-      Title="表情包"
-      subTitle="你想要的表情包都在这里"
-    ></header-title>
+    <header-title title="表情包" sub-title="你想要的表情包都在这里"></header-title>
     <div class="block"></div>
     <div class="update-time-area">
       <div class="time-left">
         <img class="icon-clock" src="../assets/icons/clock.svg" />
-        <div class="update-time-text">{{ "最近更新" + updateTime }}</div>
+        <div class="update-time-text">
+          {{ "最近更新" + updateTime }}
+        </div>
       </div>
 
-      <button class="head-button">刷新</button>
+      <button class="head-button">
+        刷新
+      </button>
     </div>
   </div>
 
   <div class="button-area">
-    <button class="button">A</button>
+    <button class="button">
+      A
+    </button>
 
-    <button class="button">B</button>
+    <button class="button">
+      B
+    </button>
 
-    <button class="button">C</button>
+    <button class="button">
+      C
+    </button>
 
-    <button class="button">D</button>
+    <button class="button">
+      D
+    </button>
 
-    <button class="button">E</button>
+    <button class="button">
+      E
+    </button>
   </div>
   <div class="block"></div>
-  <div class="masonry" id="app-mains">
+  <div id="app-mains" class="masonry">
     <div v-for="item in res" :key="item.id" class="item">
-      <img
-        :src="'https:' + item.url + '@518w.webp'"
-        alt="加载错误"
-        class="itemimage"
-      />
+      <img :src="'https:' + item.url + '@518w.webp'" alt="加载错误" class="itemimage" />
       <span class="item2">
         <button class="itembutton" @click="getContent">
           <img src="../assets/icons/coolicon.svg" class="cool" />
@@ -45,48 +52,48 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import headerTitle from "../components/HeaderTitle.vue";
-import useCurrentInstance from "@/hooks/useCurrentInstance";
+import { defineComponent, ref } from 'vue'
+import headerTitle from '../components/HeaderTitle.vue'
+import useCurrentInstance from '@/hooks/useCurrentInstance'
 
 export interface itemObj {
-  id: string;
-  url: string;
-  height: string;
-  width: string;
+  id: string
+  url: string
+  height: string
+  width: string
 }
 
 export default defineComponent({
   components: { headerTitle },
 
   setup() {
-    const Title = "表情包";
-    const subtitle = "你想要的表情包都在这里";
-    let updateTime = ref("2021.8.26 15:00");
-    const res = ref<itemObj[]>([]);
-    const loading = ref(false);
+    const Title = '表情包'
+    const subtitle = '你想要的表情包都在这里'
+    const updateTime = ref('2021.8.26 15:00')
+    const res = ref<itemObj[]>([])
+    const loading = ref(false)
     // 获取列表
 
-    const { proxy } = useCurrentInstance();
+    const { proxy } = useCurrentInstance()
 
-    const getItem = async () => {
+    const getItem = async() => {
       res.value = await proxy.$request({
-        url: "https://tools.asoulfan.com/emoji/",
+        url: import.meta.env.VITE_API_EMOJI,
         params: {
           page: 1,
           limit: 100,
         },
-      });
+      })
 
-      loading.value = true;
-      loading.value = false;
-      console.log(proxy);
-    };
+      loading.value = true
+      loading.value = false
+      console.log(proxy)
+    }
 
-    getItem();
+    getItem()
 
     function getContent() {
-      window.open("https" + res.value);
+      window.open(`https${res.value}`)
     }
     return {
       Title,
@@ -96,9 +103,9 @@ export default defineComponent({
       loading,
       res,
       getContent,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">
@@ -136,7 +143,6 @@ export default defineComponent({
   background: #fff;
   border: none;
   font-size: 15px;
-  font-family: OPPOSans;
   font-style: normal;
   font-weight: 400;
   line-height: 53px;
@@ -207,7 +213,7 @@ export default defineComponent({
   background: #f8f8f8;
   border: none;
 }
-.item P {
+.item p {
   color: #555;
 }
 

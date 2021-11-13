@@ -1,13 +1,18 @@
 <template>
   <headerTitle
-    Title="枝江方言词典"
-    subTitle="你想了解的词条都在这"
+    title="枝江方言词典"
+    sub-title="你想了解的词条都在这"
+    :need-button="false"
     @buttonClick="changeIntroduceShow()"
   ></headerTitle>
-  <div class="introduce-phone" v-show="isShowIntroduce">
-    <div class="introduce-title">功能介绍</div>
+  <div v-show="isShowIntroduce" class="introduce-phone">
+    <div class="introduce-title">
+      功能介绍
+    </div>
     <div class="introduce-text-content">
-      <div class="introduce-text-content">
+      <div
+        class="introduce-text-content"
+      >
         本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
       </div>
       <div class="introduce-text-content">
@@ -15,9 +20,7 @@
         <span
           class="introduce-targetUrl"
           @click="toTargetUrl('https://space.bilibili.com/1442421278')"
-        >
-          &nbsp;&nbsp;@ProJectASF</span
-        >
+        >&nbsp;&nbsp;@ProJectASF</span>
       </div>
     </div>
   </div>
@@ -40,20 +43,20 @@
         >
           查询词条
         </div>
-      </div> -->
+      </div>-->
 
-      <div class="result-area" v-show="!isShowDetail">
+      <div v-show="!isShowDetail" class="result-area">
         <!-- 分类 -->
         <div class="result-categories">
           <div
+            v-for="item in data.categoriesList"
+            :key="item.cid"
             class="result-categories-item"
             :class="
               data.categoriesKey === item.cid
                 ? 'result-categories-item-active'
                 : ''
             "
-            v-for="item in data.categoriesList"
-            :key="item.cid"
             @click="setChildCategoriesList(item.cid)"
           >
             {{ item.name }}
@@ -62,14 +65,14 @@
         </div>
         <div class="result-entries">
           <div
+            v-for="item in data.childCategoriesList"
+            :key="item.cid"
             class="result-entries-item"
             :class="
               data.childCategorieskey === item.cid
                 ? 'result-entries-item-active'
                 : ''
             "
-            v-for="item in data.childCategoriesList"
-            :key="item.cid"
             @click="getContentList(item.cid)"
           >
             {{ item.name }}
@@ -78,22 +81,19 @@
 
         <!-- 结果 -->
         <div class="result-item-area">
-          <div
-            class="result-item"
-            v-for="entry in data.entryList"
-            :key="entry.eid"
-          >
+          <div v-for="entry in data.entryList" :key="entry.eid" class="result-item">
             <div class="result-item-header">
-              <div class="result-item-title">{{ entry.title }}</div>
-              <div
-                class="result-item-header-right"
-                @click="toShowDetail(entry)"
-              >
+              <div class="result-item-title">
+                {{ entry.title }}
+              </div>
+              <div class="result-item-header-right" @click="toShowDetail(entry)">
                 <img src="@/assets/icons/link-icon.svg" />
                 查看详情
               </div>
             </div>
-            <div class="result-item-content">{{ entry.content }}</div>
+            <div class="result-item-content">
+              {{ entry.content }}
+            </div>
             <div class="result-item-footer">
               <img src="@/assets/icons/clock.svg" />
               更新日期 {{ entry.timeText }}
@@ -101,29 +101,35 @@
           </div>
         </div>
       </div>
-      <div class="entry-detail-area" v-show="isShowDetail">
+      <div v-show="isShowDetail" class="entry-detail-area">
         <div class="entry-detail-header" @click="closeDetail">
           返回
           <img src="@/assets/icons/return.svg" />
         </div>
         <div class="entry-detail-title-time">
-          <div class="entry-detail-title">{{ contentDetailItem.title }}</div>
+          <div class="entry-detail-title">
+            {{ contentDetailItem.title }}
+          </div>
           <div class="entry-detail-time">
             <img src="@/assets/icons/clock.svg" />
             最近更新 {{ contentDetailItem.timeText }}
           </div>
         </div>
-        <v-md-preview :text="contentDetailItem.content"></v-md-preview>
+        <div>{{ marked(contentDetailItem.content) }}</div>
       </div>
     </div>
     <div>
       <div>
         <div class="introduce-pc">
-          <div class="introduce-title">功能介绍</div>
+          <div class="introduce-title">
+            功能介绍
+          </div>
           <div class="introduce-text-content">
             <div class="introduce-text-content">
               <div class="introduce-text-content">
-                <div class="introduce-text-content">
+                <div
+                  class="introduce-text-content"
+                >
                   本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
                 </div>
                 <div class="introduce-text-content">
@@ -133,9 +139,7 @@
                     @click="
                       toTargetUrl('https://space.bilibili.com/1442421278')
                     "
-                  >
-                    &nbsp;&nbsp;@ProJectASF</span
-                  >
+                  >&nbsp;&nbsp;@ProJectASF</span>
                 </div>
               </div>
             </div>
@@ -147,22 +151,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from "vue";
-import headerTitle from "@/components/HeaderTitle.vue";
-import useCurrentInstance from "@/hooks/useCurrentInstance";
+import { defineComponent, ref, reactive } from 'vue'
+import { marked } from 'marked'
+import headerTitle from '@/components/HeaderTitle.vue'
+import useCurrentInstance from '@/hooks/useCurrentInstance'
 export default defineComponent({
-  name: "ZhijiangDict",
+  name: 'ZhijiangDict',
   components: { headerTitle },
   setup() {
-    const { proxy } = useCurrentInstance();
-    const searchText = ref("");
-    const isShowIntroduce = ref(false);
-    const isShowDetail = ref(false);
+    const { proxy } = useCurrentInstance()
+    const searchText = ref('')
+    const isShowIntroduce = ref(false)
+    const isShowDetail = ref(false)
     const contentDetailItem = reactive({
-      title: "",
-      timeText: "",
-      content: "",
-    });
+      title: '',
+      timeText: '',
+      content: '',
+    })
     const data = reactive({
       categoriesList: [] as any[],
       categoriesKey: 0,
@@ -170,24 +175,55 @@ export default defineComponent({
       childCategorieskey: 0,
       entryList: [] as any[],
       entryKey: 0,
-    });
-    let result = [] as any[];
-    const searchWords = async () => {
+    })
+    let result = [] as any[]
+    const searchWords = async() => {
       const res = await proxy.$request({
-        url: "dict/v1/public/search",
-        method: "get",
+        url: import.meta.env.VITE_API_DICT_SEARCH,
+        method: 'get',
         params: {
           kwd: searchText.value,
         },
-      });
-      console.log(res);
-    };
-    const getCategoriesList = async () => {
+      })
+      console.log(res)
+    }
+    const getContentList = async(cid: number) => {
+      data.childCategorieskey = cid
+      const res = await proxy.$request({
+        url: import.meta.env.VITE_API_DICT_ENTRIES,
+        method: 'get',
+        params: {
+          cid,
+        },
+      })
+      data.entryList = res.map((item: any) => {
+        // 将10位时间戳转成13位
+        item.timeText = new Date(item.updated * 1000).toLocaleString(
+          'chinese',
+          {
+            hour12: false,
+          },
+        )
+        return item
+      })
+    }
+    // 设置二级目录列表
+    const setChildCategoriesList = (cid: number) => {
+      const temp = [] as any[]
+      data.categoriesKey = cid
+      result.forEach((element: any) => {
+        if (element.parent_cid === cid)
+          temp.push(element)
+      })
+      data.childCategoriesList = temp
+      getContentList(data.childCategoriesList[0].cid)
+    }
+    const getCategoriesList = async() => {
       result = await proxy.$request({
-        url: "dict/v1/public/categories",
-        method: "get",
-      });
-      let tempCategoriesList = [] as any[];
+        url: import.meta.env.VITE_API_DICT_CATEGORIES,
+        method: 'get',
+      })
+      const tempCategoriesList = [] as any[]
 
       // 生成分类列表
       result.forEach((element: any) => {
@@ -196,64 +232,32 @@ export default defineComponent({
             cid: element.cid,
             name: element.name,
             children: [],
-          });
+          })
         }
-      });
+      })
 
-      data.categoriesList = tempCategoriesList;
+      data.categoriesList = tempCategoriesList
 
-      setChildCategoriesList(data.categoriesList[0].cid);
-    };
-    // 设置二级目录列表
-    const setChildCategoriesList = (cid: number) => {
-      let temp = [] as any[];
-      data.categoriesKey = cid;
-      result.forEach((element: any) => {
-        if (element.parent_cid === cid) {
-          temp.push(element);
-        }
-      });
-      data.childCategoriesList = temp;
-      getContentList(data.childCategoriesList[0].cid);
-    };
-    const getContentList = async (cid: number) => {
-      data.childCategorieskey = cid;
-      const res = await proxy.$request({
-        url: "dict/v1/public/entries",
-        method: "get",
-        params: {
-          cid,
-        },
-      });
-      data.entryList = res.map((item: any) => {
-        // 将10位时间戳转成13位
-        item.timeText = new Date(item.updated * 1000).toLocaleString(
-          "chinese",
-          {
-            hour12: false,
-          }
-        );
-        return item;
-      });
-    };
+      setChildCategoriesList(data.categoriesList[0].cid)
+    }
     const toShowDetail = (item: any) => {
-      contentDetailItem.title = item.title;
-      contentDetailItem.timeText = item.timeText;
-      contentDetailItem.content = item.content;
-      isShowDetail.value = true;
-    };
+      contentDetailItem.title = item.title
+      contentDetailItem.timeText = item.timeText
+      contentDetailItem.content = item.content
+      isShowDetail.value = true
+    }
     const closeDetail = () => {
-      isShowDetail.value = false;
-    };
+      isShowDetail.value = false
+    }
     const changeIntroduceShow = () => {
-      isShowIntroduce.value = !isShowIntroduce.value;
-    };
+      isShowIntroduce.value = !isShowIntroduce.value
+    }
 
     const toTargetUrl = (url: string) => {
-      window.open(url);
-    };
+      window.open(url)
+    }
 
-    getCategoriesList();
+    getCategoriesList()
     return {
       searchWords,
       setChildCategoriesList,
@@ -267,9 +271,10 @@ export default defineComponent({
       isShowIntroduce,
       isShowDetail,
       contentDetailItem,
-    };
+      marked,
+    }
   },
-});
+})
 </script>
 
 <style lang="less">

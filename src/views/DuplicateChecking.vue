@@ -1,16 +1,10 @@
 <template>
-  <headerTitle
-    Title="知网查重"
-    subTitle="帮助你快速识别原创小作文"
-    @buttonClick="changeIntroduceShow()"
-  ></headerTitle>
+  <headerTitle title="知网查重" sub-title="帮助你快速识别原创小作文" @buttonClick="changeIntroduceShow()"></headerTitle>
   <div v-show="isShowIntroduce" class="introduce-phone">
-    <div class="introduce-title">功能介绍</div>
-    <div
-      class="introduce-text-content"
-      v-for="(item, index) in contentList"
-      :key="index"
-    >
+    <div class="introduce-title">
+      功能介绍
+    </div>
+    <div v-for="(item, index) in contentList" :key="index" class="introduce-text-content">
       <div>{{ item.title }}</div>
       <div>{{ item.content }}</div>
     </div>
@@ -33,12 +27,14 @@
     <div class="search-and-result">
       <div class="search-area">
         <textarea
+          v-model="searchData.searchValue"
           placeholder="在这里输入小作文哦"
           maxlength="1000"
           class="search-textarea"
-          v-model="searchData.searchValue"
         ></textarea>
-        <div class="search-text-count">
+        <div
+          class="search-text-count"
+        >
           总字数:{{ searchData.searchValue.length }}/{{ searchData.maxLength }}
         </div>
         <div
@@ -54,11 +50,7 @@
       </div>
 
       <div class="result-area">
-        <div
-          v-for="item in DuplicateCheckingList"
-          :key="item"
-          class="result-item"
-        >
+        <div v-for="item in DuplicateCheckingList" :key="item.date" class="result-item">
           <div class="result-item-flex">
             <div class="display-center">
               <div
@@ -68,7 +60,9 @@
                 "
               >
                 <img src="@/assets/icons/BilibiliIcon.svg" />
-                <div class="result-item-author">{{ item.author }}</div>
+                <div class="result-item-author">
+                  {{ item.author }}
+                </div>
               </div>
               <div>查重率 {{ item.rate }}%</div>
             </div>
@@ -77,16 +71,15 @@
               复制
             </div>
           </div>
-          <div class="result-item-content">{{ item.content }}</div>
+          <div class="result-item-content">
+            {{ item.content }}
+          </div>
           <div class="result-item-flex">
             <div class="display-center">
               <img src="@/assets/icons/clock.svg" />
               <div>发表时间 {{ item.date }}</div>
             </div>
-            <div
-              class="display-center cursor"
-              @click="toTargetUrl(item.targetUrl)"
-            >
+            <div class="display-center cursor" @click="toTargetUrl(item.targetUrl)">
               <img src="@/assets/icons/link-icon.svg" />
               前往评论区
             </div>
@@ -96,12 +89,10 @@
     </div>
     <div>
       <div class="introduce-pc">
-        <div class="introduce-title">功能介绍</div>
-        <div
-          class="introduce-text-content"
-          v-for="(item, index) in contentList"
-          :key="index"
-        >
+        <div class="introduce-title">
+          功能介绍
+        </div>
+        <div v-for="(item, index) in contentList" :key="index" class="introduce-text-content">
           <div>{{ item.title }}</div>
           <div>{{ item.content }}</div>
         </div>
@@ -125,45 +116,56 @@
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent, ref } from "vue";
-import useCurrentInstance from "@/hooks/useCurrentInstance";
-import headerTitle from "@/components/HeaderTitle.vue";
-import copyToClipBoard from "@/hooks/useCopyToClipBoard";
+import { reactive, defineComponent, ref } from 'vue'
+import useCurrentInstance from '@/hooks/useCurrentInstance'
+import headerTitle from '@/components/HeaderTitle.vue'
+import copyToClipBoard from '@/hooks/useCopyToClipBoard'
+
+interface DuplicateCheckingItem {
+  targetUrl: string
+  content: string
+  author: string
+  authorUid: string
+  // 将10位时间戳转成13位
+  date: string
+  rate: string
+}
+
 export default defineComponent({
-  name: "DuplicateChecking",
+  name: 'DuplicateChecking',
   components: { headerTitle },
   setup() {
     const contentList = [
       {
-        title: "比对库内容范围:",
-        content: "B站动态,视频评论区（仅限A-Soul的六个官方账号）",
+        title: '比对库内容范围:',
+        content: 'B站动态,视频评论区（仅限A-Soul的六个官方账号）',
       },
       {
-        title: "比对库时间范围:",
-        content: "2020/11/23 21:18:26 至 2021/08/27 11:58:39",
+        title: '比对库时间范围:',
+        content: '2020/11/23 21:18:26 至 2021/08/27 11:58:39',
       },
       {
-        title: "参考文献:",
-        content: "[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学",
+        title: '参考文献:',
+        content: '[1]李旭.基于串匹配方法的文档复制检测系统研究[D].燕山大学',
       },
-    ];
-    let searchData = reactive({
+    ]
+    const searchData = reactive({
       maxLength: 1000,
-      searchValue: "",
-      btnContent: "查询结果",
-    });
-    let DuplicateCheckingList = ref([]);
-    let isShowIntroduce = ref(false);
-    const { proxy } = useCurrentInstance();
-    //方法
-    const getDuplicate = async () => {
+      searchValue: '',
+      btnContent: '查询结果',
+    })
+    const DuplicateCheckingList = ref([] as DuplicateCheckingItem[])
+    const isShowIntroduce = ref(false)
+    const { proxy } = useCurrentInstance()
+    // 方法
+    const getDuplicate = async() => {
       const res = await proxy.$request({
-        method: "post",
-        url: "https://asoulcnki.asia/v1/api/check",
+        method: 'post',
+        url: import.meta.env.VITE_API_DUPLICATECHECKING,
         data: {
           text: searchData.searchValue,
         },
-      });
+      })
       DuplicateCheckingList.value = res.related.map((item: any) => {
         return {
           targetUrl: item.reply_url,
@@ -171,20 +173,20 @@ export default defineComponent({
           author: item.reply.m_name,
           authorUid: item.reply.mid,
           // 将10位时间戳转成13位
-          date: new Date(item.reply.ctime * 1000).toLocaleString("chinese", {
+          date: new Date(item.reply.ctime * 1000).toLocaleString('chinese', {
             hour12: false,
           }),
           rate: (item.rate * 100).toFixed(2),
-        };
-      });
-    };
+        } as DuplicateCheckingItem
+      })
+    }
     const changeIntroduceShow = () => {
-      isShowIntroduce.value = !isShowIntroduce.value;
-    };
+      isShowIntroduce.value = !isShowIntroduce.value
+    }
     const copyResult = (item: any) => {
-      const Time = new Date().toLocaleString("chinese", {
+      const Time = new Date().toLocaleString('chinese', {
         hour12: false,
-      });
+      })
       const copyText = `枝网文本复制检测报告(ProJectASF)
       查重时间:${Time}
       总文字复制比:${item.rate}%
@@ -192,12 +194,12 @@ export default defineComponent({
       作者：${item.author}
       发表时间：${item.date}
       查重结果仅作参考，请注意辨别是否为原创
-      `;
-      copyToClipBoard(copyText);
-    };
+      `
+      copyToClipBoard(copyText)
+    }
     const toTargetUrl = (url: string) => {
-      window.open(url);
-    };
+      window.open(url)
+    }
     return {
       getDuplicate,
       copyResult,
@@ -207,18 +209,12 @@ export default defineComponent({
       contentList,
       isShowIntroduce,
       searchData,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">
-@font-face {
-  font-family: "OPPOSan-M";
-  src: url("../assets/font/OPPOSans-M.woff2");
-  font-weight: normal;
-  font-style: normal;
-}
 .display-center {
   display: flex;
   justify-content: center;
@@ -248,7 +244,6 @@ export default defineComponent({
       resize: none;
       padding: 10px 10px 40px 10px;
       font-size: 18px;
-      font-family: "OPPOSan-M", Microsoft Yahei, Times, serif;
       color: #374151;
       border: 1px solid #d1d5db;
       border-radius: 2px;
@@ -260,7 +255,6 @@ export default defineComponent({
     textarea[class="search-textarea"]::-webkit-input-placeholder {
       font-size: 20px;
       color: #d1d5db;
-      font-family: "OPPOSan-M", Microsoft Yahei, Times, serif;
     }
     .search-text-count {
       position: absolute;

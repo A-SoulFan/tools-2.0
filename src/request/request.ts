@@ -1,55 +1,46 @@
-import axios from "axios";
-import Loading from "@/components/Loading/Loading";
-import { createApp } from "vue";
-import App from "../App.vue";
-const app = createApp(App);
-app.use(Loading);
-interface AxiosRequest {
-  baseURL?: string;
-  url: string;
-  data?: any;
-  params?: any;
-  method?: string;
-  loading?: string;
-}
-const request: any = async ({
-  url,
-  data,
-  params,
-  method = "get",
-  loading = "拼命加载中...",
-}: AxiosRequest) => {
-  console.log(url, data, params, method, loading);
-  console.log("url,data, params, method, loading");
+import axios, { AxiosRequestConfig } from 'axios'
+import { createApp } from 'vue'
+import App from '../App.vue'
+import Loading from '@/components/Loading/Loading'
+const app = createApp(App)
+app.use(Loading)
+
+const request: any = async(config: AxiosRequestConfig,
+  loading = '拼命加载中...') => {
+  const { url, data, params, method = 'get' } = config
+  console.log(url, data, params, method, loading)
+  console.log('url,data, params, method, loading')
   try {
-    app.config.globalProperties.$loading.show(loading);
+    app.config.globalProperties.$loading.show(loading)
     const result: any = await axios({
-      url: url,
+      url,
       data,
       method,
       params,
-    });
+    })
 
     if (result.status === 200) {
       if (result.data.code === 0) {
-        app.config.globalProperties.$loading.hide();
-        return result.data.data;
-      } else {
+        app.config.globalProperties.$loading.hide()
+        return result.data.data
+      }
+      else {
         // TODO: 错误浮窗
-        console.log(result.data.message);
+        console.log(result.data.message)
       }
     }
 
-    console.log(result, "result");
-    app.config.globalProperties.$loading.hide();
-    return result.data.data;
-  } catch (error) {
-    app.config.globalProperties.$loading.hide();
+    console.log(result, 'result')
+    app.config.globalProperties.$loading.hide()
+    return result.data.data
+  }
+  catch (error) {
+    app.config.globalProperties.$loading.hide()
 
-    console.log(error);
+    console.log(error)
   }
   // debugger;
-};
+}
 
 // const request = axios.create({
 //   // 设置baseUr地址
@@ -78,4 +69,4 @@ const request: any = async ({
 //     return Promise.reject(error);
 //   }
 // );
-export default request;
+export default request

@@ -1,19 +1,21 @@
 <!-- 请求加载弹窗组件 -->
 <template>
-  <div class="loading" v-if="msg.loadingShow">
+  <div v-if="msg.loadingShow" class="loading">
     <img src="@/assets/Logo.svg" class="loading-icon" />
-    <div class="loading-text">{{ msg.title }}</div>
+    <div class="loading-text">
+      {{ msg.title }}
+    </div>
   </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   props: {
     msg: Object,
   },
-});
+})
 </script>
 
 <style lang="less">
