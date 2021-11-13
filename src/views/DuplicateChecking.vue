@@ -1,7 +1,9 @@
 <template>
   <headerTitle title="知网查重" sub-title="帮助你快速识别原创小作文" @buttonClick="changeIntroduceShow()"></headerTitle>
   <div v-show="isShowIntroduce" class="introduce-phone">
-    <div class="introduce-title">功能介绍</div>
+    <div class="introduce-title">
+      功能介绍
+    </div>
     <div v-for="(item, index) in contentList" :key="index" class="introduce-text-content">
       <div>{{ item.title }}</div>
       <div>{{ item.content }}</div>
@@ -32,7 +34,9 @@
         ></textarea>
         <div
           class="search-text-count"
-        >总字数:{{ searchData.searchValue.length }}/{{ searchData.maxLength }}</div>
+        >
+          总字数:{{ searchData.searchValue.length }}/{{ searchData.maxLength }}
+        </div>
         <div
           class="search-button"
           :style="{
@@ -40,7 +44,9 @@
               searchData.searchValue.length > 0 ? '#4B5563' : '#9CA3AF',
           }"
           @click="getDuplicate()"
-        >查询成分</div>
+        >
+          查询成分
+        </div>
       </div>
 
       <div class="result-area">
@@ -54,7 +60,9 @@
                 "
               >
                 <img src="@/assets/icons/BilibiliIcon.svg" />
-                <div class="result-item-author">{{ item.author }}</div>
+                <div class="result-item-author">
+                  {{ item.author }}
+                </div>
               </div>
               <div>查重率 {{ item.rate }}%</div>
             </div>
@@ -63,7 +71,9 @@
               复制
             </div>
           </div>
-          <div class="result-item-content">{{ item.content }}</div>
+          <div class="result-item-content">
+            {{ item.content }}
+          </div>
           <div class="result-item-flex">
             <div class="display-center">
               <img src="@/assets/icons/clock.svg" />
@@ -79,7 +89,9 @@
     </div>
     <div>
       <div class="introduce-pc">
-        <div class="introduce-title">功能介绍</div>
+        <div class="introduce-title">
+          功能介绍
+        </div>
         <div v-for="(item, index) in contentList" :key="index" class="introduce-text-content">
           <div>{{ item.title }}</div>
           <div>{{ item.content }}</div>
@@ -146,7 +158,7 @@ export default defineComponent({
     const isShowIntroduce = ref(false)
     const { proxy } = useCurrentInstance()
     // 方法
-    const getDuplicate = async () => {
+    const getDuplicate = async() => {
       const res = await proxy.$request({
         method: 'post',
         url: import.meta.env.VITE_API_DUPLICATECHECKING,
