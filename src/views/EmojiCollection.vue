@@ -6,37 +6,23 @@
     <div class="update-time-area">
       <div class="time-left">
         <img class="icon-clock" src="../assets/icons/clock.svg" />
-        <div class="update-time-text">
-          {{ "最近更新" + updateTime }}
-        </div>
+        <div class="update-time-text">{{ "最近更新" + updateTime }}</div>
       </div>
 
-      <button class="head-button">
-        刷新
-      </button>
+      <button class="head-button">刷新</button>
     </div>
   </div>
 
   <div class="button-area">
-    <button class="button">
-      A
-    </button>
+    <button class="button">A</button>
 
-    <button class="button">
-      B
-    </button>
+    <button class="button">B</button>
 
-    <button class="button">
-      C
-    </button>
+    <button class="button">C</button>
 
-    <button class="button">
-      D
-    </button>
+    <button class="button">D</button>
 
-    <button class="button">
-      E
-    </button>
+    <button class="button">E</button>
   </div>
   <div class="block"></div>
   <div id="app-mains" class="masonry">
@@ -76,7 +62,7 @@ export default defineComponent({
 
     const { proxy } = useCurrentInstance()
 
-    const getItem = async() => {
+    const getItem = async () => {
       res.value = await proxy.$request({
         url: import.meta.env.VITE_API_EMOJI,
         params: {
@@ -143,7 +129,6 @@ export default defineComponent({
   background: #fff;
   border: none;
   font-size: 15px;
-  font-family: OPPOSans;
   font-style: normal;
   font-weight: 400;
   line-height: 53px;
