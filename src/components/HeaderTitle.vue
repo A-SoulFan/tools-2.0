@@ -1,11 +1,17 @@
 <template>
   <div class="title-area">
-    <div class="main-title">{{ title }}</div>
+    <div class="main-title">
+      {{ title }}
+    </div>
 
     <div class="title-area-sub">
-      <div class="sub-title">{{ subTitle }}</div>
-      <div class="button-area" @click="handleClick" v-if="needButton">
-        <div class="button-text">{{ buttonText }}</div>
+      <div class="sub-title">
+        {{ subTitle }}
+      </div>
+      <div v-if="needButton" class="button-area" @click="handleClick">
+        <div class="button-text">
+          {{ buttonText }}
+        </div>
         <img
           class="button-icon"
           :class="isTopIcon ? '' : 'rotate-top'"
@@ -17,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   props: {
@@ -34,26 +40,26 @@ export default defineComponent({
     },
   },
   setup(prop, context) {
-    console.log(prop);
-    const buttonText = ref<string>("详情");
-    const isTopIcon = ref(true);
+    console.log(prop)
+    const buttonText = ref<string>('详情')
+    const isTopIcon = ref(true)
     const handleClick = () => {
-      context.emit("buttonClick");
+      context.emit('buttonClick')
       // false
-      if (!isTopIcon.value) {
-        buttonText.value = "详情";
-      } else {
-        buttonText.value = "收起";
-      }
-      isTopIcon.value = !isTopIcon.value;
-    };
+      if (!isTopIcon.value)
+        buttonText.value = '详情'
+      else
+        buttonText.value = '收起'
+
+      isTopIcon.value = !isTopIcon.value
+    }
     return {
       handleClick,
       buttonText,
       isTopIcon,
-    };
+    }
   },
-});
+})
 </script>
 
 <style scoped lang="less">

@@ -1,53 +1,53 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
-    redirect: "/randomVideo",
+    path: '/',
+    redirect: '/randomVideo',
   },
   {
-    path: "/randomVideo",
-    name: "randomVideo",
+    path: '/randomVideo',
+    name: 'randomVideo',
     component: () =>
-      import(/* webpackChunkName: "RandomVideo" */ "../views/RandomVideo.vue"),
+      import(/* webpackChunkName: "RandomVideo" */ '../views/RandomVideo.vue'),
   },
   {
-    path: "/duplicateChecking",
-    name: "duplicateChecking",
+    path: '/duplicateChecking',
+    name: 'duplicateChecking',
     component: () =>
       import(
-        /* webpackChunkName: "DuplicateChecking" */ "../views/DuplicateChecking.vue"
+        /* webpackChunkName: "DuplicateChecking" */ '../views/DuplicateChecking.vue'
       ),
   },
   {
-    path: "/zhijiangDict",
-    name: "zhijiangDict",
+    path: '/zhijiangDict',
+    name: 'zhijiangDict',
     component: () =>
       import(
-        /* webpackChunkName: "ZhijiangDict" */ "../views/ZhijiangDict.vue"
+        /* webpackChunkName: "ZhijiangDict" */ '../views/ZhijiangDict.vue'
       ),
   },
   {
-    path: "/emojicollect",
-    name: "emojicollect",
+    path: '/emojicollect',
+    name: 'emojicollect',
     component: () =>
       import(
-        /* webpackChunkName: "Emojicollect" */ "../views/EmojiCollection.vue"
+        /* webpackChunkName: "Emojicollect" */ '../views/EmojiCollection.vue'
       ),
   },
   {
-    path: "/ingredientChecking",
-    name: "ingredientChecking",
+    path: '/ingredientChecking',
+    name: 'ingredientChecking',
     component: () =>
       import(
-        /* webpackChunkName: "IngredientChecking" */ "../views/IngredientChecking.vue"
+        /* webpackChunkName: "IngredientChecking" */ '../views/IngredientChecking.vue'
       ),
   },
-];
+]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
-});
+})
 
-export default router;
+export default router
