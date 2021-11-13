@@ -16,6 +16,8 @@ table { border-collapse:collapse; border-spacing:0; }
 html{
   color: #000;
   overflow-x: hidden;
+  overflow-y: scroll;
+  overscroll-behavior-y: none; 
   font-size: 10px;
   height: 100%;
   scrollbar-width: thin;
