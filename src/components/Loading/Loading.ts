@@ -10,7 +10,6 @@ const msg = reactive({
 const $loading = createApp(Loading, { msg }).mount(
   document.createElement('div'),
 )
-// console.log($loading);
 const load = {
   // 控制显示loading的方法
   show(title = '拼命加载中...') {

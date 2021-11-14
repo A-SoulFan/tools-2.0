@@ -1,7 +1,7 @@
 <!-- 今天溜什么-->
 <template>
   <div>
-    <header-title title="今天溜什么" sub-title="相见即是缘份"></header-title>
+    <header-title title="今天溜什么" sub-title="相见即是缘份" @buttonClick="changeIntroduceShow()"></header-title>
     <div v-show="isShowIntroduce" class="introduce-phone">
       <div class="introduce-title">
         功能介绍
@@ -155,7 +155,7 @@ export default defineComponent({
         face: 'https://i1.hdslb.com/bfs/face/8895c87082beba1355ea4bc7f91f2786ef49e354.jpg@256w_256h_1o.webp',
       },
     ]
-    const isShowIntroduce = ref(true)
+    const isShowIntroduce = ref(false)
     const historyVideoList: any[] = JSON.parse(
       localStorage.getItem('historyVideoList') || JSON.stringify([]),
     )
@@ -196,11 +196,19 @@ export default defineComponent({
     const selectVideo = (item: videoObj): void => {
       window.open(`https://www.bilibili.com/video/${item.bv}`)
     }
+    const toBilibiliSpace = (uid: number) => {
+      window.open(`https://space.bilibili.com/${uid}`)
+    }
+    const changeIntroduceShow = () => {
+      isShowIntroduce.value = !isShowIntroduce.value
+    }
     getRandomVideo()
     return {
       getRandomVideo,
       preVideo,
       selectVideo,
+      toBilibiliSpace,
+      changeIntroduceShow,
       updateTime,
       historyVideoList,
       currentVideoIndex,
