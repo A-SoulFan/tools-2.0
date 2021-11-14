@@ -75,7 +75,6 @@ export default defineComponent({
   padding: 0 5.83vw;
 }
 .componts-box {
-  max-width: 1440px;
   margin: auto;
 }
 </style>

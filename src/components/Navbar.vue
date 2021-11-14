@@ -12,7 +12,7 @@
           :class="
             data.navIndex === index ? 'elementary-nav-content-item-active' : ''
           "
-          @click="selectElementary(elementary, index,'pc')"
+          @click="selectElementary(elementary, index, 'pc')"
         >
           {{ elementary.name }}
         </div>
@@ -37,10 +37,18 @@
       <div class="asf-logo">
         <img src="@/assets/Logo.svg" />
       </div>
-      <div v-show="phoneMenu.phoneMenuShow" class="asf-logo" @click="changePhoneMenu('close')">
+      <div
+        v-show="phoneMenu.phoneMenuShow"
+        class="asf-logo"
+        @click="changePhoneMenu('close')"
+      >
         <img src="@/assets/icons/close.svg" />
       </div>
-      <div v-show="!phoneMenu.phoneMenuShow" class="asf-logo" @click="changePhoneMenu('show')">
+      <div
+        v-show="!phoneMenu.phoneMenuShow"
+        class="asf-logo"
+        @click="changePhoneMenu('show')"
+      >
         <img src="@/assets/icons/menu.svg" />
       </div>
     </div>
@@ -53,11 +61,13 @@
         >
           <div class="elementary-item">
             <div>{{ elementary.name }}</div>
-            <div @click="selectElementary(elementary, index,'phone')">
+            <div @click="selectElementary(elementary, index, 'phone')">
               <img src="@/assets/icons/addIcon.svg" />
             </div>
           </div>
-          <div v-show="phoneMenu.navIndex===index &&phoneMenu.isShowSecondary">
+          <div
+            v-show="phoneMenu.navIndex === index && phoneMenu.isShowSecondary"
+          >
             <div
               v-for="item in elementary.secondaryList"
               :key="item.name"
@@ -149,8 +159,7 @@ export default defineComponent({
         phoneMenu.phoneMenuShow = true
         return
       }
-      if (type === 'close')
-        phoneMenu.phoneMenuShow = false
+      if (type === 'close') phoneMenu.phoneMenuShow = false
     }
     return {
       selectElementary,
@@ -168,12 +177,9 @@ export default defineComponent({
 
 .nav-area-pc {
   background-color: #f8f8f8;
-  // max-width: 1440px;
   padding: 0 5.83vw;
-  // margin: auto;
 
   .elementary-nav-area {
-    max-width: 1440px;
     margin: auto;
     display: flex;
     justify-content: space-between;
@@ -201,7 +207,6 @@ export default defineComponent({
     }
   }
   .secondary-nav-area {
-    max-width: 1440px;
     margin: auto;
     display: flex;
     justify-content: center;
@@ -227,15 +232,15 @@ export default defineComponent({
   .nav-area-phone {
     display: block;
     padding: 20px 5.83vw;
-    position: relative;
     z-index: 1000;
     width: 100%;
     position: fixed;
+    top: 0;
     background-color: #fff;
     .nav-area-header {
       display: flex;
       justify-content: space-between;
-      img{
+      img {
         height: 30px;
         width: auto;
       }
@@ -243,29 +248,29 @@ export default defineComponent({
     .nav-area-phone-main {
       position: relative;
       height: 100vh;
-      .elementary{
-          margin-top: 50px;
-          .elementary-item-box{
-          border-top: 1px solid #D1D5DB;
-          }
-        .elementary-item{
+      .elementary {
+        margin-top: 50px;
+        .elementary-item-box {
+          border-top: 1px solid #d1d5db;
+        }
+        .elementary-item {
           display: flex;
           align-items: center;
           justify-content: space-between;
           height: 70px;
           font-size: 16px;
-          img{
+          img {
             height: 16px;
           }
         }
-        .secondary-item{
+        .secondary-item {
           display: flex;
           flex-direction: column;
           justify-content: center;
           margin-left: 80px;
           height: 50px;
           font-size: 14px;
-          border-top: 1px solid #D1D5DB;
+          border-top: 1px solid #d1d5db;
         }
       }
     }
