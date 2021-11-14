@@ -6,7 +6,6 @@
     "serve": "vite --open --host",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },
