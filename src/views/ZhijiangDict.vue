@@ -115,7 +115,7 @@
             最近更新 {{ contentDetailItem.timeText }}
           </div>
         </div>
-        <div>{{ marked(contentDetailItem.content) }}</div>
+        <div v-html="marked(contentDetailItem.content)"></div>
       </div>
     </div>
     <div>
