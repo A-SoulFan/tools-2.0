@@ -2,8 +2,9 @@ import axios, { AxiosRequestConfig } from 'axios'
 import { createApp } from 'vue'
 import App from '../App.vue'
 import Loading from '@/components/Loading/Loading'
+import ShowErrorToast from '@/components/ShowErrorToast/ShowErrorToast'
 const app = createApp(App)
-app.use(Loading)
+app.use(Loading).use(ShowErrorToast)
 
 const request: any = async(config: AxiosRequestConfig,
   loading = '拼命加载中...') => {
@@ -18,15 +19,14 @@ const request: any = async(config: AxiosRequestConfig,
       method,
       params,
     })
-
     if (result.status === 200) {
       if (result.data.code === 0) {
         app.config.globalProperties.$loading.hide()
         return result.data.data
       }
       else {
-        // TODO: 错误浮窗
-        console.log(result.data.message)
+        app.config.globalProperties.$loading.hide()
+        return Promise.reject(result.data.message)
       }
     }
 
@@ -36,8 +36,7 @@ const request: any = async(config: AxiosRequestConfig,
   }
   catch (error) {
     app.config.globalProperties.$loading.hide()
-
-    console.log(error)
+    app.config.globalProperties.$ShowErrorToast.show(error)
   }
 }
 export default request
