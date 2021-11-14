@@ -178,34 +178,43 @@ export default defineComponent({
     })
     let result = [] as any[]
     const searchWords = async() => {
-      const res = await proxy.$request({
-        url: import.meta.env.VITE_API_DICT_SEARCH,
-        method: 'get',
-        params: {
-          kwd: searchText.value,
-        },
-      })
-      console.log(res)
+      try {
+        const res = await proxy.$request({
+          url: import.meta.env.VITE_API_DICT_SEARCH,
+          method: 'get',
+          params: {
+            kwd: searchText.value,
+          },
+        })
+      }
+      catch (error) {
+        proxy.$ShowErrorToast.show(error)
+      }
     }
     const getContentList = async(cid: number) => {
-      data.childCategorieskey = cid
-      const res = await proxy.$request({
-        url: import.meta.env.VITE_API_DICT_ENTRIES,
-        method: 'get',
-        params: {
-          cid,
-        },
-      })
-      data.entryList = res.map((item: any) => {
-        // 将10位时间戳转成13位
-        item.timeText = new Date(item.updated * 1000).toLocaleString(
-          'chinese',
-          {
-            hour12: false,
+      try {
+        data.childCategorieskey = cid
+        const res = await proxy.$request({
+          url: import.meta.env.VITE_API_DICT_ENTRIES,
+          method: 'get',
+          params: {
+            cid,
           },
-        )
-        return item
-      })
+        })
+        data.entryList = res.map((item: any) => {
+        // 将10位时间戳转成13位
+          item.timeText = new Date(item.updated * 1000).toLocaleString(
+            'chinese',
+            {
+              hour12: false,
+            },
+          )
+          return item
+        })
+      }
+      catch (error) {
+        proxy.$ShowErrorToast.show(error)
+      }
     }
     // 设置二级目录列表
     const setChildCategoriesList = (cid: number) => {
@@ -219,26 +228,31 @@ export default defineComponent({
       getContentList(data.childCategoriesList[0].cid)
     }
     const getCategoriesList = async() => {
-      result = await proxy.$request({
-        url: import.meta.env.VITE_API_DICT_CATEGORIES,
-        method: 'get',
-      })
-      const tempCategoriesList = [] as any[]
+      try {
+        result = await proxy.$request({
+          url: import.meta.env.VITE_API_DICT_CATEGORIES,
+          method: 'get',
+        })
+        const tempCategoriesList = [] as any[]
 
-      // 生成分类列表
-      result.forEach((element: any) => {
-        if (element.parent_cid === null) {
-          tempCategoriesList.push({
-            cid: element.cid,
-            name: element.name,
-            children: [],
-          })
-        }
-      })
+        // 生成分类列表
+        result.forEach((element: any) => {
+          if (element.parent_cid === null) {
+            tempCategoriesList.push({
+              cid: element.cid,
+              name: element.name,
+              children: [],
+            })
+          }
+        })
 
-      data.categoriesList = tempCategoriesList
+        data.categoriesList = tempCategoriesList
 
-      setChildCategoriesList(data.categoriesList[0].cid)
+        setChildCategoriesList(data.categoriesList[0].cid)
+      }
+      catch (error) {
+        proxy.$ShowErrorToast.show(error)
+      }
     }
     const toShowDetail = (item: any) => {
       contentDetailItem.title = item.title

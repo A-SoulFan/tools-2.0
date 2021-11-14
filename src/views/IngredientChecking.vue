@@ -208,10 +208,9 @@ export default defineComponent({
             } as vupItem
           },
         )
-        // debugger;
       }
       catch (error) {
-        console.log(error)
+        proxy.$ShowErrorToast.show(error)
       }
     }
     const copySearchResult = () => {

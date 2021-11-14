@@ -166,28 +166,32 @@ export default defineComponent({
     const { proxy } = useCurrentInstance()
 
     const getRandomVideo = async() => {
-      const res = await proxy.$request({
-        url: import.meta.env.VITE_API_RANDOMVIDEO,
-      })
-      // debugger;
-      res.time = new Date().toLocaleString('chinese', { hour12: false })
-      currentVideoIndex = 0
-      res.play_url = `https:${res.play_url}`
-      iframeUrl.value = res.play_url
-      // 长度保持在二十条
-      if (historyVideoList.length >= 20) historyVideoList.pop()
+      try {
+        const res = await proxy.$request({
+          url: import.meta.env.VITE_API_RANDOMVIDEO,
+        })
+        res.time = new Date().toLocaleString('chinese', { hour12: false })
+        currentVideoIndex = 0
+        res.play_url = `https:${res.play_url}`
+        iframeUrl.value = res.play_url
+        // 长度保持在二十条
+        if (historyVideoList.length >= 20) historyVideoList.pop()
 
-      historyVideoList.unshift({
-        title: res.title,
-        imgsrc: res.cover || '',
-        time: res.time,
-        play_url: res.play_url,
-        bv: res.bv,
-      })
-      localStorage.setItem(
-        'historyVideoList',
-        JSON.stringify(historyVideoList),
-      )
+        historyVideoList.unshift({
+          title: res.title,
+          imgsrc: res.cover || '',
+          time: res.time,
+          play_url: res.play_url,
+          bv: res.bv,
+        })
+        localStorage.setItem(
+          'historyVideoList',
+          JSON.stringify(historyVideoList),
+        )
+      }
+      catch (error) {
+        proxy.$ShowErrorToast.show(error)
+      }
     }
     const preVideo = (): void => {
       currentVideoIndex++
