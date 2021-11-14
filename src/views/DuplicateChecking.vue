@@ -238,7 +238,6 @@ export default defineComponent({
     .search-textarea {
       width: 100%;
       min-width: 400px;
-      max-width: 1000px;
       min-height: 300px;
       max-height: 600px;
       resize: none;
