@@ -415,6 +415,7 @@ export default defineComponent({
     align-items: center;
     word-break: keep-all;
     cursor: pointer;
+    width: 75px;
   }
   .introduce-Asoul-face {
     width: 67px;

@@ -73,7 +73,7 @@ export default defineComponent({
 }
 .title-area {
   position: relative;
-  margin-top: 60px;
+  // margin-top: 60px;
   // animation: herderTitle 1s;
   animation: herderTitle 1s;
 }
@@ -90,6 +90,9 @@ export default defineComponent({
 }
 
 @media only screen and (max-width: 768px) {
+  .title-area{
+    margin-top: 70px;
+  }
   .button-area {
     display: flex;
     justify-content: flex-end;
