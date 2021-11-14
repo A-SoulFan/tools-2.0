@@ -6,7 +6,7 @@
       </div>
       <div class="elementary-nav-content-area">
         <div
-          v-for="(elementary, index) in navList"
+          v-for="(elementary, index) in navList as {name: string}[]"
           :key="elementary.name"
           class="elementary-nav-content-item"
           :class="
@@ -55,7 +55,7 @@
     <div v-show="phoneMenu.phoneMenuShow" class="nav-area-phone-main">
       <div class="elementary">
         <div
-          v-for="(elementary, index) in navList"
+          v-for="(elementary , index) in navList as {name: string, secondaryList:any[]}[]"
           :key="elementary.name"
           class="elementary-item-box"
         >
