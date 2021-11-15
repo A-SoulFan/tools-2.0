@@ -178,6 +178,8 @@ export default defineComponent({
       try {
         if (searchText.value === '')
           return
+        vupList.value = []
+        isVuplistEmpty.value = false
 
         const res = await proxy.$request({
           url: import.meta.env.VITE_API_CFJ,
@@ -210,7 +212,7 @@ export default defineComponent({
         )
       }
       catch (error) {
-        proxy.$Toast.ShowError(error)
+        proxy.$Toast.showError(error)
       }
     }
     const copySearchResult = () => {
