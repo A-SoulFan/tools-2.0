@@ -29,11 +29,9 @@ export default defineComponent({
     const navList = [
       {
         name: '用户讨论',
-        link: 'https://www.baidu.com',
       },
       {
         name: '内容整理',
-        link: 'https://www.baidu.com',
 
       },
       {
@@ -48,7 +46,6 @@ export default defineComponent({
       },
       {
         name: '新人指南',
-        link: 'https://www.baidu.com',
       },
     ]
     const callback = (str: string) => {
