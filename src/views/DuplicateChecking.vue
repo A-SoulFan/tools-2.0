@@ -45,7 +45,7 @@
           }"
           @click="getDuplicate()"
         >
-          查询成分
+          查询结果
         </div>
       </div>
 
@@ -237,7 +237,6 @@ export default defineComponent({
   }
   .search-area {
     position: relative;
-    margin-right: 20px;
     display: flex;
     flex-direction: column;
     .search-textarea {
@@ -276,7 +275,7 @@ export default defineComponent({
       border-radius: 0 2px 2px 0;
       cursor: pointer;
       align-self: flex-end;
-      margin: 20px -20px 0 0;
+      margin-top: 20px;
     }
   }
   .result-area {
@@ -319,7 +318,7 @@ export default defineComponent({
   width: 400px;
   // min-width: 200px;
   min-height: 200px;
-  margin-left: 20px;
+  margin-left: 40px;
   padding: 20px;
   border-radius: 2px;
 }
@@ -342,7 +341,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   margin-top: 40px;
-  font-size: 20px;
+  font-size: 18px;
   img {
     width: 30px;
     height: 30px;
