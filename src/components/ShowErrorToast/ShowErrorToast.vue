@@ -1,7 +1,6 @@
 <!-- 请求加载弹窗组件 -->
 <template>
-  <div v-if="msg!.loadingShow" class="loading">
-    <img src="@/assets/Logo.svg" class="loading-icon" />
+  <div v-if="msg!.toastShow" class="loading">
     <div class="loading-text">
       {{ msg!.title }}
     </div>
@@ -12,7 +11,7 @@
 import { defineComponent, PropType } from 'vue'
 
 export interface masObj{
-  loadingShow: boolean
+  toastShow: boolean
   title: string
 }
 export default defineComponent({
@@ -42,7 +41,7 @@ export default defineComponent({
     height: 100px;
   }
   .loading-text {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(250, 141, 141);
     color: #fff;
     padding: 6px 15px;
   }

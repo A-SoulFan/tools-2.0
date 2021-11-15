@@ -27,31 +27,53 @@ pnpm i
 pnpm dev
 ```
 
-5. lint（with fix）
+## 编辑器配置
 
+`VS Code` 用户安装 `Vue Language Features (Volar)` 和 `eslint` 插件, 并禁用所有其他 `vue` 相关插件如 `vetur` 等。习惯 `formatOnSave` 的用户推荐使用codeActionsOnSave 替代 formatOnSave, 防止不同的格式化方案产生冲突, 示例 VSCode settings 配置: 
+
+```json
+{
+   "[vue]": {
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  } 
+}
 ```
-pnpm lint
-```
-
-
-`VS Code` 用户请使用 `Vue Language Features (Volar)`插件, 并禁用所有其他 `vue` 相关插件如 `vetur`等.
-
 
 ## 部署
 
-1. 将 `.env.example` 文件重命名为`.env`, 并按需修改其中配置（如果在容器中打包，也可以直接将文件中列出的选项配置成环境变量，作用相同）
+### 普通部署
 
-2. 打包
+2. 构建
 
 ```
 pnpm build
 ```
 
-3. 可以预览当前打包的版本
+3. 预览
 
 ```
 pnpm preview
 ```
+
+### 部署到 Docker
+
+1. 构建镜像
+
+```sh
+# 注意还有个点
+docker build -t $NAME . 
+```
+
+2. 预览镜像
+
+```sh
+docker run -p 8080:80 $NAME
+```
+
+
 
 ## Commit提交规范
 

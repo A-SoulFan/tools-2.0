@@ -87,7 +87,6 @@ export default defineComponent({
 
       loading.value = true
       loading.value = false
-      console.log(proxy)
     }
 
     getItem()

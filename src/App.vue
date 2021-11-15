@@ -29,19 +29,10 @@ export default defineComponent({
     const navList = [
       {
         name: '用户讨论',
-        secondaryList: [
-          {
-            name: '用户讨论二级导航',
-          },
-        ],
       },
       {
         name: '内容整理',
-        secondaryList: [
-          {
-            name: '内容整理二级导航',
-          },
-        ],
+
       },
       {
         name: '实用工具',
@@ -55,11 +46,6 @@ export default defineComponent({
       },
       {
         name: '新人指南',
-        secondaryList: [
-          {
-            name: '新人指南二级导航',
-          },
-        ],
       },
     ]
     const callback = (str: string) => {
@@ -86,8 +72,6 @@ export default defineComponent({
   padding: 0 5.83vw;
 }
 .componts-box {
-  max-width: 1440px;
   margin: auto;
-  border-top: 1px #dda19f solid;
 }
 </style>

@@ -208,10 +208,9 @@ export default defineComponent({
             } as vupItem
           },
         )
-        // debugger;
       }
       catch (error) {
-        console.log(error)
+        proxy.$ShowErrorToast.show(error)
       }
     }
     const copySearchResult = () => {
@@ -415,6 +414,7 @@ export default defineComponent({
     align-items: center;
     word-break: keep-all;
     cursor: pointer;
+    width: 75px;
   }
   .introduce-Asoul-face {
     width: 67px;
