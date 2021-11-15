@@ -160,6 +160,7 @@ export default defineComponent({
     // 方法
     const getDuplicate = async() => {
       try {
+        DuplicateCheckingList.value = []
         const res = await proxy.$request({
           method: 'post',
           url: import.meta.env.VITE_API_DUPLICATECHECKING,
@@ -167,6 +168,11 @@ export default defineComponent({
             text: searchData.searchValue,
           },
         })
+        if (res.related.length === 0) {
+          proxy.$Toast.show('没有找到重复的小作文捏')
+          return
+        }
+
         DuplicateCheckingList.value = res.related.map((item: any) => {
           return {
             targetUrl: item.reply_url,
