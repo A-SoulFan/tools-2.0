@@ -5,8 +5,8 @@ import './assets/css/reset.css'
 import request from './request/request'
 
 import Loading from '@/components/Loading/Loading'
-import ShowErrorToast from '@/components/ShowErrorToast/ShowErrorToast'
+import Toast from '@/components/Toast/Toast'
 
 const app = createApp(App)
-app.use(router).use(Loading).use(ShowErrorToast).mount('#app')
+app.use(router).use(Loading).use(Toast).mount('#app')
 app.config.globalProperties.$request = request

@@ -2,9 +2,8 @@ import axios, { AxiosRequestConfig } from 'axios'
 import { createApp } from 'vue'
 import App from '../App.vue'
 import Loading from '@/components/Loading/Loading'
-import ShowErrorToast from '@/components/ShowErrorToast/ShowErrorToast'
 const app = createApp(App)
-app.use(Loading).use(ShowErrorToast)
+app.use(Loading)
 
 const request: any = async(config: AxiosRequestConfig,
   loading = '拼命加载中...') => {
@@ -36,7 +35,7 @@ const request: any = async(config: AxiosRequestConfig,
   }
   catch (error) {
     app.config.globalProperties.$loading.hide()
-    app.config.globalProperties.$ShowErrorToast.show(error)
+    throw error
   }
 }
 export default request

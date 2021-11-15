@@ -188,7 +188,7 @@ export default defineComponent({
         })
       }
       catch (error) {
-        proxy.$ShowErrorToast.show(error)
+        proxy.$Toast.showError(error)
       }
     }
     const getContentList = async(cid: number) => {
@@ -213,7 +213,7 @@ export default defineComponent({
         })
       }
       catch (error) {
-        proxy.$ShowErrorToast.show(error)
+        proxy.$Toast.showError(error)
       }
     }
     // 设置二级目录列表
@@ -251,7 +251,7 @@ export default defineComponent({
         setChildCategoriesList(data.categoriesList[0].cid)
       }
       catch (error) {
-        proxy.$ShowErrorToast.show(error)
+        proxy.$Toast.showError(error)
       }
     }
     const toShowDetail = (item: any) => {

@@ -1,7 +1,10 @@
 <!-- 请求加载弹窗组件 -->
 <template>
   <div v-if="msg!.toastShow" class="loading">
-    <div class="loading-text">
+    <div
+      class="loading-text"
+      :class="msg!.errorToast?'error':''"
+    >
       {{ msg!.title }}
     </div>
   </div>
@@ -13,6 +16,7 @@ import { defineComponent, PropType } from 'vue'
 export interface masObj{
   toastShow: boolean
   title: string
+  errorToast: boolean
 }
 export default defineComponent({
   props: {
@@ -27,7 +31,7 @@ export default defineComponent({
 .loading {
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.15);
+  // background-color: rgba(0, 0, 0, 0.15);
   position: fixed;
   top: 0;
   left: 0;
@@ -36,14 +40,22 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   z-index: 10000;
-  .loading-icon {
-    width: 100px;
-    height: 100px;
-  }
   .loading-text {
-    background-color: rgba(250, 141, 141);
+    background-color: rgba(0,0,0,0.7);
     color: #fff;
     padding: 6px 15px;
+    animation: moveTop .3s ease-out;
+  }
+   .error{
+    background-color: rgba(250, 141, 141);
+  }
+}
+@keyframes moveTop {
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
   }
 }
 </style>

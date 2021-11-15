@@ -210,7 +210,7 @@ export default defineComponent({
         )
       }
       catch (error) {
-        proxy.$ShowErrorToast.show(error)
+        proxy.$Toast.ShowError(error)
       }
     }
     const copySearchResult = () => {

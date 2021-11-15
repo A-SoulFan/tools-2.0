@@ -182,7 +182,7 @@ export default defineComponent({
         })
       }
       catch (error) {
-        proxy.$ShowErrorToast.show(error)
+        proxy.$Toast.showError(error)
       }
     }
     const changeIntroduceShow = () => {
