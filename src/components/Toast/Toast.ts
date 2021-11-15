@@ -14,11 +14,12 @@ const $Toast = createApp(Toast, { msg }).mount(
 const toast = {
   // 控制显示loading的方法
   show(title: string) {
+    msg.errorToast = false
     msg.toastShow = true
     msg.title = title
     setTimeout(() => {
       msg.toastShow = false
-    }, 2 * 1000)
+    }, 1.5 * 1000)
     document.body.appendChild($Toast.$el)
   },
   showError(title: string) {

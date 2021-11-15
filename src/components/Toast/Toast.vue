@@ -44,7 +44,7 @@ export default defineComponent({
     background-color: rgba(0,0,0,0.7);
     color: #fff;
     padding: 6px 15px;
-    animation: moveTop .3s ease-out;
+    animation: moveTop .3s ease-in;
   }
    .error{
     background-color: rgba(250, 141, 141);
