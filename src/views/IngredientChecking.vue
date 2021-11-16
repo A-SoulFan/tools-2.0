@@ -67,7 +67,7 @@
             该用户没有关注的Vup捏~！
           </div>
           <div v-else class="search-result-VupList">
-            <div v-for="item in vupList" :key="item.vupUid" class="Vup-item">
+            <div v-for="item in vupList" :key="item.vupUid" class="Vup-item" @click="toBilibiliSpace(item.vupUid)">
               <img :src="item.vupFace" class="Vup-item-face" />
               <div class="Vup-name">
                 {{ item.vupName }}
@@ -231,7 +231,7 @@ export default defineComponent({
       isShowIntroduce.value = !isShowIntroduce.value
     }
     // getIngredient();
-    const toBilibiliSpace = (uid: number) => {
+    const toBilibiliSpace = (uid: number|string) => {
       window.open(`https://space.bilibili.com/${uid}`)
     }
     return {
@@ -329,6 +329,9 @@ export default defineComponent({
         flex-direction: column;
         border-radius: 2px;
         word-break: break-all;
+        cursor: pointer;
+        transition: all .3s ease-in;
+
         .Vup-item-face {
           background-color: #d1d5db;
           position: absolute;
@@ -374,7 +377,11 @@ export default defineComponent({
           word-break: break-all;
         }
       }
+
     }
+  }
+    .Vup-item:hover{
+      box-shadow:  3px 3px 10px #a1a2a3;
   }
   .introduce-pc {
     background-color: #f3f4f6;
