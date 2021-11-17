@@ -1,17 +1,13 @@
 import axios, { AxiosRequestConfig } from 'axios'
-import { createApp } from 'vue'
-import App from '../App.vue'
 import Loading from '@/components/Loading/Loading'
-const app = createApp(App)
-app.use(Loading)
 
 const request: any = async(config: AxiosRequestConfig,
-  loading = '拼命加载中...') => {
+  loadingText = '拼命加载中...') => {
   const { url, data, params, method = 'get' } = config
-  console.log(url, data, params, method, loading)
+  console.log(url, data, params, method, loadingText)
   console.log('url,data, params, method, loading')
   try {
-    app.config.globalProperties.$loading.show(loading)
+    Loading.Loading.show(loadingText)
     const result: any = await axios({
       url,
       data,
@@ -20,21 +16,21 @@ const request: any = async(config: AxiosRequestConfig,
     })
     if (result.status === 200) {
       if (result.data.code === 0) {
-        app.config.globalProperties.$loading.hide()
+        Loading.Loading.hide()
         return result.data.data
       }
       else {
-        app.config.globalProperties.$loading.hide()
+        Loading.Loading.hide()
         return Promise.reject(result.data.message)
       }
     }
 
     console.log(result, 'result')
-    app.config.globalProperties.$loading.hide()
+    Loading.Loading.hide()
     return result.data.data
   }
   catch (error) {
-    app.config.globalProperties.$loading.hide()
+    Loading.Loading.hide()
     throw error
   }
 }

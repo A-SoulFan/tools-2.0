@@ -39,4 +39,5 @@ export default {
   install(app: App): void {
     app.config.globalProperties.$Toast = toast
   },
+  Toast: toast,
 }

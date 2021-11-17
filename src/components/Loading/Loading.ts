@@ -28,4 +28,5 @@ export default {
   install(app: App): void {
     app.config.globalProperties.$loading = load
   },
+  Loading: load,
 }
