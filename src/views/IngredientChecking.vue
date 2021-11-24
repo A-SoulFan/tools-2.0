@@ -83,34 +83,36 @@
           </div>
         </div>
       </div>
-      <div class="introduce-pc">
-        <div class="introduce-title">
-          功能介绍
-        </div>
-        <div class="introduce-text-content">
-          <div class="introduce-text-content-section">
-            成分姬是由
-            <span
-              class="introduce-text-content-name"
-              @click="toBilibiliSpace(32957695)"
-            >晓轩iMIKU老师</span>
-            为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
+      <div>
+        <div class="introduce-pc">
+          <div class="introduce-title">
+            功能介绍
           </div>
-          <div class="introduce-text-content-section">
-            毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
-            所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
-          </div>
-          <div class="introduce-Asoul">
-            <div
-              v-for="item in Asoul"
-              :key="item.BzhanUid"
-              :style="'color:' + item.color"
-              class="introduce-Asoul-item"
-              @click="toBilibiliSpace(item.BzhanUid)"
-            >
-              <img :src="item.face" class="introduce-Asoul-face" />
-              <div class="introduce-Asoul-name">
-                {{ item.name }}
+          <div class="introduce-text-content">
+            <div class="introduce-text-content-section">
+              成分姬是由
+              <span
+                class="introduce-text-content-name"
+                @click="toBilibiliSpace(32957695)"
+              >晓轩iMIKU老师</span>
+              为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
+            </div>
+            <div class="introduce-text-content-section">
+              毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
+              所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
+            </div>
+            <div class="introduce-Asoul">
+              <div
+                v-for="item in Asoul"
+                :key="item.BzhanUid"
+                :style="'color:' + item.color"
+                class="introduce-Asoul-item"
+                @click="toBilibiliSpace(item.BzhanUid)"
+              >
+                <img :src="item.face" class="introduce-Asoul-face" />
+                <div class="introduce-Asoul-name">
+                  {{ item.name }}
+                </div>
               </div>
             </div>
           </div>
@@ -386,7 +388,6 @@ export default defineComponent({
   .introduce-pc {
     background-color: #f3f4f6;
     width: calc(22.4vw - 40px);
-    max-height: 500px;
     min-width: 300px;
     min-height: 200px;
     margin-left: 20px;
@@ -423,7 +424,7 @@ export default defineComponent({
     align-items: center;
     word-break: keep-all;
     cursor: pointer;
-    width: 75px;
+    width: 65px;
   }
   .introduce-Asoul-face {
     width: 67px;
