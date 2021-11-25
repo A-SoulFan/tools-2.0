@@ -322,7 +322,6 @@ export default defineComponent({
 .introduce-pc {
   background-color: #f3f4f6;
   width: 400px;
-  // min-width: 200px;
   min-height: 200px;
   margin-left: 40px;
   padding: 20px;
