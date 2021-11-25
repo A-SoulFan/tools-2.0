@@ -66,7 +66,7 @@ export default defineComponent({
     "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN",
     "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti",
     SimHei, "WenQuanYi Zen Hei Sharp", "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji" sans-serif;
+    "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
 }
 .route-view {
   padding: 0 5.83vw;
