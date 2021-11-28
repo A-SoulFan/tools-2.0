@@ -29,16 +29,39 @@ pnpm dev
 
 ## 编辑器配置
 
-`VS Code` 用户安装 `Vue Language Features (Volar)` 和 `eslint` 插件, 并禁用所有其他 `vue` 相关插件如 `vetur` 等。习惯 `formatOnSave` 的用户推荐使用codeActionsOnSave 替代 formatOnSave, 防止不同的格式化方案产生冲突, 示例 VSCode settings 配置: 
+`VS Code` 用户安装 `Vue Language Features (Volar)` 和 `eslint` 插件, 并禁用所有其他 `vue` 相关插件如 `vetur` 等。并将默认 `formatter` 改为 `ESLint`.
 
 ```json
 {
-   "[vue]": {
-    "editor.formatOnSave": false,
-    "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true
-    }
-  } 
+  "editor.formatOnSave": true,
+  
+  "eslint.format.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "json"
+  ],
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  },
+  "[json]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  },
 }
 ```
 

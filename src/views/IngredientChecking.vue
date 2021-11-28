@@ -67,7 +67,7 @@
             该用户没有关注的Vup捏~！
           </div>
           <div v-else class="search-result-VupList">
-            <div v-for="item in vupList" :key="item.vupUid" class="Vup-item">
+            <div v-for="item in vupList" :key="item.vupUid" class="Vup-item" @click="toBilibiliSpace(item.vupUid)">
               <img :src="item.vupFace" class="Vup-item-face" />
               <div class="Vup-name">
                 {{ item.vupName }}
@@ -83,34 +83,36 @@
           </div>
         </div>
       </div>
-      <div class="introduce-pc">
-        <div class="introduce-title">
-          功能介绍
-        </div>
-        <div class="introduce-text-content">
-          <div class="introduce-text-content-section">
-            成分姬是由
-            <span
-              class="introduce-text-content-name"
-              @click="toBilibiliSpace(32957695)"
-            >晓轩iMIKU老师</span>
-            为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
+      <div>
+        <div class="introduce-pc">
+          <div class="introduce-title">
+            功能介绍
           </div>
-          <div class="introduce-text-content-section">
-            毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
-            所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
-          </div>
-          <div class="introduce-Asoul">
-            <div
-              v-for="item in Asoul"
-              :key="item.BzhanUid"
-              :style="'color:' + item.color"
-              class="introduce-Asoul-item"
-              @click="toBilibiliSpace(item.BzhanUid)"
-            >
-              <img :src="item.face" class="introduce-Asoul-face" />
-              <div class="introduce-Asoul-name">
-                {{ item.name }}
+          <div class="introduce-text-content">
+            <div class="introduce-text-content-section">
+              成分姬是由
+              <span
+                class="introduce-text-content-name"
+                @click="toBilibiliSpace(32957695)"
+              >晓轩iMIKU老师</span>
+              为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
+            </div>
+            <div class="introduce-text-content-section">
+              毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
+              所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
+            </div>
+            <div class="introduce-Asoul">
+              <div
+                v-for="item in Asoul"
+                :key="item.BzhanUid"
+                :style="'color:' + item.color"
+                class="introduce-Asoul-item"
+                @click="toBilibiliSpace(item.BzhanUid)"
+              >
+                <img :src="item.face" class="introduce-Asoul-face" />
+                <div class="introduce-Asoul-name">
+                  {{ item.name }}
+                </div>
               </div>
             </div>
           </div>
@@ -231,7 +233,7 @@ export default defineComponent({
       isShowIntroduce.value = !isShowIntroduce.value
     }
     // getIngredient();
-    const toBilibiliSpace = (uid: number) => {
+    const toBilibiliSpace = (uid: number|string) => {
       window.open(`https://space.bilibili.com/${uid}`)
     }
     return {
@@ -329,6 +331,9 @@ export default defineComponent({
         flex-direction: column;
         border-radius: 2px;
         word-break: break-all;
+        cursor: pointer;
+        transition: all .3s ease-in;
+
         .Vup-item-face {
           background-color: #d1d5db;
           position: absolute;
@@ -374,12 +379,15 @@ export default defineComponent({
           word-break: break-all;
         }
       }
+
     }
+  }
+    .Vup-item:hover{
+      box-shadow:  3px 3px 10px #a1a2a3;
   }
   .introduce-pc {
     background-color: #f3f4f6;
     width: calc(22.4vw - 40px);
-    max-height: 500px;
     min-width: 300px;
     min-height: 200px;
     margin-left: 20px;
@@ -416,7 +424,7 @@ export default defineComponent({
     align-items: center;
     word-break: keep-all;
     cursor: pointer;
-    width: 75px;
+    width: 65px;
   }
   .introduce-Asoul-face {
     width: 67px;
