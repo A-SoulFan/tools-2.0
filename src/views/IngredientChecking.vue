@@ -218,12 +218,12 @@ export default defineComponent({
     const copySearchResult = () => {
       const vupName = vupList.value
         .map((item: any) => {
-          return `@${item.vupName}`
+          return `${item.vupName}`
         })
         .join(',')
       const copyTime = new Date().toLocaleString('chinese', { hour12: false })
       copyToClipBoard(
-        `@${saveSearchText} 关注的VUP有：\r\n${vupName}\r\n查询时间：${copyTime}\r\n数据来源：@ProJectASF`,
+        `@${saveSearchText} 关注的VUP有：\r\n${vupName}\r\n查询时间：${copyTime}\r\n数据来源：ProJectASF`,
       )
       console.log('copySearchResult')
     }
