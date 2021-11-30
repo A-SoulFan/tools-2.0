@@ -1,7 +1,7 @@
 <template>
   <div class="nav-area-pc">
     <div class="elementary-nav-area">
-      <div class="asf-logo">
+      <div class="asf-logo" @click="toASFHome()">
         <img src="@/assets/Logo.svg" />
       </div>
       <div class="elementary-nav-content-area">
@@ -161,10 +161,16 @@ export default defineComponent({
       }
       if (type === 'close') phoneMenu.phoneMenuShow = false
     }
+
+    const toASFHome = ()=>{
+      window.open("https://asoulfan.com/")
+      
+    }
     return {
       selectElementary,
       selectSecondary,
       changePhoneMenu,
+      toASFHome,
       data,
       phoneMenu,
     }
@@ -185,7 +191,8 @@ export default defineComponent({
     justify-content: space-between;
     align-items: center;
     .asf-logo {
-      width: 60px;
+      width: 80px;
+      cursor: pointer;
     }
     .elementary-nav-content-area {
       flex: 1;

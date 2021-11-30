@@ -28,10 +28,10 @@ export default defineComponent({
     }
     const navList = [
       {
-        name: '用户讨论',
+        name: '敬请期待',
       },
       {
-        name: '内容整理',
+        name: '敬请期待',
 
       },
       {
@@ -45,7 +45,7 @@ export default defineComponent({
         ],
       },
       {
-        name: '新人指南',
+        name: '敬请期待',
       },
     ]
     const callback = (str: string) => {

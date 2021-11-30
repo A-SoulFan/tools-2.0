@@ -40,7 +40,6 @@ export default defineComponent({
     },
   },
   setup(prop, context) {
-    console.log(prop)
     const buttonText = ref<string>('详情')
     const isTopIcon = ref(true)
     const handleClick = () => {
