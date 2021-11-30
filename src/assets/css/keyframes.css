@@ -9,20 +9,13 @@
 
 @keyframes herderTitle {
   0% {
-    top: -200px;
-  }
-  20%{
-      top: 0px;
-  }
-  40%{
     top: -100px;
   }
-  60%{
-      top:0px;
+  30%{
+      top: 0px;
   }
-  80%{
-    top:-30px;
-
+  60%{
+    top: -30px;
   }
   100% {
     top: 0px;

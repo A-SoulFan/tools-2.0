@@ -74,7 +74,7 @@ export default defineComponent({
   position: relative;
   // margin-top: 60px;
   // animation: herderTitle 1s;
-  animation: herderTitle 1s;
+  animation: herderTitle 0.5s;
 }
 .title-area-sub {
   display: flex;
