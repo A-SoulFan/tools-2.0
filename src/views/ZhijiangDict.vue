@@ -101,21 +101,19 @@
           </div>
         </div>
       </div>
-      <div v-show="isShowDetail" class="entry-detail-area">
+      <div class="entry-detail-area" v-show="isShowDetail">
         <div class="entry-detail-header" @click="closeDetail">
           返回
           <img src="@/assets/icons/return.svg" />
         </div>
         <div class="entry-detail-title-time">
-          <div class="entry-detail-title">
-            {{ contentDetailItem.title }}
-          </div>
+          <div class="entry-detail-title">{{ contentDetailItem.title }}</div>
           <div class="entry-detail-time">
             <img src="@/assets/icons/clock.svg" />
             最近更新 {{ contentDetailItem.timeText }}
           </div>
         </div>
-        <div v-html="marked(contentDetailItem.content)"></div>
+        <v-md-preview :text="contentDetailItem.content"></v-md-preview>
       </div>
     </div>
     <div>
@@ -152,7 +150,6 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue'
-import { marked } from 'marked'
 import headerTitle from '@/components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
 export default defineComponent({
@@ -285,7 +282,6 @@ export default defineComponent({
       isShowIntroduce,
       isShowDetail,
       contentDetailItem,
-      marked,
     }
   },
 })
