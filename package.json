@@ -13,14 +13,13 @@
     "*.{js,jsx,vue,ts,tsx}": "eslint . --fix"
   },
   "dependencies": {
+    "@kangc/v-md-editor": "^2.3.12",
     "axios": "^0.24.0",
-    "marked": "^4.0.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0"
   },
   "devDependencies": {
     "@luooooob/eslint-config": "^0.5.0",
-    "@types/marked": "^4.0.0",
     "@vitejs/plugin-vue": "^1.9.3",
     "eslint": "^8.3.0",
     "husky": "^7.0.4",

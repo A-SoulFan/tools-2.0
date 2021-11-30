@@ -355,7 +355,6 @@ export default defineComponent({
 .introduce-pc {
   background-color: #f3f4f6;
   width: calc(22.4vw - 40px);
-  max-height: 500px;
   min-width: 300px;
   min-height: 200px;
   margin-left: 20px;
