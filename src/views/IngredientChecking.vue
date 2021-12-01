@@ -1,6 +1,6 @@
 <template>
   <div>
-    <headerTitle title="成分姬" sub-title="帮助你快速分析用户成分" @buttonClick="changeIntroduceShow()"></headerTitle>
+    <headerTitle title="成分姬" sub-title="帮助你快速分析用户成分" @buttonClick="changeIntroduceShow"></headerTitle>
     <div v-show="isShowIntroduce" class="introduce-phone">
       <div class="introduce-title">
         功能介绍
@@ -174,7 +174,7 @@ export default defineComponent({
     const vupList = ref([] as vupItem[])
     const searchText = ref('')
     const isVuplistEmpty = ref(false)
-    const isShowIntroduce = ref(false)
+    const isShowIntroduce = ref(true)
     let saveSearchText = ''
     const getIngredient = async() => {
       try {
@@ -229,8 +229,8 @@ export default defineComponent({
       )
       console.log('copySearchResult')
     }
-    const changeIntroduceShow = () => {
-      isShowIntroduce.value = !isShowIntroduce.value
+    const changeIntroduceShow = (e:boolean) => {
+      isShowIntroduce.value = e
     }
     // getIngredient();
     const toBilibiliSpace = (uid: number|string) => {

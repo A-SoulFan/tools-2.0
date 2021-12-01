@@ -34,7 +34,7 @@
   </div>
   <div class="nav-area-phone">
     <div class="nav-area-header">
-      <div class="asf-logo">
+      <div class="asf-logo" @click="toASFHome()">
         <img src="@/assets/Logo.svg" />
       </div>
       <div

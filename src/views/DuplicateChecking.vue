@@ -1,5 +1,5 @@
 <template>
-  <headerTitle title="知网查重" sub-title="帮助你快速识别原创小作文" @buttonClick="changeIntroduceShow()"></headerTitle>
+  <headerTitle title="知网查重" sub-title="帮助你快速识别原创小作文" @buttonClick="changeIntroduceShow"></headerTitle>
   <div v-show="isShowIntroduce" class="introduce-phone">
     <div class="introduce-title">
       功能介绍
@@ -155,7 +155,7 @@ export default defineComponent({
       btnContent: '查询结果',
     })
     const DuplicateCheckingList = ref([] as DuplicateCheckingItem[])
-    const isShowIntroduce = ref(false)
+    const isShowIntroduce = ref(true)
     const { proxy } = useCurrentInstance()
     // 方法
     const getDuplicate = async() => {
@@ -191,8 +191,8 @@ export default defineComponent({
         proxy.$Toast.showError(error)
       }
     }
-    const changeIntroduceShow = () => {
-      isShowIntroduce.value = !isShowIntroduce.value
+    const changeIntroduceShow = (e:boolean) => {
+      isShowIntroduce.value = e
     }
     const copyResult = (item: any) => {
       const Time = new Date().toLocaleString('chinese', {

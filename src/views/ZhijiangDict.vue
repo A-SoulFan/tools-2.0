@@ -3,7 +3,7 @@
     title="枝江方言词典"
     sub-title="你想了解的词条都在这"
     :need-button="false"
-    @buttonClick="changeIntroduceShow()"
+    @buttonClick="changeIntroduceShow"
   ></headerTitle>
   <div v-show="isShowIntroduce" class="introduce-phone">
     <div class="introduce-title">
@@ -260,8 +260,8 @@ export default defineComponent({
     const closeDetail = () => {
       isShowDetail.value = false
     }
-    const changeIntroduceShow = () => {
-      isShowIntroduce.value = !isShowIntroduce.value
+    const changeIntroduceShow = (e:boolean) => {
+      isShowIntroduce.value = e
     }
 
     const toTargetUrl = (url: string) => {

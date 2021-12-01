@@ -40,15 +40,15 @@ export default defineComponent({
     },
   },
   setup(prop, context) {
-    const buttonText = ref<string>('详情')
+    const buttonText = ref<string>('收起')
     const isTopIcon = ref(true)
     const handleClick = () => {
-      context.emit('buttonClick')
+      context.emit('buttonClick',!isTopIcon.value)
       // false
       if (!isTopIcon.value)
-        buttonText.value = '详情'
-      else
         buttonText.value = '收起'
+      else
+        buttonText.value = '详情'
 
       isTopIcon.value = !isTopIcon.value
     }
@@ -72,8 +72,6 @@ export default defineComponent({
 }
 .title-area {
   position: relative;
-  // margin-top: 60px;
-  // animation: herderTitle 1s;
   animation: herderTitle 0.5s;
 }
 .title-area-sub {
