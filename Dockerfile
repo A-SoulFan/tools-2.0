@@ -9,7 +9,7 @@ COPY ./ /work
 RUN pnpm install
 
 ENV VITE_API_EMOJI=https://tools.asoulfan.com/api/emoji  \
-    VITE_API_CFJ=https://tools.asoulfan.com/cfj/  \
+    VITE_API_CFJ=https://tools.asoulfan.com/api/cfj/  \
     VITE_API_RANDOMVIDEO=https://support-api.asoulfan.com/api/stroll/random  \
     VITE_API_DICT_SEARCH=https://tools.asoulfan.com/dict/v1/public/search  \
     VITE_API_DICT_CATEGORIES=https://tools.asoulfan.com/dict/v1/public/categories  \
