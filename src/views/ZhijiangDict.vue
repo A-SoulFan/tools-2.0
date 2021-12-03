@@ -325,7 +325,6 @@ export default defineComponent({
         align-items: center;
         margin-right: 20px;
         color: #9ca3af;
-        min-width: 100px;
         font-size: 18px;
         cursor: pointer;
         white-space: nowrap;
@@ -350,7 +349,6 @@ export default defineComponent({
         align-items: center;
         padding: 5px 10px;
         margin-right: 40px;
-        min-width: 100px;
         font-size: 15px;
         color: #f3f4f6;
         border-radius: 2px;
@@ -394,7 +392,7 @@ export default defineComponent({
           color: #4b5563;
           font-size: 14px;
           margin-bottom: 30px;
-          height: 94px;
+          height: 90px;
           overflow: hidden;
           text-overflow: ellipsis;
           display: -webkit-box; //作为弹性伸缩盒子模型显示。
@@ -480,6 +478,11 @@ export default defineComponent({
 }
 
 @media only screen and (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 5px;
+
+    height: 5px;
+  }
   .introduce-pc {
     display: none;
   }
@@ -499,6 +502,9 @@ export default defineComponent({
       height: 35px;
       font-size: 15px;
     }
+  }
+  .result-item-content {
+    height: 100px !important;
   }
 }
 </style>
