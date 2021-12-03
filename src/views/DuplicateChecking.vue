@@ -37,7 +37,7 @@
           class="search-button"
           :style="{
             'background-color':
-              searchData.searchValue.length > 0 ? '#4B5563' : '#9CA3AF',
+              searchData.searchValue.length > 10 ? '#4B5563' : '#9CA3AF',
           }"
           @click="getDuplicate()"
         >查询结果</div>
@@ -148,6 +148,10 @@ export default defineComponent({
     const { proxy } = useCurrentInstance()
     // 方法
     const getDuplicate = async () => {
+      if (searchData.searchValue.length <= 10) {
+        proxy.$Toast.show('请输入十字以上的小作文')
+        return
+      }
       try {
         DuplicateCheckingList.value = []
         const res = await proxy.$request({
