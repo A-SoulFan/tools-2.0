@@ -241,15 +241,20 @@ export default defineComponent({
       contentDetailItem.timeText = item.timeText
       contentDetailItem.content = item.content
       isShowDetail.value = true
+      toScrollTop(0)
     }
     const closeDetail = () => {
       isShowDetail.value = false
-      document.documentElement.scrollTop = Number(localStorage.getItem("AsoulFanZhijiangDict") ?? 0)
+      toScrollTop(Number(localStorage.getItem("AsoulFanZhijiangDict")))
     }
     const changeIntroduceShow = (e: boolean) => {
       isShowIntroduce.value = e
     }
-
+    const toScrollTop = (scrollTop: number) => {
+      setTimeout(() => {
+        document.documentElement.scrollTop = scrollTop
+      }, 0);
+    }
     const toTargetUrl = (url: string) => {
       window.open(url)
     }
