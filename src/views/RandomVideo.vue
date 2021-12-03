@@ -3,13 +3,9 @@
   <div>
     <header-title title="今天溜什么" sub-title="相见即是缘份" @buttonClick="changeIntroduceShow"></header-title>
     <div v-show="isShowIntroduce" class="introduce-phone">
-      <div class="introduce-title">
-        功能介绍
-      </div>
+      <div class="introduce-title">功能介绍</div>
       <div class="introduce-text-content">
-        <div class="introduce-text-content">
-          请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡
-        </div>
+        <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
         <div class="introduce-Asoul">
           <div
             v-for="item in Asoul"
@@ -19,18 +15,14 @@
             @click="toBilibiliSpace(item.BzhanUid)"
           >
             <img :src="item.face" class="introduce-Asoul-face" />
-            <div class="introduce-Asoul-name">
-              {{ item.name }}
-            </div>
+            <div class="introduce-Asoul-name">{{ item.name }}</div>
           </div>
         </div>
       </div>
     </div>
     <div class="update-time-area">
       <img class="icon-clock" src="@/assets/icons/clock.svg" />
-      <div class="update-time-text">
-        {{ "最近更新" + updateTime }}
-      </div>
+      <div class="update-time-text">{{ "最近更新" + updateTime }}</div>
     </div>
     <div class="randomVideo">
       <div style="flex: 1">
@@ -39,20 +31,14 @@
           <div class="iframe-box-button-area">
             <div class="pre-button-area">
               <img class="pre-button-img" src="@/assets/icons/cube.svg" />
-              <div class="pre-button-text" @click="preVideo">
-                回到上一条视频
-              </div>
+              <div class="pre-button-text" @click="preVideo">回到上一条视频</div>
             </div>
-            <div class="random-button" @click="getRandomVideo">
-              随便看看
-            </div>
+            <div class="random-button" @click="getRandomVideo">随便看看</div>
           </div>
         </div>
         <div class="history-video-area">
           <div class="history-video-title-area">
-            <div class="history-video-title">
-              历史记录
-            </div>
+            <div class="history-video-title">历史记录</div>
           </div>
           <div class="history-video">
             <div
@@ -66,12 +52,8 @@
               </div>
 
               <div class="video-info">
-                <div class="video-title">
-                  {{ item.title }}
-                </div>
-                <div class="video-time">
-                  观看时间：{{ item.time }}
-                </div>
+                <div class="video-title">{{ item.title }}</div>
+                <div class="video-time">观看时间：{{ item.time }}</div>
               </div>
             </div>
           </div>
@@ -79,13 +61,9 @@
       </div>
       <div>
         <div class="introduce-pc">
-          <div class="introduce-title">
-            功能介绍
-          </div>
+          <div class="introduce-title">功能介绍</div>
           <div class="introduce-text-content">
-            <div class="introduce-text-content">
-              请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡
-            </div>
+            <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
             <div class="introduce-Asoul">
               <div
                 v-for="item in Asoul"
@@ -95,9 +73,7 @@
                 @click="toBilibiliSpace(item.BzhanUid)"
               >
                 <img :src="item.face" class="introduce-Asoul-face" />
-                <div class="introduce-Asoul-name">
-                  {{ item.name }}
-                </div>
+                <div class="introduce-Asoul-name">{{ item.name }}</div>
               </div>
             </div>
           </div>
@@ -111,6 +87,7 @@
 import { defineComponent, ref } from 'vue'
 import headerTitle from '@/components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
+import Asoul from '@/assets/Data'
 
 interface videoObj {
   title: string
@@ -123,38 +100,6 @@ interface videoObj {
 export default defineComponent({
   components: { headerTitle },
   setup() {
-    const Asoul = [
-      {
-        name: '向晚大魔王',
-        color: '#9ac8e2',
-        BzhanUid: 672346917,
-        face: 'https://i0.hdslb.com/bfs/face/566078c52b408571d8ae5e3bcdf57b2283024c27.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '贝拉Kira',
-        color: '#db7d74',
-        BzhanUid: 672353429,
-        face: 'https://i2.hdslb.com/bfs/face/668af440f8a8065743d3fa79cfa8f017905d0065.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '珈乐Carol',
-        color: '#b8a6d9',
-        BzhanUid: 351609538,
-        face: 'https://i2.hdslb.com/bfs/face/a7fea00016a8d3ffb015b6ed8647cc3ed89cbc63.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '嘉然今天吃什么',
-        color: '#e799b0',
-        BzhanUid: 672328094,
-        face: 'https://i2.hdslb.com/bfs/face/d399d6f5cf7943a996ae96999ba3e6ae2a2988de.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '乃琳Queen',
-        color: '#576690',
-        BzhanUid: 672342685,
-        face: 'https://i1.hdslb.com/bfs/face/8895c87082beba1355ea4bc7f91f2786ef49e354.jpg@256w_256h_1o.webp',
-      },
-    ]
     const isShowIntroduce = ref(true)
     const historyVideoList: any[] = JSON.parse(
       localStorage.getItem('historyVideoList') || JSON.stringify([]),
@@ -165,7 +110,7 @@ export default defineComponent({
     let currentVideoIndex = 0
     const { proxy } = useCurrentInstance()
 
-    const getRandomVideo = async() => {
+    const getRandomVideo = async () => {
       try {
         const res = await proxy.$request({
           url: import.meta.env.VITE_API_RANDOMVIDEO,
@@ -203,7 +148,7 @@ export default defineComponent({
     const toBilibiliSpace = (uid: number) => {
       window.open(`https://space.bilibili.com/${uid}`)
     }
-    const changeIntroduceShow = (e:boolean) => {
+    const changeIntroduceShow = (e: boolean) => {
       isShowIntroduce.value = e
     }
     getRandomVideo()

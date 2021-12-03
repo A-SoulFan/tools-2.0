@@ -1,9 +1,7 @@
 <template>
   <headerTitle title="知网查重" sub-title="帮助你快速识别原创小作文" @buttonClick="changeIntroduceShow"></headerTitle>
   <div v-show="isShowIntroduce" class="introduce-phone">
-    <div class="introduce-title">
-      功能介绍
-    </div>
+    <div class="introduce-title">功能介绍</div>
     <div v-for="(item, index) in contentList" :key="index" class="introduce-text-content">
       <div>{{ item.title }}</div>
       <div>{{ item.content }}</div>
@@ -12,7 +10,7 @@
       <div
         class="display-center cursor"
         style="margin-right: 20px"
-        @click="toTargetUrl('https://github.com/ASoulCnki/')"
+        @click="toTargetUrlWithNewWindow('https://github.com/ASoulCnki/')"
       >
         <img src="@/assets/icons/githubIcon.svg" />
         查重接口开源仓库
@@ -34,9 +32,7 @@
         ></textarea>
         <div
           class="search-text-count"
-        >
-          总字数:{{ searchData.searchValue.length }}/{{ searchData.maxLength }}
-        </div>
+        >总字数:{{ searchData.searchValue.length }}/{{ searchData.maxLength }}</div>
         <div
           class="search-button"
           :style="{
@@ -44,9 +40,7 @@
               searchData.searchValue.length > 0 ? '#4B5563' : '#9CA3AF',
           }"
           @click="getDuplicate()"
-        >
-          查询结果
-        </div>
+        >查询结果</div>
       </div>
 
       <div class="result-area">
@@ -56,13 +50,11 @@
               <div
                 class="display-center cursor"
                 @click="
-                  toTargetUrl('https://space.bilibili.com/' + item.authorUid)
+                  toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.authorUid)
                 "
               >
                 <img src="@/assets/icons/BilibiliIcon.svg" />
-                <div class="result-item-author">
-                  {{ item.author }}
-                </div>
+                <div class="result-item-author">{{ item.author }}</div>
               </div>
               <div>查重率 {{ item.rate }}%</div>
             </div>
@@ -71,15 +63,13 @@
               复制
             </div>
           </div>
-          <div class="result-item-content">
-            {{ item.content }}
-          </div>
+          <div class="result-item-content">{{ item.content }}</div>
           <div class="result-item-flex">
             <div class="display-center">
               <img src="@/assets/icons/clock.svg" />
               <div>发表时间 {{ item.date }}</div>
             </div>
-            <div class="display-center cursor" @click="toTargetUrl(item.targetUrl)">
+            <div class="display-center cursor" @click="toTargetUrlWithNewWindow(item.targetUrl)">
               <img src="@/assets/icons/link-icon.svg" />
               前往评论区
             </div>
@@ -89,9 +79,7 @@
     </div>
     <div>
       <div class="introduce-pc">
-        <div class="introduce-title">
-          功能介绍
-        </div>
+        <div class="introduce-title">功能介绍</div>
         <div v-for="(item, index) in contentList" :key="index" class="introduce-text-content">
           <div>{{ item.title }}</div>
           <div>{{ item.content }}</div>
@@ -100,7 +88,7 @@
           <div
             class="display-center cursor"
             style="margin-right: 20px"
-            @click="toTargetUrl('https://github.com/ASoulCnki/')"
+            @click="toTargetUrlWithNewWindow('https://github.com/ASoulCnki/')"
           >
             <img src="@/assets/icons/githubIcon.svg" />
             查重接口开源仓库
@@ -120,6 +108,7 @@ import { reactive, defineComponent, ref } from 'vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
 import headerTitle from '@/components/HeaderTitle.vue'
 import copyToClipBoard from '@/hooks/useCopyToClipBoard'
+import toTargetUrlWithNewWindow from '@/hooks/useUtility'
 
 interface DuplicateCheckingItem {
   targetUrl: string
@@ -158,7 +147,7 @@ export default defineComponent({
     const isShowIntroduce = ref(true)
     const { proxy } = useCurrentInstance()
     // 方法
-    const getDuplicate = async() => {
+    const getDuplicate = async () => {
       try {
         DuplicateCheckingList.value = []
         const res = await proxy.$request({
@@ -191,7 +180,7 @@ export default defineComponent({
         proxy.$Toast.showError(error)
       }
     }
-    const changeIntroduceShow = (e:boolean) => {
+    const changeIntroduceShow = (e: boolean) => {
       isShowIntroduce.value = e
     }
     const copyResult = (item: any) => {
@@ -208,13 +197,10 @@ export default defineComponent({
       `
       copyToClipBoard(copyText)
     }
-    const toTargetUrl = (url: string) => {
-      window.open(url)
-    }
     return {
       getDuplicate,
       copyResult,
-      toTargetUrl,
+      toTargetUrlWithNewWindow,
       changeIntroduceShow,
       DuplicateCheckingList,
       contentList,

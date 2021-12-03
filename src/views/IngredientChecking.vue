@@ -2,15 +2,13 @@
   <div>
     <headerTitle title="成分姬" sub-title="帮助你快速分析用户成分" @buttonClick="changeIntroduceShow"></headerTitle>
     <div v-show="isShowIntroduce" class="introduce-phone">
-      <div class="introduce-title">
-        功能介绍
-      </div>
+      <div class="introduce-title">功能介绍</div>
       <div class="introduce-text-content">
         <div class="introduce-text-content-section">
           成分姬是由
           <span
             class="introduce-text-content-name"
-            @click="toBilibiliSpace(32957695)"
+            @click="toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')"
           >晓轩iMIKU老师</span>
           为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
         </div>
@@ -24,12 +22,10 @@
             :key="item.BzhanUid"
             :style="'color:' + item.color"
             class="introduce-Asoul-item"
-            @click="toBilibiliSpace(item.BzhanUid)"
+            @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.BzhanUid.toString())"
           >
             <img :src="item.face" class="introduce-Asoul-face" />
-            <div class="introduce-Asoul-name">
-              {{ item.name }}
-            </div>
+            <div class="introduce-Asoul-name">{{ item.name }}</div>
           </div>
         </div>
       </div>
@@ -50,9 +46,7 @@
               'background-color': searchText.length > 0 ? '#4B5563' : '#9CA3AF',
             }"
             @click="getIngredient()"
-          >
-            查询成分
-          </div>
+          >查询成分</div>
         </div>
         <!-- 查询结果展示 -->
         <div class="results-area">
@@ -63,37 +57,32 @@
               复制结果
             </div>
           </div>
-          <div v-if="isVuplistEmpty" class="search-result-tip">
-            该用户没有关注的Vup捏~！
-          </div>
+          <div v-if="isVuplistEmpty" class="search-result-tip">该用户没有关注的Vup捏~！</div>
           <div v-else class="search-result-VupList">
-            <div v-for="item in vupList" :key="item.vupUid" class="Vup-item" @click="toBilibiliSpace(item.vupUid)">
+            <div
+              v-for="item in vupList"
+              :key="item.vupUid"
+              class="Vup-item"
+              @click="toTargetUrlWithNewWindow(item.vupUid)"
+            >
               <img :src="item.vupFace" class="Vup-item-face" />
-              <div class="Vup-name">
-                {{ item.vupName }}
-              </div>
-              <div class="Vup-describe">
-                {{ item.officalVerify }}
-              </div>
+              <div class="Vup-name">{{ item.vupName }}</div>
+              <div class="Vup-describe">{{ item.officalVerify }}</div>
               <div class="divider"></div>
-              <div class="Vup-sign">
-                {{ item.vupSign }}
-              </div>
+              <div class="Vup-sign">{{ item.vupSign }}</div>
             </div>
           </div>
         </div>
       </div>
       <div>
         <div class="introduce-pc">
-          <div class="introduce-title">
-            功能介绍
-          </div>
+          <div class="introduce-title">功能介绍</div>
           <div class="introduce-text-content">
             <div class="introduce-text-content-section">
               成分姬是由
               <span
                 class="introduce-text-content-name"
-                @click="toBilibiliSpace(32957695)"
+                @click="toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')"
               >晓轩iMIKU老师</span>
               为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
             </div>
@@ -107,12 +96,10 @@
                 :key="item.BzhanUid"
                 :style="'color:' + item.color"
                 class="introduce-Asoul-item"
-                @click="toBilibiliSpace(item.BzhanUid)"
+                @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.BzhanUid.toString())"
               >
                 <img :src="item.face" class="introduce-Asoul-face" />
-                <div class="introduce-Asoul-name">
-                  {{ item.name }}
-                </div>
+                <div class="introduce-Asoul-name">{{ item.name }}</div>
               </div>
             </div>
           </div>
@@ -127,6 +114,9 @@ import { defineComponent, ref } from 'vue'
 import headerTitle from '@/components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
 import copyToClipBoard from '@/hooks/useCopyToClipBoard'
+import toTargetUrlWithNewWindow from '@/hooks/useUtility'
+import Asoul from '@/assets/Data'
+
 
 interface vupItem {
   vupName: string
@@ -139,44 +129,12 @@ export default defineComponent({
   components: { headerTitle },
   setup() {
     const { proxy } = useCurrentInstance()
-    const Asoul = [
-      {
-        name: '向晚大魔王',
-        color: '#9ac8e2',
-        BzhanUid: 672346917,
-        face: 'https://i0.hdslb.com/bfs/face/566078c52b408571d8ae5e3bcdf57b2283024c27.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '贝拉Kira',
-        color: '#db7d74',
-        BzhanUid: 672353429,
-        face: 'https://i2.hdslb.com/bfs/face/668af440f8a8065743d3fa79cfa8f017905d0065.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '珈乐Carol',
-        color: '#b8a6d9',
-        BzhanUid: 351609538,
-        face: 'https://i2.hdslb.com/bfs/face/a7fea00016a8d3ffb015b6ed8647cc3ed89cbc63.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '嘉然今天吃什么',
-        color: '#e799b0',
-        BzhanUid: 672328094,
-        face: 'https://i2.hdslb.com/bfs/face/d399d6f5cf7943a996ae96999ba3e6ae2a2988de.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '乃琳Queen',
-        color: '#576690',
-        BzhanUid: 672342685,
-        face: 'https://i1.hdslb.com/bfs/face/8895c87082beba1355ea4bc7f91f2786ef49e354.jpg@256w_256h_1o.webp',
-      },
-    ]
     const vupList = ref([] as vupItem[])
     const searchText = ref('')
     const isVuplistEmpty = ref(false)
     const isShowIntroduce = ref(true)
     let saveSearchText = ''
-    const getIngredient = async() => {
+    const getIngredient = async () => {
       try {
         if (searchText.value === '')
           return
@@ -229,19 +187,15 @@ export default defineComponent({
       )
       console.log('copySearchResult')
     }
-    const changeIntroduceShow = (e:boolean) => {
+    const changeIntroduceShow = (e: boolean) => {
       isShowIntroduce.value = e
-    }
-    // getIngredient();
-    const toBilibiliSpace = (uid: number|string) => {
-      window.open(`https://space.bilibili.com/${uid}`)
     }
     return {
       getIngredient,
       vupList,
       searchText,
       Asoul,
-      toBilibiliSpace,
+      toTargetUrlWithNewWindow,
       copySearchResult,
       isVuplistEmpty,
       changeIntroduceShow,
@@ -332,7 +286,7 @@ export default defineComponent({
         border-radius: 2px;
         word-break: break-all;
         cursor: pointer;
-        transition: all .3s ease-in;
+        transition: all 0.3s ease-in;
 
         .Vup-item-face {
           background-color: #d1d5db;
@@ -379,11 +333,10 @@ export default defineComponent({
           word-break: break-all;
         }
       }
-
     }
   }
-    .Vup-item:hover{
-      box-shadow:  3px 3px 10px #a1a2a3;
+  .Vup-item:hover {
+    box-shadow: 3px 3px 10px #a1a2a3;
   }
   .introduce-pc {
     background-color: #f3f4f6;

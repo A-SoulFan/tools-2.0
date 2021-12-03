@@ -1,10 +1,5 @@
 <template>
-  <headerTitle
-    title="枝江方言词典"
-    sub-title="你想了解的词条都在这"
-    :need-button="false"
-    @buttonClick="changeIntroduceShow"
-  ></headerTitle>
+  <headerTitle title="枝江方言词典" sub-title="你想了解的词条都在这" @buttonClick="changeIntroduceShow"></headerTitle>
   <div v-show="isShowIntroduce" class="introduce-phone">
     <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
@@ -142,7 +137,7 @@ export default defineComponent({
   setup() {
     const { proxy } = useCurrentInstance()
     const searchText = ref('')
-    const isShowIntroduce = ref(false)
+    const isShowIntroduce = ref(true)
     const isShowDetail = ref(false)
     const contentDetailItem = reactive({
       title: '',
