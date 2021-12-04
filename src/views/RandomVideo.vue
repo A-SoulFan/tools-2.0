@@ -12,7 +12,7 @@
             :key="item.BzhanUid"
             :style="'color:' + item.color"
             class="introduce-Asoul-item"
-            @click="toBilibiliSpace(item.BzhanUid)"
+            @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.BzhanUid.toString())"
           >
             <img :src="item.face" class="introduce-Asoul-face" />
             <div class="introduce-Asoul-name">{{ item.name }}</div>
@@ -45,7 +45,7 @@
               v-for="(item, index) in historyVideoList"
               :key="index"
               class="history-video-item"
-              @click="selectVideo(item)"
+              @click="toTargetUrlWithNewWindow('https://www.bilibili.com/video/' + item.bv)"
             >
               <div class="video-cover">
                 <img :src="item.imgsrc" />
@@ -70,7 +70,7 @@
                 :key="item.BzhanUid"
                 :style="'color:' + item.color"
                 class="introduce-Asoul-item"
-                @click="toBilibiliSpace(item.BzhanUid)"
+                @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.BzhanUid.toString())"
               >
                 <img :src="item.face" class="introduce-Asoul-face" />
                 <div class="introduce-Asoul-name">{{ item.name }}</div>
@@ -87,12 +87,14 @@
 import { defineComponent, ref } from 'vue'
 import headerTitle from '@/components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
+import toTargetUrlWithNewWindow from '@/hooks/useUtility'
 import Asoul from '@/assets/Data'
 
 interface videoObj {
   title: string
-  cover: string
+  cover?: string
   time: string
+  imgsrc: string
   play_url: string
   bv: string
 }
@@ -100,16 +102,24 @@ interface videoObj {
 export default defineComponent({
   components: { headerTitle },
   setup() {
+    const { proxy } = useCurrentInstance()
     const isShowIntroduce = ref(true)
-    const historyVideoList: any[] = JSON.parse(
+    const historyVideoList: videoObj[] = JSON.parse(
       localStorage.getItem('historyVideoList') || JSON.stringify([]),
     )
-    const iframeUrl = ref('')
-    // TODO: 未拿取
-    const updateTime = ref('2021.8.26 15:00')
-    let currentVideoIndex = 0
-    const { proxy } = useCurrentInstance()
 
+
+    const updateTime = ref('')
+    const getUpdateTime = async () => {
+      const res = await proxy.$request({
+        url: import.meta.env.VITE_API_RANDOMVIDEO_UPDATETIME,
+      }) as { last_update_time: string }
+      updateTime.value = new Date(res.last_update_time).toLocaleString('chinese', { hour12: false })
+    }
+    getUpdateTime()
+
+    let currentVideoIndex = 0
+    const iframeUrl = ref('')
     const getRandomVideo = async () => {
       try {
         const res = await proxy.$request({
@@ -145,9 +155,7 @@ export default defineComponent({
     const selectVideo = (item: videoObj): void => {
       window.open(`https://www.bilibili.com/video/${item.bv}`)
     }
-    const toBilibiliSpace = (uid: number) => {
-      window.open(`https://space.bilibili.com/${uid}`)
-    }
+
     const changeIntroduceShow = (e: boolean) => {
       isShowIntroduce.value = e
     }
@@ -156,11 +164,10 @@ export default defineComponent({
       getRandomVideo,
       preVideo,
       selectVideo,
-      toBilibiliSpace,
+      toTargetUrlWithNewWindow,
       changeIntroduceShow,
       updateTime,
       historyVideoList,
-      currentVideoIndex,
       iframeUrl,
       Asoul,
       isShowIntroduce,
