@@ -36,13 +36,14 @@
             <div class="random-button" @click="getRandomVideo">随便看看</div>
           </div>
         </div>
-        <div class="history-video-area">
+        <div class="history-video-area" v-if="Data.historyVideoList.length>0">
           <div class="history-video-title-area">
             <div class="history-video-title">历史记录</div>
+            <div class="history-video-clear-button" @click="clearHistory">清理历史记录</div>
           </div>
           <div class="history-video">
             <div
-              v-for="(item, index) in historyVideoList"
+              v-for="(item, index) in Data.historyVideoList"
               :key="index"
               class="history-video-item"
               @click="toTargetUrlWithNewWindow('https://www.bilibili.com/video/' + item.bv)"
@@ -84,7 +85,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref,reactive } from 'vue'
 import headerTitle from '@/components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
 import toTargetUrlWithNewWindow from '@/hooks/useUtility'
@@ -104,10 +105,6 @@ export default defineComponent({
   setup() {
     const { proxy } = useCurrentInstance()
     const isShowIntroduce = ref(true)
-    const historyVideoList: videoObj[] = JSON.parse(
-      localStorage.getItem('historyVideoList') || JSON.stringify([]),
-    )
-
 
     const updateTime = ref('')
     const getUpdateTime = async () => {
@@ -118,6 +115,12 @@ export default defineComponent({
     }
     getUpdateTime()
 
+    const Data = reactive({
+      historyVideoList: [] as videoObj[]
+    })
+    Data.historyVideoList = JSON.parse(
+      localStorage.getItem('historyVideoList') || JSON.stringify([]),
+    )
     let currentVideoIndex = 0
     const iframeUrl = ref('')
     const getRandomVideo = async () => {
@@ -130,9 +133,9 @@ export default defineComponent({
         res.play_url = `https:${res.play_url}`
         iframeUrl.value = res.play_url
         // 长度保持在二十条
-        if (historyVideoList.length >= 20) historyVideoList.pop()
+        if (Data.historyVideoList.length >= 20) Data.historyVideoList.pop()
 
-        historyVideoList.unshift({
+        Data.historyVideoList.unshift({
           title: res.title,
           imgsrc: res.cover || '',
           time: res.time,
@@ -141,7 +144,7 @@ export default defineComponent({
         })
         localStorage.setItem(
           'historyVideoList',
-          JSON.stringify(historyVideoList),
+          JSON.stringify(Data.historyVideoList),
         )
       }
       catch (error) {
@@ -150,24 +153,27 @@ export default defineComponent({
     }
     const preVideo = (): void => {
       currentVideoIndex++
-      iframeUrl.value = historyVideoList[currentVideoIndex].play_url
+      iframeUrl.value = Data.historyVideoList[currentVideoIndex].play_url
     }
-    const selectVideo = (item: videoObj): void => {
-      window.open(`https://www.bilibili.com/video/${item.bv}`)
+        const clearHistory = ()=>{
+        Data.historyVideoList = [] as videoObj[]
+        localStorage.removeItem('historyVideoList')
     }
+
 
     const changeIntroduceShow = (e: boolean) => {
       isShowIntroduce.value = e
     }
+
     getRandomVideo()
     return {
       getRandomVideo,
       preVideo,
-      selectVideo,
       toTargetUrlWithNewWindow,
       changeIntroduceShow,
+      clearHistory,
       updateTime,
-      historyVideoList,
+      Data,
       iframeUrl,
       Asoul,
       isShowIntroduce,
@@ -179,6 +185,7 @@ export default defineComponent({
 <style scoped lang="less">
 .randomVideo {
   display: flex;
+  padding-bottom: 50px;
 }
 
 .update-time-area {
@@ -250,16 +257,14 @@ export default defineComponent({
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 30px 0;
   }
   .history-video-clear-button {
-    align-self: flex-end;
-    margin-bottom: 10px;
     font-size: 13px;
     cursor: pointer;
   }
   .history-video-title {
     font-size: 17px;
-    margin: 30px 0 20px 0;
   }
   .history-video {
     display: grid;
