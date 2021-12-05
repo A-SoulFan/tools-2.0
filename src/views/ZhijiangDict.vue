@@ -3,15 +3,29 @@
   <div v-show="isShowIntroduce" class="introduce-phone">
     <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
-      <div
-        class="introduce-text-content"
-      >本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。</div>
+      <div class="introduce-text-content">
+        本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，
+        避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
+      </div>
       <div class="introduce-text-content">
         如果有新词条或者对词条的内容方面有建议的欢迎联系:
         <span
           class="introduce-targetUrl"
-          @click="toTargetUrl('https://space.bilibili.com/1442421278')"
+          @click="toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')"
         >&nbsp;&nbsp;@ProJectASF</span>
+      </div>
+        <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
+      <div class="introduce-Asoul">
+        <div
+          v-for="item in Asoul"
+          :key="item.BzhanUid"
+          :style="'color:' + item.color"
+          class="introduce-Asoul-item"
+          @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.BzhanUid.toString())"
+        >
+          <img :src="item.face" class="introduce-Asoul-face" />
+          <div class="introduce-Asoul-name">{{ item.name }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -104,21 +118,30 @@
         <div class="introduce-pc">
           <div class="introduce-title">功能介绍</div>
           <div class="introduce-text-content">
+            <div
+              class="introduce-text-content"
+            >本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。</div>
             <div class="introduce-text-content">
-              <div class="introduce-text-content">
-                <div
-                  class="introduce-text-content"
-                >本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。</div>
-                <div class="introduce-text-content">
-                  如果有新词条或者对词条的内容方面有建议的欢迎联系:
-                  <span
-                    class="introduce-targetUrl"
-                    @click="
-                      toTargetUrl('https://space.bilibili.com/1442421278')
-                    "
-                  >&nbsp;&nbsp;@ProJectASF</span>
-                </div>
-              </div>
+              如果有新词条或者对词条的内容方面有建议的欢迎联系:
+              <span
+                class="introduce-targetUrl"
+                @click="
+                  toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')
+                "
+              >&nbsp;&nbsp;@ProJectASF</span>
+            </div>
+          </div>
+        <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
+          <div class="introduce-Asoul">
+            <div
+              v-for="item in Asoul"
+              :key="item.BzhanUid"
+              :style="'color:' + item.color"
+              class="introduce-Asoul-item"
+              @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.BzhanUid.toString())"
+            >
+              <img :src="item.face" class="introduce-Asoul-face" />
+              <div class="introduce-Asoul-name">{{ item.name }}</div>
             </div>
           </div>
         </div>
@@ -131,6 +154,9 @@
 import { defineComponent, ref, reactive } from 'vue'
 import headerTitle from '@/components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
+import toTargetUrlWithNewWindow from '@/hooks/useUtility'
+import Asoul from '@/assets/Data'
+
 export default defineComponent({
   name: 'ZhijiangDict',
   components: { headerTitle },
@@ -250,9 +276,6 @@ export default defineComponent({
         document.documentElement.scrollTop = scrollTop
       }, 0);
     }
-    const toTargetUrl = (url: string) => {
-      window.open(url)
-    }
 
     getCategoriesList()
     return {
@@ -262,12 +285,13 @@ export default defineComponent({
       changeIntroduceShow,
       toShowDetail,
       closeDetail,
-      toTargetUrl,
+      toTargetUrlWithNewWindow,
       searchText,
       data,
       isShowIntroduce,
       isShowDetail,
       contentDetailItem,
+      Asoul
     }
   },
 })
@@ -475,6 +499,30 @@ export default defineComponent({
 }
 .introduce-phone {
   display: none;
+}
+.introduce-Asoul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  .introduce-Asoul-item {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    word-break: keep-all;
+    cursor: pointer;
+    width: 65px;
+  }
+  .introduce-Asoul-face {
+    width: 67px;
+    height: 67px;
+    border-radius: 50%;
+  }
+  .introduce-Asoul-name {
+    margin-top: 5px;
+    font-size: 12px;
+  }
 }
 
 @media only screen and (max-width: 768px) {
