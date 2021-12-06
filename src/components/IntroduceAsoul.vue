@@ -67,6 +67,7 @@ export default defineComponent({
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  margin-top: 15px;
   .introduce-Asoul-item {
     display: flex;
     flex-direction: column;
