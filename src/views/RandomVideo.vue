@@ -3,34 +3,15 @@
   <div>
     <header-title title="今天溜什么" sub-title="相见即是缘份" @buttonClick="changeIntroduceShow"></header-title>
     <div v-show="isShowIntroduce" class="introduce-phone">
-      <div class="introduce-title">
-        功能介绍
-      </div>
+      <div class="introduce-title">功能介绍</div>
       <div class="introduce-text-content">
-        <div class="introduce-text-content">
-          请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡
-        </div>
-        <div class="introduce-Asoul">
-          <div
-            v-for="item in Asoul"
-            :key="item.BzhanUid"
-            :style="'color:' + item.color"
-            class="introduce-Asoul-item"
-            @click="toBilibiliSpace(item.BzhanUid)"
-          >
-            <img :src="item.face" class="introduce-Asoul-face" />
-            <div class="introduce-Asoul-name">
-              {{ item.name }}
-            </div>
-          </div>
-        </div>
+        <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
+        <introduceAsoul></introduceAsoul>
       </div>
     </div>
     <div class="update-time-area">
       <img class="icon-clock" src="@/assets/icons/clock.svg" />
-      <div class="update-time-text">
-        {{ "最近更新" + updateTime }}
-      </div>
+      <div class="update-time-text">{{ "最近更新" + updateTime }}</div>
     </div>
     <div class="randomVideo">
       <div style="flex: 1">
@@ -39,39 +20,30 @@
           <div class="iframe-box-button-area">
             <div class="pre-button-area">
               <img class="pre-button-img" src="@/assets/icons/cube.svg" />
-              <div class="pre-button-text" @click="preVideo">
-                回到上一条视频
-              </div>
+              <div class="pre-button-text" @click="preVideo">回到上一条视频</div>
             </div>
-            <div class="random-button" @click="getRandomVideo">
-              随便看看
-            </div>
+            <div class="random-button" @click="getRandomVideo">随便看看</div>
           </div>
         </div>
-        <div class="history-video-area">
+        <div class="history-video-area" v-if="Data.historyVideoList.length > 0">
           <div class="history-video-title-area">
-            <div class="history-video-title">
-              历史记录
-            </div>
+            <div class="history-video-title">历史记录</div>
+            <div class="history-video-clear-button" @click="clearHistory">清理历史记录</div>
           </div>
           <div class="history-video">
             <div
-              v-for="(item, index) in historyVideoList"
+              v-for="(item, index) in Data.historyVideoList"
               :key="index"
               class="history-video-item"
-              @click="selectVideo(item)"
+              @click="toTargetUrlWithNewWindow('https://www.bilibili.com/video/' + item.bv)"
             >
               <div class="video-cover">
                 <img :src="item.imgsrc" />
               </div>
 
               <div class="video-info">
-                <div class="video-title">
-                  {{ item.title }}
-                </div>
-                <div class="video-time">
-                  观看时间：{{ item.time }}
-                </div>
+                <div class="video-title">{{ item.title }}</div>
+                <div class="video-time">观看时间：{{ item.time }}</div>
               </div>
             </div>
           </div>
@@ -79,27 +51,10 @@
       </div>
       <div>
         <div class="introduce-pc">
-          <div class="introduce-title">
-            功能介绍
-          </div>
+          <div class="introduce-title">功能介绍</div>
           <div class="introduce-text-content">
-            <div class="introduce-text-content">
-              请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡
-            </div>
-            <div class="introduce-Asoul">
-              <div
-                v-for="item in Asoul"
-                :key="item.BzhanUid"
-                :style="'color:' + item.color"
-                class="introduce-Asoul-item"
-                @click="toBilibiliSpace(item.BzhanUid)"
-              >
-                <img :src="item.face" class="introduce-Asoul-face" />
-                <div class="introduce-Asoul-name">
-                  {{ item.name }}
-                </div>
-              </div>
-            </div>
+            <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
+            <introduceAsoul></introduceAsoul>
           </div>
         </div>
       </div>
@@ -108,64 +63,45 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, reactive } from 'vue'
 import headerTitle from '@/components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
+import toTargetUrlWithNewWindow from '@/hooks/useUtility'
+import introduceAsoul from '@/components/IntroduceAsoul.vue'
 
 interface videoObj {
   title: string
-  cover: string
+  cover?: string
   time: string
+  imgsrc: string
   play_url: string
   bv: string
 }
 
 export default defineComponent({
-  components: { headerTitle },
+  components: { headerTitle, introduceAsoul },
   setup() {
-    const Asoul = [
-      {
-        name: '向晚大魔王',
-        color: '#9ac8e2',
-        BzhanUid: 672346917,
-        face: 'https://i0.hdslb.com/bfs/face/566078c52b408571d8ae5e3bcdf57b2283024c27.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '贝拉Kira',
-        color: '#db7d74',
-        BzhanUid: 672353429,
-        face: 'https://i2.hdslb.com/bfs/face/668af440f8a8065743d3fa79cfa8f017905d0065.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '珈乐Carol',
-        color: '#b8a6d9',
-        BzhanUid: 351609538,
-        face: 'https://i2.hdslb.com/bfs/face/a7fea00016a8d3ffb015b6ed8647cc3ed89cbc63.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '嘉然今天吃什么',
-        color: '#e799b0',
-        BzhanUid: 672328094,
-        face: 'https://i2.hdslb.com/bfs/face/d399d6f5cf7943a996ae96999ba3e6ae2a2988de.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '乃琳Queen',
-        color: '#576690',
-        BzhanUid: 672342685,
-        face: 'https://i1.hdslb.com/bfs/face/8895c87082beba1355ea4bc7f91f2786ef49e354.jpg@256w_256h_1o.webp',
-      },
-    ]
+    const { proxy } = useCurrentInstance()
     const isShowIntroduce = ref(true)
-    const historyVideoList: any[] = JSON.parse(
+
+    const updateTime = ref('')
+    const getUpdateTime = async () => {
+      const res = await proxy.$request({
+        url: import.meta.env.VITE_API_RANDOMVIDEO_UPDATETIME,
+      }) as { last_update_time: string }
+      updateTime.value = new Date(res.last_update_time).toLocaleString('chinese', { hour12: false })
+    }
+    getUpdateTime()
+
+    const Data = reactive({
+      historyVideoList: [] as videoObj[]
+    })
+    Data.historyVideoList = JSON.parse(
       localStorage.getItem('historyVideoList') || JSON.stringify([]),
     )
-    const iframeUrl = ref('')
-    // TODO: 未拿取
-    const updateTime = ref('2021.8.26 15:00')
     let currentVideoIndex = 0
-    const { proxy } = useCurrentInstance()
-
-    const getRandomVideo = async() => {
+    const iframeUrl = ref('')
+    const getRandomVideo = async () => {
       try {
         const res = await proxy.$request({
           url: import.meta.env.VITE_API_RANDOMVIDEO,
@@ -175,9 +111,9 @@ export default defineComponent({
         res.play_url = `https:${res.play_url}`
         iframeUrl.value = res.play_url
         // 长度保持在二十条
-        if (historyVideoList.length >= 20) historyVideoList.pop()
+        if (Data.historyVideoList.length >= 20) Data.historyVideoList.pop()
 
-        historyVideoList.unshift({
+        Data.historyVideoList.unshift({
           title: res.title,
           imgsrc: res.cover || '',
           time: res.time,
@@ -186,7 +122,7 @@ export default defineComponent({
         })
         localStorage.setItem(
           'historyVideoList',
-          JSON.stringify(historyVideoList),
+          JSON.stringify(Data.historyVideoList),
         )
       }
       catch (error) {
@@ -195,29 +131,28 @@ export default defineComponent({
     }
     const preVideo = (): void => {
       currentVideoIndex++
-      iframeUrl.value = historyVideoList[currentVideoIndex].play_url
+      iframeUrl.value = Data.historyVideoList[currentVideoIndex].play_url
     }
-    const selectVideo = (item: videoObj): void => {
-      window.open(`https://www.bilibili.com/video/${item.bv}`)
+    const clearHistory = () => {
+      Data.historyVideoList = [] as videoObj[]
+      localStorage.removeItem('historyVideoList')
     }
-    const toBilibiliSpace = (uid: number) => {
-      window.open(`https://space.bilibili.com/${uid}`)
-    }
-    const changeIntroduceShow = (e:boolean) => {
+
+
+    const changeIntroduceShow = (e: boolean) => {
       isShowIntroduce.value = e
     }
+
     getRandomVideo()
     return {
       getRandomVideo,
       preVideo,
-      selectVideo,
-      toBilibiliSpace,
+      toTargetUrlWithNewWindow,
       changeIntroduceShow,
+      clearHistory,
       updateTime,
-      historyVideoList,
-      currentVideoIndex,
+      Data,
       iframeUrl,
-      Asoul,
       isShowIntroduce,
     }
   },
@@ -227,6 +162,7 @@ export default defineComponent({
 <style scoped lang="less">
 .randomVideo {
   display: flex;
+  padding-bottom: 50px;
 }
 
 .update-time-area {
@@ -298,16 +234,14 @@ export default defineComponent({
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 30px 0;
   }
   .history-video-clear-button {
-    align-self: flex-end;
-    margin-bottom: 10px;
     font-size: 13px;
     cursor: pointer;
   }
   .history-video-title {
     font-size: 17px;
-    margin: 30px 0 20px 0;
   }
   .history-video {
     display: grid;
@@ -354,8 +288,7 @@ export default defineComponent({
 /* 历史切片区域 */
 .introduce-pc {
   background-color: #f3f4f6;
-  width: calc(22.4vw - 40px);
-  min-width: 300px;
+  width: 400px;
   min-height: 200px;
   margin-left: 20px;
   padding: 20px;
@@ -377,30 +310,6 @@ export default defineComponent({
   cursor: pointer;
   color: #666;
   text-decoration: underline;
-}
-.introduce-Asoul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  .introduce-Asoul-item {
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    word-break: keep-all;
-    cursor: pointer;
-    width: 65px;
-  }
-  .introduce-Asoul-face {
-    width: 67px;
-    height: 67px;
-    border-radius: 50%;
-  }
-  .introduce-Asoul-name {
-    margin-top: 5px;
-    font-size: 12px;
-  }
 }
 .introduce-phone {
   display: none;

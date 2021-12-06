@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from "vue-router"
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    redirect: "/emojicollect"
+    redirect: "/ingredientChecking"
   },
   {
     path: "/randomVideo",

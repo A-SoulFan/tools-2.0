@@ -1,27 +1,21 @@
 <template>
-  <headerTitle
-    title="枝江方言词典"
-    sub-title="你想了解的词条都在这"
-    :need-button="false"
-    @buttonClick="changeIntroduceShow"
-  ></headerTitle>
+  <headerTitle title="枝江方言词典" sub-title="你想了解的词条都在这" @buttonClick="changeIntroduceShow"></headerTitle>
   <div v-show="isShowIntroduce" class="introduce-phone">
-    <div class="introduce-title">
-      功能介绍
-    </div>
+    <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
-      <div
-        class="introduce-text-content"
-      >
-        本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
+      <div class="introduce-text-content">
+        本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，
+        避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
       </div>
       <div class="introduce-text-content">
         如果有新词条或者对词条的内容方面有建议的欢迎联系:
         <span
           class="introduce-targetUrl"
-          @click="toTargetUrl('https://space.bilibili.com/1442421278')"
+          @click="toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')"
         >&nbsp;&nbsp;@ProJectASF</span>
       </div>
+      <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
+      <introduceAsoul></introduceAsoul>
     </div>
   </div>
   <div class="zhijiang-dict">
@@ -58,9 +52,7 @@
                 : ''
             "
             @click="setChildCategoriesList(item.cid)"
-          >
-            {{ item.name }}
-          </div>
+          >{{ item.name }}</div>
           <!-- 二级分类 -->
         </div>
         <div class="result-entries">
@@ -74,26 +66,20 @@
                 : ''
             "
             @click="getContentList(item.cid)"
-          >
-            {{ item.name }}
-          </div>
+          >{{ item.name }}</div>
         </div>
 
         <!-- 结果 -->
         <div class="result-item-area">
           <div v-for="entry in data.entryList" :key="entry.eid" class="result-item">
             <div class="result-item-header">
-              <div class="result-item-title">
-                {{ entry.title }}
-              </div>
+              <div class="result-item-title">{{ entry.title }}</div>
               <div class="result-item-header-right" @click="toShowDetail(entry)">
                 <img src="@/assets/icons/link-icon.svg" />
                 查看详情
               </div>
             </div>
-            <div class="result-item-content">
-              {{ entry.content }}
-            </div>
+            <div class="result-item-content">{{ entry.content }}</div>
             <div class="result-item-footer">
               <img src="@/assets/icons/clock.svg" />
               更新日期 {{ entry.timeText }}
@@ -119,29 +105,23 @@
     <div>
       <div>
         <div class="introduce-pc">
-          <div class="introduce-title">
-            功能介绍
-          </div>
+          <div class="introduce-title">功能介绍</div>
           <div class="introduce-text-content">
+            <div
+              class="introduce-text-content"
+            >本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。</div>
             <div class="introduce-text-content">
-              <div class="introduce-text-content">
-                <div
-                  class="introduce-text-content"
-                >
-                  本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
-                </div>
-                <div class="introduce-text-content">
-                  如果有新词条或者对词条的内容方面有建议的欢迎联系:
-                  <span
-                    class="introduce-targetUrl"
-                    @click="
-                      toTargetUrl('https://space.bilibili.com/1442421278')
-                    "
-                  >&nbsp;&nbsp;@ProJectASF</span>
-                </div>
-              </div>
+              如果有新词条或者对词条的内容方面有建议的欢迎联系:
+              <span
+                class="introduce-targetUrl"
+                @click="
+                  toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')
+                "
+              >&nbsp;&nbsp;@ProJectASF</span>
             </div>
           </div>
+          <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
+          <introduceAsoul></introduceAsoul>
         </div>
       </div>
     </div>
@@ -151,14 +131,18 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue'
 import headerTitle from '@/components/HeaderTitle.vue'
+import introduceAsoul from '@/components/IntroduceAsoul.vue'
+
 import useCurrentInstance from '@/hooks/useCurrentInstance'
+import toTargetUrlWithNewWindow from '@/hooks/useUtility'
+
 export default defineComponent({
   name: 'ZhijiangDict',
-  components: { headerTitle },
+  components: { headerTitle, introduceAsoul },
   setup() {
     const { proxy } = useCurrentInstance()
     const searchText = ref('')
-    const isShowIntroduce = ref(false)
+    const isShowIntroduce = ref(true)
     const isShowDetail = ref(false)
     const contentDetailItem = reactive({
       title: '',
@@ -174,7 +158,7 @@ export default defineComponent({
       entryKey: 0,
     })
     let result = [] as any[]
-    const searchWords = async() => {
+    const searchWords = async () => {
       try {
         const res = await proxy.$request({
           url: import.meta.env.VITE_API_DICT_SEARCH,
@@ -188,7 +172,7 @@ export default defineComponent({
         proxy.$Toast.showError(error)
       }
     }
-    const getContentList = async(cid: number) => {
+    const getContentList = async (cid: number) => {
       try {
         data.childCategorieskey = cid
         const res = await proxy.$request({
@@ -199,7 +183,7 @@ export default defineComponent({
           },
         })
         data.entryList = res.map((item: any) => {
-        // 将10位时间戳转成13位
+          // 将10位时间戳转成13位
           item.timeText = new Date(item.updated * 1000).toLocaleString(
             'chinese',
             {
@@ -224,7 +208,7 @@ export default defineComponent({
       data.childCategoriesList = temp
       getContentList(data.childCategoriesList[0].cid)
     }
-    const getCategoriesList = async() => {
+    const getCategoriesList = async () => {
       try {
         result = await proxy.$request({
           url: import.meta.env.VITE_API_DICT_CATEGORIES,
@@ -252,20 +236,24 @@ export default defineComponent({
       }
     }
     const toShowDetail = (item: any) => {
+      localStorage.setItem("AsoulFanZhijiangDict", (document.documentElement.scrollTop || document.body.scrollTop).toString())
       contentDetailItem.title = item.title
       contentDetailItem.timeText = item.timeText
       contentDetailItem.content = item.content
       isShowDetail.value = true
+      toScrollTop(0)
     }
     const closeDetail = () => {
       isShowDetail.value = false
+      toScrollTop(Number(localStorage.getItem("AsoulFanZhijiangDict")))
     }
-    const changeIntroduceShow = (e:boolean) => {
+    const changeIntroduceShow = (e: boolean) => {
       isShowIntroduce.value = e
     }
-
-    const toTargetUrl = (url: string) => {
-      window.open(url)
+    const toScrollTop = (scrollTop: number) => {
+      setTimeout(() => {
+        document.documentElement.scrollTop = scrollTop
+      }, 0);
     }
 
     getCategoriesList()
@@ -276,7 +264,7 @@ export default defineComponent({
       changeIntroduceShow,
       toShowDetail,
       closeDetail,
-      toTargetUrl,
+      toTargetUrlWithNewWindow,
       searchText,
       data,
       isShowIntroduce,
@@ -339,7 +327,6 @@ export default defineComponent({
         align-items: center;
         margin-right: 20px;
         color: #9ca3af;
-        min-width: 100px;
         font-size: 18px;
         cursor: pointer;
         white-space: nowrap;
@@ -364,7 +351,6 @@ export default defineComponent({
         align-items: center;
         padding: 5px 10px;
         margin-right: 40px;
-        min-width: 100px;
         font-size: 15px;
         color: #f3f4f6;
         border-radius: 2px;
@@ -408,7 +394,7 @@ export default defineComponent({
           color: #4b5563;
           font-size: 14px;
           margin-bottom: 30px;
-          height: 94px;
+          height: 90px;
           overflow: hidden;
           text-overflow: ellipsis;
           display: -webkit-box; //作为弹性伸缩盒子模型显示。
@@ -469,8 +455,7 @@ export default defineComponent({
 }
 .introduce-pc {
   background-color: #f3f4f6;
-  width: calc(22.4vw - 40px);
-  min-width: 200px;
+  width: 400px;
   min-height: 200px;
   margin-left: 20px;
   padding: 20px;
@@ -494,6 +479,11 @@ export default defineComponent({
 }
 
 @media only screen and (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 5px;
+
+    height: 5px;
+  }
   .introduce-pc {
     display: none;
   }
@@ -513,6 +503,9 @@ export default defineComponent({
       height: 35px;
       font-size: 15px;
     }
+  }
+  .result-item-content {
+    height: 100px !important;
   }
 }
 </style>
