@@ -6,18 +6,7 @@
       <div class="introduce-title">功能介绍</div>
       <div class="introduce-text-content">
         <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
-        <div class="introduce-Asoul">
-          <div
-            v-for="item in Asoul"
-            :key="item.BzhanUid"
-            :style="'color:' + item.color"
-            class="introduce-Asoul-item"
-            @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.BzhanUid.toString())"
-          >
-            <img :src="item.face" class="introduce-Asoul-face" />
-            <div class="introduce-Asoul-name">{{ item.name }}</div>
-          </div>
-        </div>
+        <introduceAsoul></introduceAsoul>
       </div>
     </div>
     <div class="update-time-area">
@@ -36,7 +25,7 @@
             <div class="random-button" @click="getRandomVideo">随便看看</div>
           </div>
         </div>
-        <div class="history-video-area" v-if="Data.historyVideoList.length>0">
+        <div class="history-video-area" v-if="Data.historyVideoList.length > 0">
           <div class="history-video-title-area">
             <div class="history-video-title">历史记录</div>
             <div class="history-video-clear-button" @click="clearHistory">清理历史记录</div>
@@ -65,18 +54,7 @@
           <div class="introduce-title">功能介绍</div>
           <div class="introduce-text-content">
             <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
-            <div class="introduce-Asoul">
-              <div
-                v-for="item in Asoul"
-                :key="item.BzhanUid"
-                :style="'color:' + item.color"
-                class="introduce-Asoul-item"
-                @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.BzhanUid.toString())"
-              >
-                <img :src="item.face" class="introduce-Asoul-face" />
-                <div class="introduce-Asoul-name">{{ item.name }}</div>
-              </div>
-            </div>
+            <introduceAsoul></introduceAsoul>
           </div>
         </div>
       </div>
@@ -85,11 +63,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref,reactive } from 'vue'
+import { defineComponent, ref, reactive } from 'vue'
 import headerTitle from '@/components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
 import toTargetUrlWithNewWindow from '@/hooks/useUtility'
-import Asoul from '@/assets/Data'
+import introduceAsoul from '@/components/IntroduceAsoul.vue'
 
 interface videoObj {
   title: string
@@ -101,7 +79,7 @@ interface videoObj {
 }
 
 export default defineComponent({
-  components: { headerTitle },
+  components: { headerTitle, introduceAsoul },
   setup() {
     const { proxy } = useCurrentInstance()
     const isShowIntroduce = ref(true)
@@ -155,9 +133,9 @@ export default defineComponent({
       currentVideoIndex++
       iframeUrl.value = Data.historyVideoList[currentVideoIndex].play_url
     }
-        const clearHistory = ()=>{
-        Data.historyVideoList = [] as videoObj[]
-        localStorage.removeItem('historyVideoList')
+    const clearHistory = () => {
+      Data.historyVideoList = [] as videoObj[]
+      localStorage.removeItem('historyVideoList')
     }
 
 
@@ -175,7 +153,6 @@ export default defineComponent({
       updateTime,
       Data,
       iframeUrl,
-      Asoul,
       isShowIntroduce,
     }
   },
@@ -311,8 +288,7 @@ export default defineComponent({
 /* 历史切片区域 */
 .introduce-pc {
   background-color: #f3f4f6;
-  width: calc(22.4vw - 40px);
-  min-width: 300px;
+  width: 400px;
   min-height: 200px;
   margin-left: 20px;
   padding: 20px;
@@ -334,30 +310,6 @@ export default defineComponent({
   cursor: pointer;
   color: #666;
   text-decoration: underline;
-}
-.introduce-Asoul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  .introduce-Asoul-item {
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    word-break: keep-all;
-    cursor: pointer;
-    width: 65px;
-  }
-  .introduce-Asoul-face {
-    width: 67px;
-    height: 67px;
-    border-radius: 50%;
-  }
-  .introduce-Asoul-name {
-    margin-top: 5px;
-    font-size: 12px;
-  }
 }
 .introduce-phone {
   display: none;

@@ -14,19 +14,8 @@
           @click="toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')"
         >&nbsp;&nbsp;@ProJectASF</span>
       </div>
-        <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
-      <div class="introduce-Asoul">
-        <div
-          v-for="item in Asoul"
-          :key="item.BzhanUid"
-          :style="'color:' + item.color"
-          class="introduce-Asoul-item"
-          @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.BzhanUid.toString())"
-        >
-          <img :src="item.face" class="introduce-Asoul-face" />
-          <div class="introduce-Asoul-name">{{ item.name }}</div>
-        </div>
-      </div>
+      <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
+      <introduceAsoul></introduceAsoul>
     </div>
   </div>
   <div class="zhijiang-dict">
@@ -131,19 +120,8 @@
               >&nbsp;&nbsp;@ProJectASF</span>
             </div>
           </div>
-        <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
-          <div class="introduce-Asoul">
-            <div
-              v-for="item in Asoul"
-              :key="item.BzhanUid"
-              :style="'color:' + item.color"
-              class="introduce-Asoul-item"
-              @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.BzhanUid.toString())"
-            >
-              <img :src="item.face" class="introduce-Asoul-face" />
-              <div class="introduce-Asoul-name">{{ item.name }}</div>
-            </div>
-          </div>
+          <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
+          <introduceAsoul></introduceAsoul>
         </div>
       </div>
     </div>
@@ -153,13 +131,14 @@
 <script lang="ts">
 import { defineComponent, ref, reactive } from 'vue'
 import headerTitle from '@/components/HeaderTitle.vue'
+import introduceAsoul from '@/components/IntroduceAsoul.vue'
+
 import useCurrentInstance from '@/hooks/useCurrentInstance'
 import toTargetUrlWithNewWindow from '@/hooks/useUtility'
-import Asoul from '@/assets/Data'
 
 export default defineComponent({
   name: 'ZhijiangDict',
-  components: { headerTitle },
+  components: { headerTitle, introduceAsoul },
   setup() {
     const { proxy } = useCurrentInstance()
     const searchText = ref('')
@@ -291,7 +270,6 @@ export default defineComponent({
       isShowIntroduce,
       isShowDetail,
       contentDetailItem,
-      Asoul
     }
   },
 })
@@ -477,8 +455,7 @@ export default defineComponent({
 }
 .introduce-pc {
   background-color: #f3f4f6;
-  width: calc(22.4vw - 40px);
-  min-width: 200px;
+  width: 400px;
   min-height: 200px;
   margin-left: 20px;
   padding: 20px;
@@ -499,30 +476,6 @@ export default defineComponent({
 }
 .introduce-phone {
   display: none;
-}
-.introduce-Asoul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  .introduce-Asoul-item {
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    word-break: keep-all;
-    cursor: pointer;
-    width: 65px;
-  }
-  .introduce-Asoul-face {
-    width: 67px;
-    height: 67px;
-    border-radius: 50%;
-  }
-  .introduce-Asoul-name {
-    margin-top: 5px;
-    font-size: 12px;
-  }
 }
 
 @media only screen and (max-width: 768px) {

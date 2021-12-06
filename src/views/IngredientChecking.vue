@@ -1,108 +1,84 @@
 <template>
-  <div>
-    <headerTitle title="成分姬" sub-title="帮助你快速分析用户成分" @buttonClick="changeIntroduceShow"></headerTitle>
-    <div v-show="isShowIntroduce" class="introduce-phone">
-      <div class="introduce-title">功能介绍</div>
-      <div class="introduce-text-content">
-        <div class="introduce-text-content-section">
-          成分姬是由
-          <span
-            class="introduce-text-content-name"
-            @click="toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')"
-          >晓轩iMIKU老师</span>
-          为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
+  <headerTitle title="成分姬" sub-title="帮助你快速分析用户成分" @buttonClick="changeIntroduceShow"></headerTitle>
+  <div v-show="isShowIntroduce" class="introduce-phone">
+    <div class="introduce-title">功能介绍</div>
+    <div class="introduce-text-content">
+      <div class="introduce-text-content-section">
+        成分姬是由
+        <span
+          class="introduce-text-content-name"
+          @click="toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')"
+        >晓轩iMIKU老师</span>
+        为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
+      </div>
+      <div class="introduce-text-content-section">
+        毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
+        所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
+      </div>
+      <introduceAsoul></introduceAsoul>
+    </div>
+  </div>
+  <div class="ingredient">
+    <div class="search-and-results">
+      <div class="search-area">
+        <input
+          v-model="searchText"
+          type="text"
+          class="search-input"
+          placeholder="请输入B站用户名或UID"
+          @keyup.enter="getIngredient()"
+        />
+        <div
+          class="search-button"
+          :style="{
+            'background-color': searchText.length > 0 ? '#4B5563' : '#9CA3AF',
+          }"
+          @click="getIngredient()"
+        >查询成分</div>
+      </div>
+      <!-- 查询结果展示 -->
+      <div class="results-area">
+        <div class="results-header-area">
+          <div>TA关注的VUP有:</div>
+          <div class="results-header-button" @click="copySearchResult()">
+            <img class="link-icon" src="@/assets/icons/link-icon.svg" />
+            复制结果
+          </div>
         </div>
-        <div class="introduce-text-content-section">
-          毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
-          所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
-        </div>
-        <div class="introduce-Asoul">
+        <div v-if="isVuplistEmpty" class="search-result-tip">该用户没有关注的Vup捏~！</div>
+        <div v-else class="search-result-VupList">
           <div
-            v-for="item in Asoul"
-            :key="item.BzhanUid"
-            :style="'color:' + item.color"
-            class="introduce-Asoul-item"
-            @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.BzhanUid.toString())"
+            v-for="item in vupList"
+            :key="item.vupUid"
+            class="Vup-item"
+            @click="toTargetUrlWithNewWindow(item.vupUid)"
           >
-            <img :src="item.face" class="introduce-Asoul-face" />
-            <div class="introduce-Asoul-name">{{ item.name }}</div>
+            <img :src="item.vupFace" class="Vup-item-face" />
+            <div class="Vup-name">{{ item.vupName }}</div>
+            <div class="Vup-describe">{{ item.officalVerify }}</div>
+            <div class="divider"></div>
+            <div class="Vup-sign">{{ item.vupSign }}</div>
           </div>
         </div>
       </div>
     </div>
-    <div class="ingredient">
-      <div class="search-and-results">
-        <div class="search-area">
-          <input
-            v-model="searchText"
-            type="text"
-            class="search-input"
-            placeholder="请输入B站用户名或UID"
-            @keyup.enter="getIngredient()"
-          />
-          <div
-            class="search-button"
-            :style="{
-              'background-color': searchText.length > 0 ? '#4B5563' : '#9CA3AF',
-            }"
-            @click="getIngredient()"
-          >查询成分</div>
-        </div>
-        <!-- 查询结果展示 -->
-        <div class="results-area">
-          <div class="results-header-area">
-            <div>TA关注的VUP有:</div>
-            <div class="results-header-button" @click="copySearchResult()">
-              <img class="link-icon" src="@/assets/icons/link-icon.svg" />
-              复制结果
-            </div>
+    <div>
+      <div class="introduce-pc">
+        <div class="introduce-title">功能介绍</div>
+        <div class="introduce-text-content">
+          <div class="introduce-text-content-section">
+            成分姬是由
+            <span
+              class="introduce-text-content-name"
+              @click="toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')"
+            >晓轩iMIKU老师</span>
+            为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
           </div>
-          <div v-if="isVuplistEmpty" class="search-result-tip">该用户没有关注的Vup捏~！</div>
-          <div v-else class="search-result-VupList">
-            <div
-              v-for="item in vupList"
-              :key="item.vupUid"
-              class="Vup-item"
-              @click="toTargetUrlWithNewWindow(item.vupUid)"
-            >
-              <img :src="item.vupFace" class="Vup-item-face" />
-              <div class="Vup-name">{{ item.vupName }}</div>
-              <div class="Vup-describe">{{ item.officalVerify }}</div>
-              <div class="divider"></div>
-              <div class="Vup-sign">{{ item.vupSign }}</div>
-            </div>
+          <div class="introduce-text-content-section">
+            毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
+            所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
           </div>
-        </div>
-      </div>
-      <div>
-        <div class="introduce-pc">
-          <div class="introduce-title">功能介绍</div>
-          <div class="introduce-text-content">
-            <div class="introduce-text-content-section">
-              成分姬是由
-              <span
-                class="introduce-text-content-name"
-                @click="toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')"
-              >晓轩iMIKU老师</span>
-              为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
-            </div>
-            <div class="introduce-text-content-section">
-              毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
-              所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
-            </div>
-            <div class="introduce-Asoul">
-              <div
-                v-for="item in Asoul"
-                :key="item.BzhanUid"
-                :style="'color:' + item.color"
-                class="introduce-Asoul-item"
-                @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.BzhanUid.toString())"
-              >
-                <img :src="item.face" class="introduce-Asoul-face" />
-                <div class="introduce-Asoul-name">{{ item.name }}</div>
-              </div>
-            </div>
-          </div>
+          <introduceAsoul></introduceAsoul>
         </div>
       </div>
     </div>
@@ -115,7 +91,8 @@ import headerTitle from '@/components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
 import copyToClipBoard from '@/hooks/useCopyToClipBoard'
 import toTargetUrlWithNewWindow from '@/hooks/useUtility'
-import Asoul from '@/assets/Data'
+import introduceAsoul from '@/components/IntroduceAsoul.vue'
+
 
 
 interface vupItem {
@@ -126,7 +103,7 @@ interface vupItem {
   vupFace: string
 }
 export default defineComponent({
-  components: { headerTitle },
+  components: { headerTitle, introduceAsoul },
   setup() {
     const { proxy } = useCurrentInstance()
     const vupList = ref([] as vupItem[])
@@ -194,7 +171,6 @@ export default defineComponent({
       getIngredient,
       vupList,
       searchText,
-      Asoul,
       toTargetUrlWithNewWindow,
       copySearchResult,
       isVuplistEmpty,
@@ -340,8 +316,7 @@ export default defineComponent({
   }
   .introduce-pc {
     background-color: #f3f4f6;
-    width: calc(22.4vw - 40px);
-    min-width: 300px;
+    width: 400px;
     min-height: 200px;
     margin-left: 20px;
     padding: 20px;
@@ -364,30 +339,6 @@ export default defineComponent({
   cursor: pointer;
   color: #666;
   text-decoration: underline;
-}
-.introduce-Asoul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  .introduce-Asoul-item {
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    word-break: keep-all;
-    cursor: pointer;
-    width: 65px;
-  }
-  .introduce-Asoul-face {
-    width: 67px;
-    height: 67px;
-    border-radius: 50%;
-  }
-  .introduce-Asoul-name {
-    margin-top: 5px;
-    font-size: 12px;
-  }
 }
 .introduce-phone {
   display: none;
