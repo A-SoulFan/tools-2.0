@@ -3,13 +3,20 @@
   <header-title title="表情包" sub-title="你想要的表情包都在这里"></header-title>
   <div class="EmojiCollection">
     <div class="waterfall" ref="waterfallBox">
-      <div
-        class
-        v-for="img in data.imgShowList"
-        :key="img.id"
-        :style="'width:' + img.width + 'px;height:' + img.height + 'px;'"
-      >
-        <img :src="'//' + img.url + `@` + img.width + 'w_' + img.height + 'h.webp'" />
+      <div v-for="(item,index) in waterfallData.waterfallList" class="waterfall-list">
+        <div
+          class="waterfall-item"
+          v-for="img in item"
+          :key="img.id"
+          :style="'width:' + img.width + 'px;' + 'height:' + img.height + 'px;'"
+          @click="download(img)"
+        >
+          <img
+            class="waterfall-item-img"
+            data-loaded="false"
+            :data-src="img.url + `@` + img.width + 'w_' + img.height + 'h.webp'"
+          />
+        </div>
       </div>
     </div>
 
@@ -19,16 +26,7 @@
         <div class="introduce-text-content">
           <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
           <div class="introduce-Asoul">
-            <div
-              v-for="item in Asoul"
-              :key="item.BzhanUid"
-              :style="'color:' + item.color"
-              class="introduce-Asoul-item"
-              @click="toBilibiliSpace(item.BzhanUid)"
-            >
-              <img :src="item.face" class="introduce-Asoul-face" />
-              <div class="introduce-Asoul-name">{{ item.name }}</div>
-            </div>
+            <introduceAsoul></introduceAsoul>
           </div>
         </div>
       </div>
@@ -37,9 +35,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue'
+import { defineComponent, ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
 import headerTitle from '../components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
+import introduceAsoul from '@/components/IntroduceAsoul.vue'
 
 export interface itemObj {
   id: number
@@ -49,102 +48,189 @@ export interface itemObj {
 }
 
 export default defineComponent({
-  components: { headerTitle },
+  components: { headerTitle, introduceAsoul },
   setup() {
     const { proxy } = useCurrentInstance()
     const waterfallBox = ref<null | HTMLElement>(null)
-    const Width = 250;
-    const boxWidth = ref<number>(0)
-    const Asoul = [
-      {
-        name: '向晚大魔王',
-        color: '#9ac8e2',
-        BzhanUid: 672346917,
-        face: 'https://i0.hdslb.com/bfs/face/566078c52b408571d8ae5e3bcdf57b2283024c27.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '贝拉Kira',
-        color: '#db7d74',
-        BzhanUid: 672353429,
-        face: 'https://i2.hdslb.com/bfs/face/668af440f8a8065743d3fa79cfa8f017905d0065.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '珈乐Carol',
-        color: '#b8a6d9',
-        BzhanUid: 351609538,
-        face: 'https://i2.hdslb.com/bfs/face/a7fea00016a8d3ffb015b6ed8647cc3ed89cbc63.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '嘉然今天吃什么',
-        color: '#e799b0',
-        BzhanUid: 672328094,
-        face: 'https://i2.hdslb.com/bfs/face/d399d6f5cf7943a996ae96999ba3e6ae2a2988de.jpg@256w_256h_1o.webp',
-      },
-      {
-        name: '乃琳Queen',
-        color: '#576690',
-        BzhanUid: 672342685,
-        face: 'https://i1.hdslb.com/bfs/face/8895c87082beba1355ea4bc7f91f2786ef49e354.jpg@256w_256h_1o.webp',
-      },
-    ]
-    const data = reactive({
-      imgShowList: [] as any[],
-      waterList: Array.from(Array(4), () => new Array(0)),
-      initDate: [] as itemObj[]
+    let Width = 250;
+    let init =true
+    const waterfallData = reactive({
+      // imgShowList: [] as any[],
+      waterfallList: Array.from(Array(4), () => new Array(0)) as itemObj[][], //瀑布流数组
+      waterfallHeightList: new Array(4).fill(0),
+      waterfallIndex: 0,
+      column: 4,
+      boxWidth: 0,
+      initData: [] as itemObj[]
     })
-    // const res = ref<itemObj[]>([])
+    // 设置瀑布流数据
+    const timeResize = ref(false) //节流
+    const setWaterfallData = async () => {
+          const W = Width
+          if (document.body.clientWidth > 768) {
+            Width = 250
+          } else {
+            Width = 150
+          }
+          if (W !== Width ||init) {
+            init=false
+            waterfallData.waterfallList.forEach((ele) => {
+              ele.forEach((item) => {
+                item.height = Math.floor((item.height) / (item.width) * Width)
+                item.width = Width
+              })
+            })
+            waterfallData.initData.forEach((item)=>{
+                item.height = Math.floor((item.height) / (item.width) * Width)
+                item.width = Width
+            })
+          }
+      if (!timeResize.value) {
+        timeResize.value = true
+        setTimeout(async () => {
+          console.log(document.body.clientWidth);
+
+
+          const itemWidth = Width + 10
+          waterfallData.boxWidth = waterfallBox.value!.clientWidth
+          console.log(waterfallData.boxWidth,'waterfallData.boxWidth');
+          
+          console.log(waterfallBox.value!.clientWidth / itemWidth,'');
+
+          const column = Math.floor(waterfallBox.value!.clientWidth / itemWidth) >= 1 ? Math.floor(waterfallBox.value!.clientWidth / itemWidth) : 1
+
+          // 列数有变
+          if (waterfallData.column !== column) {
+            waterfallData.column = column
+            waterfallData.waterfallList = Array.from(Array(column), () => new Array(0))
+            waterfallData.waterfallHeightList = new Array(column).fill(0)
+            waterfallData.waterfallList = Array.from(Array(column), () => new Array(0))
+
+            waterfallData.initData.forEach((item) => {
+              waterfallData.waterfallIndex = waterfallData.waterfallHeightList.indexOf(Math.min(...waterfallData.waterfallHeightList))
+              waterfallData.waterfallList[waterfallData.waterfallIndex].push(item)
+              waterfallData.waterfallHeightList[waterfallData.waterfallIndex] += item.height
+            })
+            await nextTick()
+            lazyLoad()
+          }
+          timeResize.value = false
+        }, 200);
+      }
+    }
+    let page = 1, isLastPage = false
     // 获取列表
-
-
     const getEmojiList = async () => {
+      if (isLastPage) {
+        return
+      }
       const res: Array<itemObj> = await proxy.$request({
         url: import.meta.env.VITE_API_EMOJI,
         params: {
-          page: 1,
-          limit: 20,
+          page,
+          limit: 100,
         },
       })
-      data.initDate.push(...res)
-
-      // data.imgShowList = res
+      if (res.length < 100) {
+        isLastPage = true
+      }
       let tempList = res.map((item: itemObj) => {
         return {
-          width: Width,
           height: Math.floor((item.height) / (item.width) * Width),
+          width: Width,
           url: '//' + item.url,
           id: item.id
         }
-      }).sort((a, b) => {
-        return a.height - b.height
       })
-      data.imgShowList = [...data.imgShowList, ...tempList]
-      console.log(data.imgShowList);
+      waterfallData.initData.push(...tempList)
+      tempList.forEach((item) => {
+        waterfallData.waterfallIndex = waterfallData.waterfallHeightList.indexOf(Math.min(...waterfallData.waterfallHeightList))
+        waterfallData.waterfallList[waterfallData.waterfallIndex].push(item)
+        waterfallData.waterfallHeightList[waterfallData.waterfallIndex] += item.height
+      })
+    }
+
+
+    const timeBoxScroll = ref(false) //节流
+    const listensBoxScroll = () => {
+      // 监听scroll事件函数
+      if (isLastPage) {
+        return
+      }
+      if (!timeBoxScroll.value) {
+        timeBoxScroll.value = true
+        setTimeout(async () => {
+          // 目前窗口底部离容器顶部的距离
+          let TopOffsetHeight = document.documentElement.scrollTop + document.documentElement.offsetHeight
+          let scrollHeight = document.documentElement.scrollHeight
+          // 离底部100px触发翻页
+          if (TopOffsetHeight + 100 >= scrollHeight) {
+            page++;
+            await getEmojiList()
+
+            lazyLoad()
+            // this.lazyLoadimg()
+          }
+          timeBoxScroll.value = false
+        }, 200)
+      }
+    }
+    // 懒加载
+    const lazyLoad = () => {
+      // 创建观察器
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const img = entry.target
+
+            const loaded = img.getAttribute('data-loaded')
+            if (loaded == "true") {
+              return
+            }
+
+            const src = img.getAttribute('data-src')
+            img.setAttribute('src', src!)
+            img.setAttribute('data-loaded', "true")
+            observer.unobserve(entry.target)
+          }
+        });
+      }, {
+        root: null,
+        threshold: [0],
+        rootMargin: '100px'
+      })
+      const length = waterfallBox.value!.children.length
+      for (let i = 0; i < length; i++) {
+        waterfallBox.value!.children[i].querySelectorAll(".waterfall-item-img").forEach((ele) => {
+          observer.observe(ele)
+        })
+      }
+    }
+    const download = (item: itemObj) => {
+      console.log(item);
 
     }
 
-    const toBilibiliSpace = (uid: number) => {
-      window.open(`https://space.bilibili.com/${uid}`)
-    }
+    onMounted(async () => {
+      await setWaterfallData()
+      waterfallData.boxWidth = waterfallBox.value!.clientWidth
+      await getEmojiList()
+      lazyLoad()
+      window.addEventListener('scroll', listensBoxScroll)
+      window.addEventListener('resize', setWaterfallData)
+    })
+    onUnmounted(() => {
+      window.removeEventListener('scroll', listensBoxScroll)
+      window.removeEventListener('resize', setWaterfallData)
+    })
 
     return {
-      data,
+      waterfallData,
       waterfallBox,
-      Asoul,
-      boxWidth,
-      Width,
-      toBilibiliSpace,
-      getEmojiList
+      getEmojiList,
+      download,
     }
   },
-  async mounted() {
-    await this.getEmojiList()
-
-    window.onresize = () => {
-      this.boxWidth = this.waterfallBox!.clientWidth
-      console.log(this.boxWidth);
-      this.data.waterList = Array.from(Array(Math.floor(this.boxWidth / this.Width)), () => new Array(0))
-    }
-  }
 })
 </script>
 
@@ -156,9 +242,16 @@ export default defineComponent({
 }
 
 .waterfall {
-  border: 1px solid #374151;
   flex: 1;
   display: flex;
+  justify-content: space-evenly;
+  .waterfall-list {
+    border: black 1px solid;
+  }
+  .waterfall-item {
+    margin-bottom: 20px;
+    background-color: #f3f4f6;
+  }
 }
 
 //
@@ -187,30 +280,6 @@ export default defineComponent({
   cursor: pointer;
   color: #666;
   text-decoration: underline;
-}
-.introduce-Asoul {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  .introduce-Asoul-item {
-    margin: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    word-break: keep-all;
-    cursor: pointer;
-    width: 65px;
-  }
-  .introduce-Asoul-face {
-    width: 67px;
-    height: 67px;
-    border-radius: 50%;
-  }
-  .introduce-Asoul-name {
-    margin-top: 5px;
-    font-size: 12px;
-  }
 }
 //
 @media only screen and (max-width: 768px) {
