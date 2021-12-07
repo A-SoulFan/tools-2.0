@@ -3,19 +3,20 @@
   <header-title title="表情包" sub-title="你想要的表情包都在这里"></header-title>
   <div class="EmojiCollection">
     <div class="waterfall" ref="waterfallBox">
-      <div v-for="(item,index) in waterfallData.waterfallList" class="waterfall-list">
+      <div v-for="item in waterfallData.waterfallList" class="waterfall-list">
         <div
           class="waterfall-item"
           v-for="img in item"
           :key="img.id"
-          :style="'width:' + img.width + 'px;' + 'height:' + img.height + 'px;'"
-          @click="download(img)"
+          :style="'padding-top:' + img.paddingTop + '%;'"
+          
         >
           <img
             class="waterfall-item-img"
             data-loaded="false"
             :data-src="img.url + `@` + img.width + 'w_' + img.height + 'h.webp'"
           />
+          <img @click="download(img)" class="waterfall-download-img" src="@/assets/icons/coolicon.svg">
         </div>
       </div>
     </div>
@@ -39,12 +40,16 @@ import { defineComponent, ref, reactive, onMounted, onUnmounted, nextTick } from
 import headerTitle from '../components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
 import introduceAsoul from '@/components/IntroduceAsoul.vue'
+import downloadImage from '@/hooks/useDownloadImage'
+import axios from "axios"
 
 export interface itemObj {
   id: number
   url: string
   height: number
   width: number
+  paddingTop: string
+  name:string
 }
 
 export default defineComponent({
@@ -53,7 +58,7 @@ export default defineComponent({
     const { proxy } = useCurrentInstance()
     const waterfallBox = ref<null | HTMLElement>(null)
     let Width = 250;
-    let init =true
+    let init = true
     const waterfallData = reactive({
       // imgShowList: [] as any[],
       waterfallList: Array.from(Array(4), () => new Array(0)) as itemObj[][], //瀑布流数组
@@ -66,88 +71,91 @@ export default defineComponent({
     // 设置瀑布流数据
     const timeResize = ref(false) //节流
     const setWaterfallData = async () => {
-          const W = Width
-          if (document.body.clientWidth > 768) {
-            Width = 250
-          } else {
-            Width = 150
-          }
-          if (W !== Width ||init) {
-            init=false
-            waterfallData.waterfallList.forEach((ele) => {
-              ele.forEach((item) => {
-                item.height = Math.floor((item.height) / (item.width) * Width)
-                item.width = Width
-              })
-            })
-            waterfallData.initData.forEach((item)=>{
-                item.height = Math.floor((item.height) / (item.width) * Width)
-                item.width = Width
-            })
-          }
-      if (!timeResize.value) {
-        timeResize.value = true
-        setTimeout(async () => {
-          console.log(document.body.clientWidth);
-
-
-          const itemWidth = Width + 10
-          waterfallData.boxWidth = waterfallBox.value!.clientWidth
-          console.log(waterfallData.boxWidth,'waterfallData.boxWidth');
-          
-          console.log(waterfallBox.value!.clientWidth / itemWidth,'');
-
-          const column = Math.floor(waterfallBox.value!.clientWidth / itemWidth) >= 1 ? Math.floor(waterfallBox.value!.clientWidth / itemWidth) : 1
-
-          // 列数有变
-          if (waterfallData.column !== column) {
-            waterfallData.column = column
-            waterfallData.waterfallList = Array.from(Array(column), () => new Array(0))
-            waterfallData.waterfallHeightList = new Array(column).fill(0)
-            waterfallData.waterfallList = Array.from(Array(column), () => new Array(0))
-
-            waterfallData.initData.forEach((item) => {
-              waterfallData.waterfallIndex = waterfallData.waterfallHeightList.indexOf(Math.min(...waterfallData.waterfallHeightList))
-              waterfallData.waterfallList[waterfallData.waterfallIndex].push(item)
-              waterfallData.waterfallHeightList[waterfallData.waterfallIndex] += item.height
-            })
-            await nextTick()
-            lazyLoad()
-          }
-          timeResize.value = false
-        }, 200);
+      const W = Width
+      if (document.body.clientWidth > 768) {
+        Width = 250
+      } else {
+        Width = 150
       }
+      // 图片宽度变化或者初始化
+      if (W !== Width || init) {
+        init = false
+        waterfallData.column = Math.floor(waterfallBox.value!.clientWidth / Width) >= 1 ? Math.floor(waterfallBox.value!.clientWidth / Width) : 1
+        waterfallData.initData.forEach((item) => {
+          item.height = Math.floor((item.height) / (item.width) * Width)
+          item.width = Width
+        })
+        changeWaterfallList()
+      } else {
+        if (!timeResize.value) {
+          timeResize.value = true
+          setTimeout(async () => {
+            waterfallData.boxWidth = waterfallBox.value!.clientWidth
+            const column = Math.floor(waterfallBox.value!.clientWidth / Width) >= 1 ? Math.floor(waterfallBox.value!.clientWidth / Width) : 1
+            // 列数有变
+            if (waterfallData.column !== column) {
+              waterfallData.column = column
+              changeWaterfallList()
+            }
+            timeResize.value = false
+          }, 200);
+        }
+      }
+
     }
+    // 改变瀑布流数组
+    const changeWaterfallList = async () => {
+      const column = waterfallData.column
+      waterfallData.waterfallList = Array.from(Array(column), () => new Array(0))
+      waterfallData.waterfallHeightList = new Array(column).fill(0)
+      waterfallData.waterfallList = Array.from(Array(column), () => new Array(0))
+      waterfallData.initData.forEach((item) => {
+        waterfallData.waterfallIndex = waterfallData.waterfallHeightList.indexOf(Math.min(...waterfallData.waterfallHeightList))
+        waterfallData.waterfallList[waterfallData.waterfallIndex].push(item)
+        waterfallData.waterfallHeightList[waterfallData.waterfallIndex] += item.height
+      })
+      await nextTick()
+      lazyLoad()
+    }
+
+
+
     let page = 1, isLastPage = false
     // 获取列表
     const getEmojiList = async () => {
       if (isLastPage) {
         return
       }
-      const res: Array<itemObj> = await proxy.$request({
-        url: import.meta.env.VITE_API_EMOJI,
-        params: {
-          page,
-          limit: 100,
-        },
-      })
-      if (res.length < 100) {
-        isLastPage = true
-      }
-      let tempList = res.map((item: itemObj) => {
-        return {
-          height: Math.floor((item.height) / (item.width) * Width),
-          width: Width,
-          url: '//' + item.url,
-          id: item.id
+      try {
+        const res: Array<itemObj> = await proxy.$request({
+          url: import.meta.env.VITE_API_EMOJI,
+          params: {
+            page,
+            limit: 100,
+          },
+        })
+        if (res.length < 100) {
+          isLastPage = true
         }
-      })
-      waterfallData.initData.push(...tempList)
-      tempList.forEach((item) => {
-        waterfallData.waterfallIndex = waterfallData.waterfallHeightList.indexOf(Math.min(...waterfallData.waterfallHeightList))
-        waterfallData.waterfallList[waterfallData.waterfallIndex].push(item)
-        waterfallData.waterfallHeightList[waterfallData.waterfallIndex] += item.height
-      })
+        let tempList = res.map((item: itemObj) => {
+          return {
+            name: item.url.split('/')[(item.url.split('/')).length-1],
+            height: Math.floor((item.height) / (item.width) * Width),
+            width: Width,
+            url: '//' + item.url,
+            id: item.id,
+            paddingTop: (((item.height) / (item.width)) * 100).toFixed(2)
+          }
+        })
+        waterfallData.initData.push(...tempList)
+        tempList.forEach((item) => {
+          waterfallData.waterfallIndex = waterfallData.waterfallHeightList.indexOf(Math.min(...waterfallData.waterfallHeightList))
+          waterfallData.waterfallList[waterfallData.waterfallIndex].push(item)
+          waterfallData.waterfallHeightList[waterfallData.waterfallIndex] += item.height
+        })
+      } catch (error) {
+        proxy.$Toast.showError(error)
+      }
     }
 
 
@@ -206,11 +214,20 @@ export default defineComponent({
         })
       }
     }
-    const download = (item: itemObj) => {
+    const download = async (item: itemObj) => {
       console.log(item);
+      try {
+        const res = await axios({
+          url: item.url,
+          responseType: 'arraybuffer'
+        })
+        
+        downloadImage(item.name, res.data)
 
+      } catch (error) {
+        proxy.$Toast.showError(error)
+      }
     }
-
     onMounted(async () => {
       await setWaterfallData()
       waterfallData.boxWidth = waterfallBox.value!.clientWidth
@@ -244,21 +261,41 @@ export default defineComponent({
 .waterfall {
   flex: 1;
   display: flex;
-  justify-content: space-evenly;
+  // justify-content: space-around;
   .waterfall-list {
-    border: black 1px solid;
+    flex: 1;
+    margin-right: 10px;
+    max-width: 300px;
   }
   .waterfall-item {
     margin-bottom: 20px;
     background-color: #f3f4f6;
+    position: relative;
+    width: 100%;
+  }
+  .waterfall-item-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+  }
+  .waterfall-download-img{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: #f3f4f6;
+    cursor: pointer;
+    bottom: 0;
+    right: 0;
+    z-index: 2;
   }
 }
 
 //
 .introduce-pc {
   background-color: #f3f4f6;
-  width: calc(22.4vw - 40px);
-  min-width: 300px;
+  width: 350px;
   min-height: 200px;
   margin-left: 20px;
   padding: 20px;
