@@ -76,6 +76,7 @@ export default defineComponent({
     word-break: keep-all;
     cursor: pointer;
     width: 60px;
+    margin: 0 2px;
   }
   .introduce-Asoul-face {
     width: 60px;

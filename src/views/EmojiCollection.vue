@@ -272,6 +272,7 @@ export default defineComponent({
     background-color: #f3f4f6;
     position: relative;
     width: 100%;
+    box-shadow: 1px 1px 4px #a1a2a3;
   }
   .waterfall-item-img {
     position: absolute;
@@ -295,7 +296,7 @@ export default defineComponent({
 //
 .introduce-pc {
   background-color: #f3f4f6;
-  width: 350px;
+  width: 360px;
   min-height: 200px;
   margin-left: 20px;
   padding: 20px;
