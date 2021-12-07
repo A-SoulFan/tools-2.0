@@ -1,247 +1,328 @@
 <!-- 今天溜什么-->
 <template>
-  <div>
-    <header-title title="表情包" sub-title="你想要的表情包都在这里"></header-title>
-    <div class="block"></div>
-    <div class="update-time-area">
-      <div class="time-left">
-        <img class="icon-clock" src="../assets/icons/clock.svg" />
-        <div class="update-time-text">
-          {{ "最近更新" + updateTime }}
+  <header-title title="表情包" sub-title="你想要的表情包都在这里"></header-title>
+  <div class="EmojiCollection">
+    <div class="waterfall" ref="waterfallBox">
+      <div v-for="item in waterfallData.waterfallList" class="waterfall-list">
+        <div
+          class="waterfall-item"
+          v-for="img in item"
+          :key="img.id"
+          :style="'padding-top:' + img.paddingTop + '%;'"
+          
+        >
+          <img
+            class="waterfall-item-img"
+            data-loaded="false"
+            :data-src="img.url + `@` + img.width + 'w_' + img.height + 'h.webp'"
+          />
+          <img @click="download(img)" class="waterfall-download-img" src="@/assets/icons/coolicon.svg">
         </div>
       </div>
-
-      <button class="head-button">
-        刷新
-      </button>
     </div>
-  </div>
 
-  <div class="button-area">
-    <button class="button">
-      A
-    </button>
-
-    <button class="button">
-      B
-    </button>
-
-    <button class="button">
-      C
-    </button>
-
-    <button class="button">
-      D
-    </button>
-
-    <button class="button">
-      E
-    </button>
-  </div>
-  <div class="block"></div>
-  <div id="app-mains" class="masonry">
-    <div v-for="item in res" :key="item.id" class="item">
-      <img :src="'https:' + item.url + '@518w.webp'" alt="加载错误" class="itemimage" />
-      <span class="item2">
-        <button class="itembutton" @click="getContent">
-          <img src="../assets/icons/coolicon.svg" class="cool" />
-        </button>
-      </span>
+    <div>
+      <div class="introduce-pc">
+        <div class="introduce-title">功能介绍</div>
+        <div class="introduce-text-content">
+          <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
+          <div class="introduce-Asoul">
+            <introduceAsoul></introduceAsoul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
 import headerTitle from '../components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
+import introduceAsoul from '@/components/IntroduceAsoul.vue'
+import downloadImage from '@/hooks/useDownloadImage'
+import axios from "axios"
 
 export interface itemObj {
-  id: string
+  id: number
   url: string
-  height: string
-  width: string
+  height: number
+  width: number
+  paddingTop: string
+  name:string
 }
 
 export default defineComponent({
-  components: { headerTitle },
-
+  components: { headerTitle, introduceAsoul },
   setup() {
-    const Title = '表情包'
-    const subtitle = '你想要的表情包都在这里'
-    const updateTime = ref('2021.8.26 15:00')
-    const res = ref<itemObj[]>([])
-    const loading = ref(false)
-    // 获取列表
-
     const { proxy } = useCurrentInstance()
+    const waterfallBox = ref<null | HTMLElement>(null)
+    let Width = 250;
+    let init = true
+    const waterfallData = reactive({
+      // imgShowList: [] as any[],
+      waterfallList: Array.from(Array(4), () => new Array(0)) as itemObj[][], //瀑布流数组
+      waterfallHeightList: new Array(4).fill(0),
+      waterfallIndex: 0,
+      column: 4,
+      boxWidth: 0,
+      initData: [] as itemObj[]
+    })
+    // 设置瀑布流数据
+    const timeResize = ref(false) //节流
+    const setWaterfallData = async () => {
+      const W = Width
+      if (document.body.clientWidth > 768) {
+        Width = 250
+      } else {
+        Width = 150
+      }
+      // 图片宽度变化或者初始化
+      if (W !== Width || init) {
+        init = false
+        waterfallData.column = Math.floor(waterfallBox.value!.clientWidth / Width) >= 1 ? Math.floor(waterfallBox.value!.clientWidth / Width) : 1
+        waterfallData.initData.forEach((item) => {
+          item.height = Math.floor((item.height) / (item.width) * Width)
+          item.width = Width
+        })
+        changeWaterfallList()
+      } else {
+        if (!timeResize.value) {
+          timeResize.value = true
+          setTimeout(async () => {
+            waterfallData.boxWidth = waterfallBox.value!.clientWidth
+            const column = Math.floor(waterfallBox.value!.clientWidth / Width) >= 1 ? Math.floor(waterfallBox.value!.clientWidth / Width) : 1
+            // 列数有变
+            if (waterfallData.column !== column) {
+              waterfallData.column = column
+              changeWaterfallList()
+            }
+            timeResize.value = false
+          }, 200);
+        }
+      }
 
-    const getItem = async() => {
-      res.value = await proxy.$request({
-        url: import.meta.env.VITE_API_EMOJI,
-        params: {
-          page: 1,
-          limit: 100,
-        },
+    }
+    // 改变瀑布流数组
+    const changeWaterfallList = async () => {
+      const column = waterfallData.column
+      waterfallData.waterfallList = Array.from(Array(column), () => new Array(0))
+      waterfallData.waterfallHeightList = new Array(column).fill(0)
+      waterfallData.waterfallList = Array.from(Array(column), () => new Array(0))
+      waterfallData.initData.forEach((item) => {
+        waterfallData.waterfallIndex = waterfallData.waterfallHeightList.indexOf(Math.min(...waterfallData.waterfallHeightList))
+        waterfallData.waterfallList[waterfallData.waterfallIndex].push(item)
+        waterfallData.waterfallHeightList[waterfallData.waterfallIndex] += item.height
       })
-
-      loading.value = true
-      loading.value = false
+      await nextTick()
+      lazyLoad()
     }
 
-    getItem()
 
-    function getContent() {
-      window.open(`https${res.value}`)
+
+    let page = 1, isLastPage = false
+    // 获取列表
+    const getEmojiList = async () => {
+      if (isLastPage) {
+        return
+      }
+      try {
+        const res: Array<itemObj> = await proxy.$request({
+          url: import.meta.env.VITE_API_EMOJI,
+          params: {
+            page,
+            limit: 100,
+          },
+        })
+        if (res.length < 100) {
+          isLastPage = true
+        }
+        let tempList = res.map((item: itemObj) => {
+          return {
+            name: item.url.split('/')[(item.url.split('/')).length-1],
+            height: Math.floor((item.height) / (item.width) * Width),
+            width: Width,
+            url: '//' + item.url,
+            id: item.id,
+            paddingTop: (((item.height) / (item.width)) * 100).toFixed(2)
+          }
+        })
+        waterfallData.initData.push(...tempList)
+        tempList.forEach((item) => {
+          waterfallData.waterfallIndex = waterfallData.waterfallHeightList.indexOf(Math.min(...waterfallData.waterfallHeightList))
+          waterfallData.waterfallList[waterfallData.waterfallIndex].push(item)
+          waterfallData.waterfallHeightList[waterfallData.waterfallIndex] += item.height
+        })
+      } catch (error) {
+        proxy.$Toast.showError(error)
+      }
     }
+
+
+    const timeBoxScroll = ref(false) //节流
+    const listensBoxScroll = () => {
+      // 监听scroll事件函数
+      if (isLastPage) {
+        return
+      }
+      if (!timeBoxScroll.value) {
+        timeBoxScroll.value = true
+        setTimeout(async () => {
+          // 目前窗口底部离容器顶部的距离
+          let TopOffsetHeight = document.documentElement.scrollTop + document.documentElement.offsetHeight
+          let scrollHeight = document.documentElement.scrollHeight
+          // 离底部100px触发翻页
+          if (TopOffsetHeight + 100 >= scrollHeight) {
+            page++;
+            await getEmojiList()
+
+            lazyLoad()
+            // this.lazyLoadimg()
+          }
+          timeBoxScroll.value = false
+        }, 200)
+      }
+    }
+    // 懒加载
+    const lazyLoad = () => {
+      // 创建观察器
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const img = entry.target
+
+            const loaded = img.getAttribute('data-loaded')
+            if (loaded == "true") {
+              return
+            }
+
+            const src = img.getAttribute('data-src')
+            img.setAttribute('src', src!)
+            img.setAttribute('data-loaded', "true")
+            observer.unobserve(entry.target)
+          }
+        });
+      }, {
+        root: null,
+        threshold: [0],
+        rootMargin: '100px'
+      })
+      const length = waterfallBox.value!.children.length
+      for (let i = 0; i < length; i++) {
+        waterfallBox.value!.children[i].querySelectorAll(".waterfall-item-img").forEach((ele) => {
+          observer.observe(ele)
+        })
+      }
+    }
+    const download = async (item: itemObj) => {
+      console.log(item);
+      try {
+        const res = await axios({
+          url: item.url,
+          responseType: 'arraybuffer'
+        })
+        
+        downloadImage(item.name, res.data)
+
+      } catch (error) {
+        proxy.$Toast.showError(error)
+      }
+    }
+    onMounted(async () => {
+      await setWaterfallData()
+      waterfallData.boxWidth = waterfallBox.value!.clientWidth
+      await getEmojiList()
+      lazyLoad()
+      window.addEventListener('scroll', listensBoxScroll)
+      window.addEventListener('resize', setWaterfallData)
+    })
+    onUnmounted(() => {
+      window.removeEventListener('scroll', listensBoxScroll)
+      window.removeEventListener('resize', setWaterfallData)
+    })
+
     return {
-      Title,
-      subtitle,
-      updateTime,
-      col: 4,
-      loading,
-      res,
-      getContent,
+      waterfallData,
+      waterfallBox,
+      getEmojiList,
+      download,
     }
   },
 })
 </script>
 
 <style scoped lang="less">
-.update-time-area {
-  display: inline-flex;
-  margin-top: 23.5px;
-  margin-bottom: 25px;
-  /* height: 30px; */
-  align-items: center;
-}
-.time-left {
-  display: block;
-  float: left;
-  width: 100px;
-  height: 40px;
-  position: absolute;
-}
-
-.icon-clock {
-  width: 12px;
-  height: 12px;
-  margin-right: 2px;
-}
-.update-time-text {
-  display: inline;
-  font-size: 12px;
-  color: #4b5563;
-}
-
-.head-button {
-  position: absolute;
-  right: 100px;
-  height: 60px;
-  /* 0 */
-  background: #fff;
-  border: none;
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 53px;
-  letter-spacing: 0em;
-  text-align: center;
-}
-.block {
-  width: 100%;
-  height: 20px;
-}
-.app-mains {
-  position: relative;
-  left: 100px;
-  top: 100px;
-}
-.button-area {
+.EmojiCollection {
   display: flex;
-  justify-content: space-around;
-}
-.button {
-  position: float;
-  width: 60px;
-  height: 60px;
-  left: 63px;
-  top: 573px;
-  /* 0 */
-  background: #f8f8f8;
-  border: none;
-  font-size: 20px;
-}
-.container {
-  display: inline;
-}
-.masonry {
-  width: auto; // 默认宽度
-  margin: 20px auto; // 剧中
-  columns: 4; // 默认列数
-  column-gap: 30px; // 列间距
+  margin-top: 20px;
+  color: #374151;
 }
 
-.item {
-  width: 100%;
-  break-inside: avoid;
-  margin-bottom: 30px;
-  -webkit-column-break-inside: avoid;
-  break-inside: avoid; /*防止断点*/
-  text-align: right;
-  position: relative;
-}
-
-.item2 {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-}
-.itemimage {
-  z-index: 2;
-  width: 100%;
-}
-
-.item h2 {
-  padding: 8px 0;
-}
-.itembutton {
-  width: 35px;
-  height: 35px;
-  margin: -700px 0px 0 0;
-  background: #f8f8f8;
-  border: none;
-}
-.item p {
-  color: #555;
-}
-
-.cool {
-  height: 75%;
-  text-align: center;
-}
-@media screen and (min-width: 1024px) and (max-width: 1439.98px) {
-  .masonry {
+.waterfall {
+  flex: 1;
+  display: flex;
+  // justify-content: space-around;
+  .waterfall-list {
+    flex: 1;
+    margin-right: 10px;
+    max-width: 300px;
+  }
+  .waterfall-item {
+    margin-bottom: 20px;
+    background-color: #f3f4f6;
+    position: relative;
     width: 100%;
-    columns: 4;
-    column-gap: 20px;
+  }
+  .waterfall-item-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    top: 0;
+  }
+  .waterfall-download-img{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: #f3f4f6;
+    cursor: pointer;
+    bottom: 0;
+    right: 0;
+    z-index: 2;
   }
 }
-//ipad:
 
-@media screen and (min-width: 768px) and (max-width: 1023.98px) {
-  .masonry {
-    width: 100%;
-    columns: 3;
-    column-gap: 20px;
+//
+.introduce-pc {
+  background-color: #f3f4f6;
+  width: 350px;
+  min-height: 200px;
+  margin-left: 20px;
+  padding: 20px;
+  border-radius: 2px;
+}
+.introduce-title {
+  font-weight: 400;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.introduce-text-content {
+  font-size: 15px;
+  .introduce-text-content-section {
+    margin-bottom: 20px;
   }
 }
-//mobile:
-
-@media screen and (max-width: 767.98px) {
-  .masonry {
-    width: 100%;
-    columns: 2;
+.introduce-text-content-name {
+  margin: 0 10px;
+  cursor: pointer;
+  color: #666;
+  text-decoration: underline;
+}
+//
+@media only screen and (max-width: 768px) {
+  .introduce-pc {
+    display: none;
   }
 }
 </style>
+
