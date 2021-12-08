@@ -9,14 +9,17 @@
           v-for="img in item"
           :key="img.id"
           :style="'padding-top:' + img.paddingTop + '%;'"
-          
         >
           <img
             class="waterfall-item-img"
             data-loaded="false"
             :data-src="img.url + `@` + img.width + 'w_' + img.height + 'h.webp'"
           />
-          <img @click="download(img)" class="waterfall-download-img" src="@/assets/icons/coolicon.svg">
+          <img
+            @click="downloadImage(img)"
+            class="waterfall-download-img"
+            src="@/assets/icons/coolicon.svg"
+          />
         </div>
       </div>
     </div>
@@ -41,15 +44,15 @@ import headerTitle from '../components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
 import introduceAsoul from '@/components/IntroduceAsoul.vue'
 import downloadImage from '@/hooks/useDownloadImage'
-import axios from "axios"
 
-export interface itemObj {
+
+export interface imgObj {
   id: number
   url: string
   height: number
   width: number
   paddingTop: string
-  name:string
+  name: string
 }
 
 export default defineComponent({
@@ -61,12 +64,12 @@ export default defineComponent({
     let init = true
     const waterfallData = reactive({
       // imgShowList: [] as any[],
-      waterfallList: Array.from(Array(4), () => new Array(0)) as itemObj[][], //瀑布流数组
+      waterfallList: Array.from(Array(4), () => new Array(0)) as imgObj[][], //瀑布流数组
       waterfallHeightList: new Array(4).fill(0),
       waterfallIndex: 0,
       column: 4,
       boxWidth: 0,
-      initData: [] as itemObj[]
+      initData: [] as imgObj[]
     })
     // 设置瀑布流数据
     const timeResize = ref(false) //节流
@@ -127,7 +130,7 @@ export default defineComponent({
         return
       }
       try {
-        const res: Array<itemObj> = await proxy.$request({
+        const res: Array<imgObj> = await proxy.$request({
           url: import.meta.env.VITE_API_EMOJI,
           params: {
             page,
@@ -137,12 +140,12 @@ export default defineComponent({
         if (res.length < 100) {
           isLastPage = true
         }
-        let tempList = res.map((item: itemObj) => {
+        let tempList = res.map((item: imgObj) => {
           return {
-            name: item.url.split('/')[(item.url.split('/')).length-1],
+            name: item.url.split('/')[(item.url.split('/')).length - 1],
             height: Math.floor((item.height) / (item.width) * Width),
             width: Width,
-            url: '//' + item.url,
+            url: 'https://' + item.url,
             id: item.id,
             paddingTop: (((item.height) / (item.width)) * 100).toFixed(2)
           }
@@ -214,20 +217,6 @@ export default defineComponent({
         })
       }
     }
-    const download = async (item: itemObj) => {
-      console.log(item);
-      try {
-        const res = await axios({
-          url: item.url,
-          responseType: 'arraybuffer'
-        })
-        
-        downloadImage(item.name, res.data)
-
-      } catch (error) {
-        proxy.$Toast.showError(error)
-      }
-    }
     onMounted(async () => {
       await setWaterfallData()
       waterfallData.boxWidth = waterfallBox.value!.clientWidth
@@ -244,8 +233,7 @@ export default defineComponent({
     return {
       waterfallData,
       waterfallBox,
-      getEmojiList,
-      download,
+      downloadImage,
     }
   },
 })
@@ -281,7 +269,7 @@ export default defineComponent({
     z-index: 1;
     top: 0;
   }
-  .waterfall-download-img{
+  .waterfall-download-img {
     position: absolute;
     width: 30px;
     height: 30px;

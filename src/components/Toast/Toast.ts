@@ -23,15 +23,13 @@ const toast = {
     }, 1.5 * 1000)
     document.body.appendChild($Toast.$el)
   },
-  showError (title: string) {
+  showError (title: any) {
     msg.errorToast = true
     msg.toastShow = true
-    msg.title = title
-    console.log(title)
-
+    msg.title = JSON.stringify(title) 
     setTimeout(() => {
       msg.toastShow = false
-    }, 2 * 1000)
+    }, 3 * 1000)
     document.body.appendChild($Toast.$el)
   }
 }
