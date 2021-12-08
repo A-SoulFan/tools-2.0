@@ -142,7 +142,7 @@ export default defineComponent({
         }
         let tempList = res.map((item: imgObj) => {
           return {
-            name: item.url.split('/')[(item.url.split('/')).length - 1],
+            name: (item.url.split('/')[(item.url.split('/')).length - 1]).slice(-10),
             height: Math.floor((item.height) / (item.width) * Width),
             width: Width,
             url: 'https://' + item.url,
