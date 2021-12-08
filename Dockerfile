@@ -8,7 +8,7 @@ COPY ./ /work
 
 RUN pnpm install
 
-ENV VITE_API_EMOJI=https://tools.asoulfan.com/api/emoji  \
+ENV VITE_API_EMOJI=https://meme-api.asoulfan.com/  \
     VITE_API_CFJ=https://tools.asoulfan.com/api/cfj/  \
     VITE_API_RANDOMVIDEO=https://support-api.asoulfan.com/api/stroll/random  \
     VITE_API_RANDOMVIDEO_UPDATETIME=https://support-api.asoulfan.com/api/stroll/last-update-time    \
