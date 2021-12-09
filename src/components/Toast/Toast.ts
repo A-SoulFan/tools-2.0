@@ -26,7 +26,7 @@ const toast = {
   showError (title: any) {
     msg.errorToast = true
     msg.toastShow = true
-    msg.title = JSON.stringify(title) 
+    msg.title = title 
     setTimeout(() => {
       msg.toastShow = false
     }, 3 * 1000)
