@@ -1,9 +1,9 @@
-<!-- 今天溜什么-->
+<!-- 表情包-->
 <template>
   <header-title title="表情包" sub-title="你想要的表情包都在这里"></header-title>
   <div class="EmojiCollection">
     <div class="waterfall" ref="waterfallBox">
-      <div v-for="item in waterfallData.waterfallList" class="waterfall-list">
+      <div v-for="(item,index) in waterfallData.waterfallList" class="waterfall-list" :key="index">
         <div
           class="waterfall-item"
           v-for="img in item"
@@ -261,6 +261,10 @@ export default defineComponent({
     position: relative;
     width: 100%;
     box-shadow: 1px 1px 4px #a1a2a3;
+    transition: all 0.3s ease-in;
+  }
+  .waterfall-item:hover {
+    box-shadow: 3px 3px 10px #6b6b6b;
   }
   .waterfall-item-img {
     position: absolute;
