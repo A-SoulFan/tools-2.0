@@ -126,7 +126,7 @@ export default defineComponent({
         )
       }
       catch (error) {
-        proxy.$Toast.showError(error)
+        proxy.$Toast.showError(error, 'getRandomVideo')
       }
     }
     const preVideo = (): void => {

@@ -149,7 +149,7 @@ export default defineComponent({
         )
       }
       catch (error) {
-        proxy.$Toast.showError(error)
+        proxy.$Toast.showError(error, 'getIngredient')
       }
     }
     const copySearchResult = () => {

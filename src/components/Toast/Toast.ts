@@ -23,7 +23,7 @@ const toast = {
     }, 1.5 * 1000)
     document.body.appendChild($Toast.$el)
   },
-  showError (title: any) {
+  showError (title: any,funtionName:string) {
     msg.errorToast = true
     msg.toastShow = true
     msg.title = title 
@@ -31,6 +31,7 @@ const toast = {
       msg.toastShow = false
     }, 3 * 1000)
     document.body.appendChild($Toast.$el)
+    console.log(title,funtionName);
   }
 }
 

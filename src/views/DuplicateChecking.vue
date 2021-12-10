@@ -15,8 +15,10 @@
         <img src="@/assets/icons/githubIcon.svg" />
         查重接口开源仓库
       </div>
-      <div class="display-center cursor" 
-      @click="toTargetUrlWithNewWindow('https://space.bilibili.com/1809170490')">
+      <div
+        class="display-center cursor"
+        @click="toTargetUrlWithNewWindow('https://space.bilibili.com/1809170490')"
+      >
         <img src="@/assets/icons/BilibiliIcon.svg" />
         查重接口反馈
       </div>
@@ -94,8 +96,10 @@
             <img src="@/assets/icons/githubIcon.svg" />
             查重接口开源仓库
           </div>
-          <div class="display-center cursor" 
-          @click="toTargetUrlWithNewWindow('https://space.bilibili.com/1809170490')">
+          <div
+            class="display-center cursor"
+            @click="toTargetUrlWithNewWindow('https://space.bilibili.com/1809170490')"
+          >
             <img src="@/assets/icons/BilibiliIcon.svg" />
             查重接口反馈
           </div>
@@ -183,7 +187,7 @@ export default defineComponent({
         })
       }
       catch (error) {
-        proxy.$Toast.showError(error)
+        proxy.$Toast.showError(error, 'getDuplicate')
       }
     }
     const changeIntroduceShow = (e: boolean) => {

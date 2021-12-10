@@ -157,7 +157,7 @@ export default defineComponent({
           waterfallData.waterfallHeightList[waterfallData.waterfallIndex] += item.height
         })
       } catch (error) {
-        proxy.$Toast.showError(error)
+        proxy.$Toast.showError(error, 'getEmojiList')
       }
     }
 
