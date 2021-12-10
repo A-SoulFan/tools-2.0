@@ -1,4 +1,5 @@
 <template>
+  <div class="introduce-Asoul-tip">速速点击下方头像，去B站给五小只点击关注捏</div>
   <div class="introduce-Asoul">
     <div
       v-for="item in Asoul"
@@ -63,11 +64,16 @@ export default defineComponent({
 </script>
 
 <style scoped lang="less">
+.introduce-Asoul-tip {
+  font-size: 15px;
+  margin-bottom: 20px;
+}
 .introduce-Asoul {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
   margin-top: 15px;
+
   .introduce-Asoul-item {
     display: flex;
     flex-direction: column;

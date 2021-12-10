@@ -14,7 +14,6 @@
           @click="toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')"
         >&nbsp;&nbsp;@ProJectASF</span>
       </div>
-      <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
       <introduceAsoul></introduceAsoul>
     </div>
   </div>
@@ -120,7 +119,6 @@
               >&nbsp;&nbsp;@ProJectASF</span>
             </div>
           </div>
-          <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
           <introduceAsoul></introduceAsoul>
         </div>
       </div>
@@ -472,7 +470,7 @@ export default defineComponent({
 }
 .introduce-targetUrl {
   cursor: pointer;
-  color: #4e4eb6;
+  color: #1e90ff;
 }
 .introduce-phone {
   display: none;

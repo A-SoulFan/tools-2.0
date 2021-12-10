@@ -8,12 +8,8 @@
         <span
           class="introduce-text-content-name"
           @click="toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')"
-        >晓轩iMIKU老师</span>
+        >@晓轩iMIKU</span>
         为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
-      </div>
-      <div class="introduce-text-content-section">
-        毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
-        所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
       </div>
       <introduceAsoul></introduceAsoul>
     </div>
@@ -71,12 +67,8 @@
             <span
               class="introduce-text-content-name"
               @click="toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')"
-            >晓轩iMIKU老师</span>
+            >@晓轩iMIKU</span>
             为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
-          </div>
-          <div class="introduce-text-content-section">
-            毕竟人与人之间要多些攻击性(ꐦ°᷄д°᷅),
-            所以工具用都用了，速度去b站给五小只点点关注(♡ ὅ ◡ ὅ )ʃ♡
           </div>
           <introduceAsoul></introduceAsoul>
         </div>
@@ -337,8 +329,7 @@ export default defineComponent({
 .introduce-text-content-name {
   margin: 0 10px;
   cursor: pointer;
-  color: #666;
-  text-decoration: underline;
+  color: #1E90FF;
 }
 .introduce-phone {
   display: none;

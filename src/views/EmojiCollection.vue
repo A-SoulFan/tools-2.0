@@ -1,6 +1,20 @@
 <!-- 表情包-->
 <template>
-  <header-title title="表情包" sub-title="你想要的表情包都在这里"></header-title>
+  <header-title title="表情包" sub-title="你想要的表情包都在这里" @buttonClick="changeIntroduceShow"></header-title>
+  <div v-show="isShowIntroduce" class="introduce-phone">
+    <div class="introduce-title">功能介绍</div>
+    <div class="introduce-text-content">
+      <div class="introduce-text-content-section">
+        表情包大部分数据来自于
+        <span
+          class="introduce-text-content-name"
+          @click="toTargetUrlWithNewWindow('https://space.bilibili.com/15073186')"
+        >@洛骑塔</span>的专栏。
+        小伙伴们可以点击下载按钮下载对应表情包
+      </div>
+      <introduceAsoul></introduceAsoul>
+    </div>
+  </div>
   <div class="EmojiCollection">
     <div class="waterfall" ref="waterfallBox">
       <div v-for="(item,index) in waterfallData.waterfallList" class="waterfall-list" :key="index">
@@ -28,7 +42,14 @@
       <div class="introduce-pc">
         <div class="introduce-title">功能介绍</div>
         <div class="introduce-text-content">
-          <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
+          <div class="introduce-text-content-section">
+            表情包大部分数据来自于
+            <span
+              class="introduce-text-content-name"
+              @click="toTargetUrlWithNewWindow('https://space.bilibili.com/15073186')"
+            >@洛骑塔</span>的专栏。
+            小伙伴们可以点击下载按钮下载对应表情包
+          </div>
           <div class="introduce-Asoul">
             <introduceAsoul></introduceAsoul>
           </div>
@@ -43,6 +64,8 @@ import { defineComponent, ref, reactive, onMounted, onUnmounted, nextTick } from
 import headerTitle from '../components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
 import introduceAsoul from '@/components/IntroduceAsoul.vue'
+import toTargetUrlWithNewWindow from '@/hooks/useUtility'
+
 import downloadImage from '@/hooks/useDownloadImage'
 
 
@@ -106,6 +129,7 @@ export default defineComponent({
       }
 
     }
+
     // 改变瀑布流数组
     const changeWaterfallList = async () => {
       const column = waterfallData.column
@@ -120,7 +144,6 @@ export default defineComponent({
       await nextTick()
       lazyLoad()
     }
-
 
 
     let page = 1, isLastPage = false
@@ -163,8 +186,8 @@ export default defineComponent({
 
 
     const timeBoxScroll = ref(false) //节流
+    // 监听scroll事件函数
     const listensBoxScroll = () => {
-      // 监听scroll事件函数
       if (isLastPage) {
         return
       }
@@ -217,6 +240,12 @@ export default defineComponent({
         })
       }
     }
+
+    const isShowIntroduce = ref(true)
+    const changeIntroduceShow = (e: boolean) => {
+      isShowIntroduce.value = e
+    }
+
     onMounted(async () => {
       await setWaterfallData()
       waterfallData.boxWidth = waterfallBox.value!.clientWidth
@@ -230,10 +259,15 @@ export default defineComponent({
       window.removeEventListener('resize', setWaterfallData)
     })
 
+
+
     return {
+      downloadImage,
+      toTargetUrlWithNewWindow,
+      changeIntroduceShow,
       waterfallData,
       waterfallBox,
-      downloadImage,
+      isShowIntroduce,
     }
   },
 })
@@ -294,6 +328,9 @@ export default defineComponent({
   padding: 20px;
   border-radius: 2px;
 }
+.introduce-phone {
+  display: none;
+}
 .introduce-title {
   font-weight: 400;
   font-size: 24px;
@@ -308,13 +345,20 @@ export default defineComponent({
 .introduce-text-content-name {
   margin: 0 10px;
   cursor: pointer;
-  color: #666;
-  text-decoration: underline;
+  color: 	#1E90FF;
 }
 //
 @media only screen and (max-width: 768px) {
   .introduce-pc {
     display: none;
+  }
+
+  .introduce-phone {
+    display: block;
+    background-color: #f3f4f6;
+    padding: 20px;
+    margin-top: 30px;
+    min-height: 180px;
   }
 }
 </style>

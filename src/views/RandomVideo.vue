@@ -5,7 +5,6 @@
     <div v-show="isShowIntroduce" class="introduce-phone">
       <div class="introduce-title">功能介绍</div>
       <div class="introduce-text-content">
-        <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
         <introduceAsoul></introduceAsoul>
       </div>
     </div>
@@ -53,7 +52,6 @@
         <div class="introduce-pc">
           <div class="introduce-title">功能介绍</div>
           <div class="introduce-text-content">
-            <div class="introduce-text-content">请速度去b站给五小只点点关注捏(♡ ὅ ◡ ὅ )ʃ♡</div>
             <introduceAsoul></introduceAsoul>
           </div>
         </div>
