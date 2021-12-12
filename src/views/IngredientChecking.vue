@@ -47,7 +47,7 @@
             v-for="item in vupList"
             :key="item.vupUid"
             class="Vup-item"
-            @click="toTargetUrlWithNewWindow(item.vupUid)"
+            @click="toTargetUrlWithNewWindow('https://space.bilibili.com/'+item.vupUid)"
           >
             <img :src="item.vupFace" class="Vup-item-face" />
             <div class="Vup-name">{{ item.vupName }}</div>
@@ -241,7 +241,7 @@ export default defineComponent({
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       justify-content: space-between;
-      grid-gap: 80px 50px;
+      grid-gap: 80px 20px;
       padding-top: 100px;
       .Vup-item {
         background-color: #f8f8f8;
@@ -261,13 +261,13 @@ export default defineComponent({
           position: absolute;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 85px;
-          height: 85px;
+          width: 70px;
+          height: 70px;
           border-radius: 50%;
           border: 1px #d1d5db solid;
         }
         .Vup-name {
-          margin-top: 55px;
+          margin-top: 50px;
           font-size: 18px;
           font-weight: bold;
           align-self: center;
