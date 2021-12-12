@@ -47,7 +47,7 @@
             v-for="item in vupList"
             :key="item.vupUid"
             class="Vup-item"
-            @click="toTargetUrlWithNewWindow('https://space.bilibili.com/'+item.vupUid)"
+            @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.vupUid)"
           >
             <img :src="item.vupFace" class="Vup-item-face" />
             <div class="Vup-name">{{ item.vupName }}</div>
@@ -161,12 +161,12 @@ export default defineComponent({
     }
     return {
       getIngredient,
-      vupList,
-      searchText,
       toTargetUrlWithNewWindow,
       copySearchResult,
-      isVuplistEmpty,
       changeIntroduceShow,
+      vupList,
+      searchText,
+      isVuplistEmpty,
       isShowIntroduce,
     }
   },
@@ -241,7 +241,7 @@ export default defineComponent({
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       justify-content: space-between;
-      grid-gap: 80px 20px;
+      grid-gap: 70px 20px;
       padding-top: 100px;
       .Vup-item {
         background-color: #f8f8f8;
@@ -273,6 +273,7 @@ export default defineComponent({
           align-self: center;
         }
         .Vup-describe {
+          margin-top: 10px;
           color: #9ca3af;
           text-overflow: -o-ellipsis-lastline;
           overflow: hidden;
@@ -329,7 +330,7 @@ export default defineComponent({
 .introduce-text-content-name {
   margin: 0 10px;
   cursor: pointer;
-  color: #1E90FF;
+  color: #1e90ff;
 }
 .introduce-phone {
   display: none;

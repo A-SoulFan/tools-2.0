@@ -16,16 +16,6 @@ export default defineComponent({
   components: { asfNavbar },
   setup() {
     const route = useRouter()
-    const conf = {
-      elementaryBar: '实用工具',
-      secondaryBars: [
-        { name: '枝网查重', link: '/duplicateChecking' },
-        { name: '今日溜什么', link: '/randomVideo' },
-        { name: '成分姬', link: '/ingredientChecking' },
-        { name: '表情包', link: '/emojicollect' },
-        { name: '方言词典', link: '/zhijiangDict' },
-      ],
-    }
     const navList = [
       {
         name: '敬请期待',
@@ -48,12 +38,7 @@ export default defineComponent({
         name: '敬请期待',
       },
     ]
-    const callback = (str: string) => {
-      route.push(str)
-    }
     return {
-      conf,
-      callback,
       navList,
     }
   },
