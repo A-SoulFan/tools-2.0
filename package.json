@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@luooooob/eslint-config": "^0.5.0",
-    "@vitejs/plugin-vue": "^1.9.3",
+    "@vitejs/plugin-vue": "^2.0.0",
     "eslint": "^8.3.0",
     "husky": "^7.0.4",
     "less": "^4.1.1",
