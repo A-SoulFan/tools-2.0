@@ -273,7 +273,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .zhijiang-dict {
   display: flex;
   padding-top: 30px;
