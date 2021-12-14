@@ -105,15 +105,15 @@ export default defineComponent({
     let saveSearchText = ''
     const getIngredient = async () => {
       try {
-        if (searchText.value === '')
-          return
+        if (searchText.value === '') return
+
         vupList.value = []
         isVuplistEmpty.value = false
 
         const res = await proxy.$request({
           url: import.meta.env.VITE_API_CFJ,
           params: {
-            name: searchText.value,
+            name: searchText.value.replace(/^(UID\:|UID：)/i, ''),
           },
         })
         saveSearchText = searchText.value
