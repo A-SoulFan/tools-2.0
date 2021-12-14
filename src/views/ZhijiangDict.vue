@@ -1,5 +1,12 @@
 <template>
-  <headerTitle title="枝江方言词典" sub-title="你想了解的词条都在这" @buttonClick="changeIntroduceShow"></headerTitle>
+  <headerTitle
+    title="枝江方言词典"
+    sub-title="你想了解的词条都在这"
+    @buttonClick="changeIntroduceShow"
+    @returnClick="returnCategory"
+    :returnButton="isShowSerchResult"
+    class="header-title"
+  ></headerTitle>
   <div v-show="isShowIntroduce" class="introduce-phone">
     <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
@@ -19,7 +26,7 @@
   </div>
   <div class="zhijiang-dict">
     <div class="search-and-results">
-      <!-- <div class="search-area">
+      <div class="search-area">
         <input
           type="text"
           class="search-input"
@@ -33,41 +40,40 @@
             'background-color': searchText.length > 0 ? '#4B5563' : '#9CA3AF',
           }"
           @click="searchWords()"
-        >
-          查询词条
-        </div>
-      </div>-->
+        >查询词条</div>
+      </div>
 
       <div v-show="!isShowDetail" class="result-area">
-        <!-- 分类 -->
-        <div class="result-categories">
-          <div
-            v-for="item in data.categoriesList"
-            :key="item.cid"
-            class="result-categories-item"
-            :class="
-              data.categoriesKey === item.cid
-                ? 'result-categories-item-active'
-                : ''
-            "
-            @click="setChildCategoriesList(item.cid)"
-          >{{ item.name }}</div>
-          <!-- 二级分类 -->
+        <div v-show="!isShowSerchResult">
+          <!-- 分类 -->
+          <div class="result-categories">
+            <div
+              v-for="item in data.categoriesList"
+              :key="item.cid"
+              class="result-categories-item"
+              :class="
+                data.categoriesKey === item.cid
+                  ? 'result-categories-item-active'
+                  : ''
+              "
+              @click="setChildCategoriesList(item.cid)"
+            >{{ item.name }}</div>
+            <!-- 二级分类 -->
+          </div>
+          <div class="result-entries">
+            <div
+              v-for="item in data.childCategoriesList"
+              :key="item.cid"
+              class="result-entries-item"
+              :class="
+                data.childCategorieskey === item.cid
+                  ? 'result-entries-item-active'
+                  : ''
+              "
+              @click="getContentList(item.cid)"
+            >{{ item.name }}</div>
+          </div>
         </div>
-        <div class="result-entries">
-          <div
-            v-for="item in data.childCategoriesList"
-            :key="item.cid"
-            class="result-entries-item"
-            :class="
-              data.childCategorieskey === item.cid
-                ? 'result-entries-item-active'
-                : ''
-            "
-            @click="getContentList(item.cid)"
-          >{{ item.name }}</div>
-        </div>
-
         <!-- 结果 -->
         <div class="result-item-area">
           <div v-for="entry in data.entryList" :key="entry.eid" class="result-item">
@@ -127,36 +133,41 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue'
+import { defineComponent, ref, reactive, onMounted } from 'vue'
 import headerTitle from '@/components/HeaderTitle.vue'
 import introduceAsoul from '@/components/IntroduceAsoul.vue'
 
 import useCurrentInstance from '@/hooks/useCurrentInstance'
 import toTargetUrlWithNewWindow from '@/hooks/useUtility'
 
+interface categoriesList {
+  name: string
+  children: categoriesList[]
+  cid: number
+}
+
 export default defineComponent({
   name: 'ZhijiangDict',
   components: { headerTitle, introduceAsoul },
   setup() {
     const { proxy } = useCurrentInstance()
-    const searchText = ref('')
-    const isShowIntroduce = ref(true)
-    const isShowDetail = ref(false)
-    const contentDetailItem = reactive({
-      title: '',
-      timeText: '',
-      content: '',
-    })
+
+
     const data = reactive({
-      categoriesList: [] as any[],
+      categoriesList: [] as categoriesList[],
       categoriesKey: 0,
       childCategoriesList: [] as any[],
       childCategorieskey: 0,
       entryList: [] as any[],
       entryKey: 0,
     })
-    let result = [] as any[]
+    const isShowSerchResult = ref(false)
+    const searchText = ref('')
+
     const searchWords = async () => {
+      if (searchText.value.length === 0) {
+        return
+      }
       try {
         const res = await proxy.$request({
           url: import.meta.env.VITE_API_DICT_SEARCH,
@@ -165,11 +176,33 @@ export default defineComponent({
             kwd: searchText.value,
           },
         })
-      }
-      catch (error) {
+        data.entryList = res.map((item: any) => {
+          // 将10位时间戳转成13位
+          item.timeText = new Date(item.updated * 1000).toLocaleString(
+            'chinese',
+            {
+              hour12: false,
+            },
+          )
+          return item
+        })
+        isShowSerchResult.value = true
+      } catch (error) {
         proxy.$Toast.showError(error, 'searchWords')
       }
     }
+    const returnCategory = async () => {
+      isShowSerchResult.value = false
+      searchText.value = ""
+      try {
+        await getContentList(data.childCategorieskey)
+
+      } catch (error) {
+        proxy.$Toast.showError(error, 'getContentList')
+
+      }
+    }
+    // 获取内容数据
     const getContentList = async (cid: number) => {
       try {
         data.childCategorieskey = cid
@@ -195,44 +228,38 @@ export default defineComponent({
         proxy.$Toast.showError(error, 'getContentList')
       }
     }
-    // 设置二级目录列表
+    // // 设置二级目录列表
     const setChildCategoriesList = (cid: number) => {
-      const temp = [] as any[]
       data.categoriesKey = cid
-      result.forEach((element: any) => {
-        if (element.parent_cid === cid)
-          temp.push(element)
+      data.categoriesList.forEach((item) => {
+        if (item.cid === cid) {
+          data.childCategoriesList = item.children
+          data.childCategorieskey = item.children[0].cid
+        }
       })
-      data.childCategoriesList = temp
       getContentList(data.childCategoriesList[0].cid)
     }
+    // 获取目录
     const getCategoriesList = async () => {
       try {
-        result = await proxy.$request({
+        const result = await proxy.$request({
           url: import.meta.env.VITE_API_DICT_CATEGORIES,
           method: 'get',
-        })
-        const tempCategoriesList = [] as any[]
-
-        // 生成分类列表
-        result.forEach((element: any) => {
-          if (element.parent_cid === null) {
-            tempCategoriesList.push({
-              cid: element.cid,
-              name: element.name,
-              children: [],
-            })
-          }
-        })
-
-        data.categoriesList = tempCategoriesList
-
-        setChildCategoriesList(data.categoriesList[0].cid)
+        }) as categoriesList[]
+        data.categoriesList = result
+        data.categoriesKey = result[0].cid
+        setChildCategoriesList(data.categoriesKey)
       }
       catch (error) {
         proxy.$Toast.showError(error, 'getCategoriesList')
       }
     }
+    const contentDetailItem = reactive({
+      title: '',
+      timeText: '',
+      content: '',
+    })
+    const isShowDetail = ref(false)
     const toShowDetail = (item: any) => {
       localStorage.setItem("AsoulFanZhijiangDict", (document.documentElement.scrollTop || document.body.scrollTop).toString())
       contentDetailItem.title = item.title
@@ -245,16 +272,20 @@ export default defineComponent({
       isShowDetail.value = false
       toScrollTop(Number(localStorage.getItem("AsoulFanZhijiangDict")))
     }
-    const changeIntroduceShow = (e: boolean) => {
-      isShowIntroduce.value = e
-    }
+
     const toScrollTop = (scrollTop: number) => {
       setTimeout(() => {
         document.documentElement.scrollTop = scrollTop
       }, 0);
     }
+    const isShowIntroduce = ref(true)
+    const changeIntroduceShow = (e: boolean) => {
+      isShowIntroduce.value = e
+    }
+    onMounted(() => {
+      getCategoriesList()
+    })
 
-    getCategoriesList()
     return {
       searchWords,
       setChildCategoriesList,
@@ -263,10 +294,12 @@ export default defineComponent({
       toShowDetail,
       closeDetail,
       toTargetUrlWithNewWindow,
+      returnCategory,
       searchText,
       data,
       isShowIntroduce,
       isShowDetail,
+      isShowSerchResult,
       contentDetailItem,
     }
   },
@@ -475,8 +508,13 @@ export default defineComponent({
 .introduce-phone {
   display: none;
 }
-
+.header-title{
+  margin-right: 420px;
+}
 @media only screen and (max-width: 768px) {
+  .header-title{
+      margin-right: 0;
+  }
   ::-webkit-scrollbar {
     width: 5px;
 
@@ -494,16 +532,13 @@ export default defineComponent({
   }
   .result-categories,
   .result-entries {
-    max-width: calc(88.34vw - 20px) !important;
+    max-width: 88.34vw !important;
   }
   .zhijiang-dict {
     .search-area {
       height: 35px;
-      font-size: 15px;
+      font-size: 14px;
     }
-  }
-  .result-item-content {
-    height: 100px !important;
   }
 }
 </style>
