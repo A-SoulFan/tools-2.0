@@ -75,7 +75,7 @@
           </div>
         </div>
         <!-- 结果 -->
-        <div class="result-item-area">
+        <div class="result-item-area" v-if="data.entryList.length > 0">
           <div v-for="entry in data.entryList" :key="entry.eid" class="result-item">
             <div class="result-item-header">
               <div class="result-item-title">{{ entry.title }}</div>
@@ -91,6 +91,10 @@
             </div>
           </div>
         </div>
+        <div v-else class="search-result-tip">小伙伴很抱歉，暂无相关数据。如需要，请私信<span
+          class="introduce-targetUrl"
+          @click="toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')"
+        >&nbsp;&nbsp;@ProJectASF</span> 进行添加</div>
       </div>
       <div class="entry-detail-area" v-show="isShowDetail">
         <div class="entry-detail-header" @click="closeDetail">
@@ -166,6 +170,7 @@ export default defineComponent({
 
     const searchWords = async () => {
       if (searchText.value.length === 0) {
+        isShowSerchResult.value && returnCategory()
         return
       }
       try {
@@ -447,6 +452,12 @@ export default defineComponent({
       }
     }
   }
+  .search-result-tip {
+    margin-top: 50px;
+    font-size: 20px;
+    color: #333;
+    text-align: center;
+  }
   .entry-detail-area {
     background-color: #f3f4f6;
     padding: 30px 20px;
@@ -508,12 +519,12 @@ export default defineComponent({
 .introduce-phone {
   display: none;
 }
-.header-title{
+.header-title {
   margin-right: 420px;
 }
 @media only screen and (max-width: 768px) {
-  .header-title{
-      margin-right: 0;
+  .header-title {
+    margin-right: 0;
   }
   ::-webkit-scrollbar {
     width: 5px;
