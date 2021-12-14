@@ -1,5 +1,5 @@
 <template>
-  <headerTitle title="知网查重" sub-title="帮助你快速识别原创小作文" @buttonClick="changeIntroduceShow"></headerTitle>
+  <headerTitle title="枝网查重" sub-title="帮助你快速识别原创小作文" @buttonClick="changeIntroduceShow"></headerTitle>
   <div v-show="isShowIntroduce" class="introduce-phone">
     <div class="introduce-title">功能介绍</div>
     <div v-for="(item, index) in contentList" :key="index" class="introduce-text-content">
