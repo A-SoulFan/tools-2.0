@@ -1,22 +1,20 @@
 <template>
   <div class="title-area">
-    <div class="main-title">
-      {{ title }}
-    </div>
+    <div class="main-title">{{ title }}</div>
 
     <div class="title-area-sub">
-      <div class="sub-title">
-        {{ subTitle }}
-      </div>
-      <div v-if="needButton" class="button-area" @click="handleClick">
-        <div class="button-text">
-          {{ buttonText }}
-        </div>
+      <div class="sub-title">{{ subTitle }}</div>
+      <div v-if="!returnButton" class="button-area" @click="handleClick">
+        <div class="button-text">{{ buttonText }}</div>
         <img
           class="button-icon"
           :class="isTopIcon ? '' : 'rotate-top'"
           src="@/assets/icons/arrow.svg"
         />
+      </div>
+      <div v-else class="return-button-area" @click="returnClick">
+        <div class="button-text">返回</div>
+        <img class="button-icon" src="@/assets/icons/return.svg" />
       </div>
     </div>
   </div>
@@ -34,16 +32,16 @@ export default defineComponent({
     subTitle: {
       type: String,
     },
-    needButton: {
+    returnButton: {
       type: Boolean,
-      default: true,
-    },
+      default: false,
+    }
   },
   setup(prop, context) {
     const buttonText = ref<string>('收起')
     const isTopIcon = ref(true)
     const handleClick = () => {
-      context.emit('buttonClick',!isTopIcon.value)
+      context.emit('buttonClick', !isTopIcon.value)
       // false
       if (!isTopIcon.value)
         buttonText.value = '收起'
@@ -52,8 +50,12 @@ export default defineComponent({
 
       isTopIcon.value = !isTopIcon.value
     }
+    const returnClick = () => {
+      context.emit('returnClick')
+    }
     return {
       handleClick,
+      returnClick,
       buttonText,
       isTopIcon,
     }
@@ -62,7 +64,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="less">
-// @import "@/assets/css/keyframes.css";
 @import "../../src/assets/css/keyframes.css";
 
 .main-title {
@@ -85,9 +86,22 @@ export default defineComponent({
 .button-area {
   display: none;
 }
-
+.return-button-area {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  cursor: pointer;
+  .button-text {
+    font-size: 14px;
+    margin-right: 3px;
+  }
+  .button-icon {
+    width: 15px;
+    height: 15px;
+  }
+}
 @media only screen and (max-width: 768px) {
-  .title-area{
+  .title-area {
     margin-top: 70px;
   }
   .button-area {
