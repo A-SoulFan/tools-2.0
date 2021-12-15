@@ -91,10 +91,7 @@
             </div>
           </div>
         </div>
-        <div v-else class="search-result-tip">小伙伴很抱歉，暂无相关数据。如需要，请私信<span
-          class="introduce-targetUrl"
-          @click="toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')"
-        >&nbsp;&nbsp;@ProJectASF</span> 进行添加</div>
+        <div v-else class="search-result-tip">暂无相关数据</div>
       </div>
       <div class="entry-detail-area" v-show="isShowDetail">
         <div class="entry-detail-header" @click="closeDetail">
