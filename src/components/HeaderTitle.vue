@@ -1,17 +1,11 @@
 <template>
   <div class="title-area">
-    <div class="main-title">
-      {{ title }}
-    </div>
+    <div class="main-title">{{ title }}</div>
 
     <div class="title-area-sub">
-      <div class="sub-title">
-        {{ subTitle }}
-      </div>
+      <div class="sub-title">{{ subTitle }}</div>
       <div v-if="needButton" class="button-area" @click="handleClick">
-        <div class="button-text">
-          {{ buttonText }}
-        </div>
+        <div class="button-text">{{ buttonText }}</div>
         <img
           class="button-icon"
           :class="isTopIcon ? '' : 'rotate-top'"
@@ -43,13 +37,12 @@ export default defineComponent({
     const buttonText = ref<string>('收起')
     const isTopIcon = ref(true)
     const handleClick = () => {
-      context.emit('buttonClick',!isTopIcon.value)
+      context.emit('buttonClick', !isTopIcon.value)
       // false
       if (!isTopIcon.value)
         buttonText.value = '收起'
       else
         buttonText.value = '详情'
-
       isTopIcon.value = !isTopIcon.value
     }
     return {
@@ -62,7 +55,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="less">
-// @import "@/assets/css/keyframes.css";
 @import "../../src/assets/css/keyframes.css";
 
 .main-title {
@@ -73,6 +65,7 @@ export default defineComponent({
 .title-area {
   position: relative;
   animation: herderTitle 0.5s;
+  margin-top: 70px;
 }
 .title-area-sub {
   display: flex;
@@ -87,9 +80,6 @@ export default defineComponent({
 }
 
 @media only screen and (max-width: 768px) {
-  .title-area{
-    margin-top: 70px;
-  }
   .button-area {
     display: flex;
     justify-content: flex-end;
