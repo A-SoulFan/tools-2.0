@@ -8,7 +8,7 @@
         <div class="button-text">{{ buttonText }}</div>
         <img
           class="button-icon"
-          :class="isTopIcon ? '' : 'rotate-top'"
+          :class="isTopIcon ? 'rotate-top' : ''"
           src="@/assets/icons/arrow.svg"
         />
       </div>
