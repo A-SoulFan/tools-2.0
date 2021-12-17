@@ -4,13 +4,17 @@
 
     <div class="title-area-sub">
       <div class="sub-title">{{ subTitle }}</div>
-      <div v-if="needButton" class="button-area" @click="handleClick">
+      <div v-if="!returnButton" class="button-area" @click="handleClick">
         <div class="button-text">{{ buttonText }}</div>
         <img
           class="button-icon"
           :class="isTopIcon ? 'rotate-top' : ''"
           src="@/assets/icons/arrow.svg"
         />
+      </div>
+      <div v-else class="return-button-area" @click="returnClick">
+        <div class="button-text">返回</div>
+        <img class="button-icon" src="@/assets/icons/return.svg" />
       </div>
     </div>
   </div>
@@ -28,10 +32,10 @@ export default defineComponent({
     subTitle: {
       type: String,
     },
-    needButton: {
+    returnButton: {
       type: Boolean,
-      default: true,
-    },
+      default: false,
+    }
   },
   setup(prop, context) {
     const buttonText = ref<string>('收起')
@@ -45,8 +49,12 @@ export default defineComponent({
         buttonText.value = '详情'
       isTopIcon.value = !isTopIcon.value
     }
+    const returnClick = () => {
+      context.emit('returnClick')
+    }
     return {
       handleClick,
+      returnClick,
       buttonText,
       isTopIcon,
     }
@@ -78,7 +86,20 @@ export default defineComponent({
 .button-area {
   display: none;
 }
-
+.return-button-area {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  cursor: pointer;
+  .button-text {
+    font-size: 14px;
+    margin-right: 3px;
+  }
+  .button-icon {
+    width: 15px;
+    height: 15px;
+  }
+}
 @media only screen and (max-width: 768px) {
   .button-area {
     display: flex;
