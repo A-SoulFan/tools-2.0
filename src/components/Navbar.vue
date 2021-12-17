@@ -184,7 +184,8 @@ export default defineComponent({
 @import "../../src/assets/css/keyframes.css";
 
 .navAreaPc {
-  background-color: #f8f8f8;
+  background-color: rgba(248, 248, 248, 0.8);
+  backdrop-filter: blur(10px);
   padding: 0 5.83vw;
   width: 100%;
   position: fixed;
@@ -205,12 +206,15 @@ export default defineComponent({
       justify-content: center;
     }
     .elementaryNavContentItem {
-      padding: 20px 5px;
-      margin: 0 30px;
+      padding: 20px 25px;
+      margin: 0 10px;
       font-size: 13.8px;
       cursor: pointer;
       color: #9ca3af;
-      transition: background-color 0.3s ease-in;
+      transition: color 0.3s ease-out;
+    }
+    .elementaryNavContentItem:hover{
+        color: #1f2937;
     }
     .elementaryNavContentItemActive {
       color: #182233;
@@ -224,11 +228,14 @@ export default defineComponent({
     align-items: center;
     animation: Navbar-opacity 0.6s;
     .secondaryNavContentItem {
-      padding: 20px 5px;
-      margin: 0 30px;
+      padding: 20px 25px;
+      margin: 0 10px;
       font-size: 12px;
       cursor: pointer;
       color: #9ca3af;
+    }
+    .secondaryNavContentItem:hover{
+      color: #1f2937;
     }
   }
 }
