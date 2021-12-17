@@ -1,80 +1,82 @@
 <template>
-  <div class="nav-area-pc">
-    <div class="elementary-nav-area">
-      <div class="asf-logo" @click="toASFHome()">
+  <div :class="$style.navAreaPc">
+    <div :class="$style.elementaryNavArea">
+      <div :class="$style.asfLogo" @click="toASFHome()">
         <img src="@/assets/Logo.svg" />
       </div>
-      <div class="elementary-nav-content-area">
+      <div :class="$style.elementaryNavContentArea">
         <div
-          v-for="(elementary, index) in navList as {name: string}[]"
+          v-for="(elementary, index) in navList "
           :key="elementary.name"
-          class="elementary-nav-content-item"
           :class="
-            data.navIndex === index ? 'elementary-nav-content-item-active' : ''
-          "
+          [$style.elementaryNavContentItem, data.navIndex === index ? $style.elementaryNavContentItemActive : '']"
           @click="selectElementary(elementary, index, 'pc')"
-        >
-          {{ elementary.name }}
-        </div>
+        >{{ elementary.name }}</div>
       </div>
-      <div>
+      <!-- <div>
         <img src="@/assets/icons/personIcon.svg" />
-      </div>
+      </div>-->
     </div>
-    <div v-show="data.isShowSecondary" class="secondary-nav-area">
+    <div v-show="data.isShowSecondary" :class="$style.secondaryNavArea">
       <div
         v-for="secondary in data.secondaryList"
         :key="secondary"
-        class="secondary-nav-content-item"
+        :class="$style.secondaryNavContentItem"
         @click="selectSecondary(secondary)"
-      >
-        {{ secondary.name }}
-      </div>
+      >{{ secondary.name }}</div>
     </div>
   </div>
-  <div class="nav-area-phone">
-    <div class="nav-area-header">
-      <div class="asf-logo" @click="toASFHome()">
+
+  <div :class="$style.navAreaPhone">
+    <div :class="$style.navAreaHeader">
+      <div :class="$style.asfLogo" @click="toASFHome()">
         <img src="@/assets/Logo.svg" />
       </div>
-      <div
+      <!-- <div
         v-show="phoneMenu.phoneMenuShow"
-        class="asf-logo"
+        :class="$style['asf-logo']"
         @click="changePhoneMenu('close')"
       >
         <img src="@/assets/icons/close.svg" />
-      </div>
-      <div
-        v-show="!phoneMenu.phoneMenuShow"
-        class="asf-logo"
-        @click="changePhoneMenu('show')"
-      >
+      </div>-->
+      <div :class="$style.asfLogo" @click="changePhoneMenu('show')">
         <img src="@/assets/icons/menu.svg" />
       </div>
     </div>
-    <div v-show="phoneMenu.phoneMenuShow" class="nav-area-phone-main">
-      <div class="elementary">
-        <div
-          v-for="(elementary , index) in navList as {name: string, secondaryList:any[]}[]"
-          :key="elementary.name"
-          class="elementary-item-box"
-        >
-          <div class="elementary-item">
-            <div>{{ elementary.name }}</div>
-            <div @click="selectElementary(elementary, index, 'phone')">
-              <img src="@/assets/icons/addIcon.svg" />
+    <div
+      @click="changePhoneMenu('close')"
+      :class="[$style.muneBehind, phoneMenu.phoneMenuShow ? $style.muneBehindShow : '']"
+    ></div>
+    <div :class="[$style.navPhoneMain, phoneMenu.phoneMenuShow ? $style.navPhoneMainShow : '']">
+      <img
+        @click="changePhoneMenu('close')"
+        :class="$style.MenuIcon"
+        src="@/assets/icons/close.svg"
+      />
+
+      <div :class="$style.elementary">
+        <div v-for="(elementary ,index) in navList" :key="elementary.name">
+          <div>
+            <div :class="$style.elementaryItem">
+              <div :class="$style.elementaryItemName">{{ elementary.name }}</div>
+              <div
+                :class="[$style.elementaryItemIcon, (phoneMenu.navIndex === index && phoneMenu.isShowSecondary) ? $style.elementaryItemIconRotate : '']"
+                @click="selectElementary(elementary, index, 'phone')"
+                v-if="elementary?.secondaryList?.length > 0"
+              >
+                <img src="@/assets/icons/arrow.svg" />
+              </div>
             </div>
-          </div>
-          <div
-            v-show="phoneMenu.navIndex === index && phoneMenu.isShowSecondary"
-          >
+
             <div
-              v-for="item in elementary.secondaryList"
-              :key="item.name"
-              class="secondary-item"
-              @click="selectSecondary(item)"
+              :class="[$style.secondaryItemBox, (phoneMenu.navIndex === index && phoneMenu.isShowSecondary) ? $style.secondaryItemBoxShow : '']"
             >
-              {{ item.name }}
+              <div
+                v-for="item in elementary.secondaryList"
+                :key="item.name"
+                :class="$style.secondaryItem"
+                @click="selectSecondary(item)"
+              >{{ item.name }}</div>
             </div>
           </div>
         </div>
@@ -84,12 +86,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, reactive, PropType } from 'vue'
 import { useRouter } from 'vue-router'
 export default defineComponent({
   props: {
     navList: {
-      type: Array,
+      type: Array as PropType<{ name: string, secondaryList: any[] }[]>,
     },
     title: {
       type: String,
@@ -162,9 +164,9 @@ export default defineComponent({
       if (type === 'close') phoneMenu.phoneMenuShow = false
     }
 
-    const toASFHome = ()=>{
+    const toASFHome = () => {
       window.open("https://asoulfan.com/")
-      
+
     }
     return {
       selectElementary,
@@ -178,48 +180,50 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="less">
+<style  lang="less" module>
 @import "../../src/assets/css/keyframes.css";
 
-.nav-area-pc {
+.navAreaPc {
   background-color: #f8f8f8;
   padding: 0 5.83vw;
-
-  .elementary-nav-area {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  .elementaryNavArea {
     margin: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .asf-logo {
+    .asfLogo {
       width: 80px;
       cursor: pointer;
     }
-    .elementary-nav-content-area {
+    .elementaryNavContentArea {
       flex: 1;
       display: flex;
       justify-content: center;
     }
-    .elementary-nav-content-item {
+    .elementaryNavContentItem {
       padding: 20px 5px;
       margin: 0 30px;
       font-size: 13.8px;
-
       cursor: pointer;
       color: #9ca3af;
       transition: background-color 0.3s ease-in;
     }
-    .elementary-nav-content-item-active {
+    .elementaryNavContentItemActive {
       color: #182233;
       border-bottom: 1px #182233 solid;
     }
   }
-  .secondary-nav-area {
+  .secondaryNavArea {
     margin: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     animation: Navbar-opacity 0.6s;
-    .secondary-nav-content-item {
+    .secondaryNavContentItem {
       padding: 20px 5px;
       margin: 0 30px;
       font-size: 12px;
@@ -229,14 +233,14 @@ export default defineComponent({
   }
 }
 
-.nav-area-phone {
+.navAreaPhone {
   display: none;
 }
 @media only screen and (max-width: 768px) {
-  .nav-area-pc {
+  .navAreaPc {
     display: none;
   }
-  .nav-area-phone {
+  .navAreaPhone {
     display: block;
     padding: 20px 5.83vw;
     z-index: 1000;
@@ -244,7 +248,8 @@ export default defineComponent({
     position: fixed;
     top: 0;
     background-color: #fff;
-    .nav-area-header {
+
+    .navAreaHeader {
       display: flex;
       justify-content: space-between;
       img {
@@ -252,34 +257,91 @@ export default defineComponent({
         width: auto;
       }
     }
-    .nav-area-phone-main {
-      position: relative;
+    .navPhoneMain {
+      position: fixed;
+      right: -768px;
+      top: 0;
+      z-index: 1001;
       height: 100vh;
+      overflow-y: scroll;
+      width: 80%;
+      max-width: 375px;
+      min-width: 200px;
+      padding: 20px;
+      background-color: #f5f5f5;
+      transition: all 0.5s cubic-bezier(0.15, 0.85, 0.35, 1);
+
+      .MenuIcon {
+        height: 30px;
+        width: auto;
+      }
       .elementary {
-        margin-top: 50px;
-        .elementary-item-box {
-          border-top: 1px solid #d1d5db;
-        }
-        .elementary-item {
+        margin: 10px -20px;
+        .elementaryItem {
           display: flex;
           align-items: center;
           justify-content: space-between;
           height: 70px;
           font-size: 16px;
-          img {
-            height: 16px;
+          .elementaryItemName {
+            margin-left: 20px;
+          }
+          .elementaryItemIcon {
+            margin-right: 20px;
+            height: 15px;
+            transform: rotate(0);
+            transition: transform 0.2s;
+          }
+          .elementaryItemIconRotate {
+            transform: rotate(180deg);
           }
         }
-        .secondary-item {
+
+        .secondaryItemBox {
+          display: none;
+          height: 0;
+          max-height: 0;
+          background-color: #fff;
+          transition: max-height 0.3s;
+        }
+        .secondaryItemBoxShow {
+          display: block;
+          height: auto;
+          max-height: 1000px;
+        }
+        .secondaryItem {
           display: flex;
           flex-direction: column;
           justify-content: center;
           margin-left: 80px;
           height: 50px;
           font-size: 14px;
-          border-top: 1px solid #d1d5db;
+          border-bottom: 1px solid #f1f2f3;
         }
       }
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+
+      height: 5px;
+    }
+    .navPhoneMainShow {
+      right: 0;
+    }
+    .muneBehind {
+      width: 100%;
+      height: 100%;
+      right: -700px;
+      background-color: rgb(0, 0, 0);
+      position: fixed;
+      top: 0;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s linear;
+    }
+    .muneBehindShow {
+      opacity: 0.4;
+      right: 0;
     }
   }
 }

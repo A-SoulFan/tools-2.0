@@ -8,7 +8,7 @@
         <div class="button-text">{{ buttonText }}</div>
         <img
           class="button-icon"
-          :class="isTopIcon ? '' : 'rotate-top'"
+          :class="isTopIcon ? 'rotate-top' : ''"
           src="@/assets/icons/arrow.svg"
         />
       </div>
@@ -47,7 +47,6 @@ export default defineComponent({
         buttonText.value = '收起'
       else
         buttonText.value = '详情'
-
       isTopIcon.value = !isTopIcon.value
     }
     const returnClick = () => {
@@ -74,6 +73,7 @@ export default defineComponent({
 .title-area {
   position: relative;
   animation: herderTitle 0.5s;
+  margin-top: 70px;
 }
 .title-area-sub {
   display: flex;
@@ -101,9 +101,6 @@ export default defineComponent({
   }
 }
 @media only screen and (max-width: 768px) {
-  .title-area {
-    margin-top: 70px;
-  }
   .button-area {
     display: flex;
     justify-content: flex-end;

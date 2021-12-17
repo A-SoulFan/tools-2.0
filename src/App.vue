@@ -10,20 +10,11 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useRouter } from 'vue-router'
 import asfNavbar from '@/components/Navbar.vue'
 export default defineComponent({
   components: { asfNavbar },
   setup() {
-    const route = useRouter()
     const navList = [
-      {
-        name: '敬请期待',
-      },
-      {
-        name: '敬请期待',
-
-      },
       {
         name: '实用工具',
         secondaryList: [
@@ -36,6 +27,7 @@ export default defineComponent({
       },
       {
         name: '敬请期待',
+        secondaryList: []
       },
     ]
     return {
