@@ -260,7 +260,7 @@ export default defineComponent({
       display: flex;
       justify-content: space-between;
       img {
-        height: 30px;
+        height: 20px;
         width: auto;
       }
     }
@@ -279,7 +279,7 @@ export default defineComponent({
       transition: all 0.5s cubic-bezier(0.15, 0.85, 0.35, 1);
 
       .MenuIcon {
-        height: 30px;
+        height: 20px;
         width: auto;
       }
       .elementary {
