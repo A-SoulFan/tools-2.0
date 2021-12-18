@@ -51,7 +51,7 @@
       <img
         @click="changePhoneMenu('close')"
         :class="$style.MenuIcon"
-        src="@/assets/icons/close.svg"
+        src="@/assets/icons/menu.svg"
       />
 
       <div :class="$style.elementary">
@@ -115,7 +115,7 @@ export default defineComponent({
     const phoneMenu = reactive({
       phoneMenuShow: false,
       navIndex: 0,
-      isShowSecondary: false,
+      isShowSecondary: true,
     })
 
     const selectElementary = (item: any, index: number, type: string) => {
