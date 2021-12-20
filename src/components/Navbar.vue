@@ -48,11 +48,7 @@
       :class="[$style.muneBehind, phoneMenu.phoneMenuShow ? $style.muneBehindShow : '']"
     ></div>
     <div :class="[$style.navPhoneMain, phoneMenu.phoneMenuShow ? $style.navPhoneMainShow : '']">
-      <img
-        @click="changePhoneMenu('close')"
-        :class="$style.MenuIcon"
-        src="@/assets/icons/menu.svg"
-      />
+      <img @click="changePhoneMenu('close')" :class="$style.MenuIcon" src="@/assets/icons/menu.svg" />
 
       <div :class="$style.elementary">
         <div v-for="(elementary ,index) in navList" :key="elementary.name">
@@ -213,8 +209,8 @@ export default defineComponent({
       color: #9ca3af;
       transition: color 0.3s ease-out;
     }
-    .elementaryNavContentItem:hover{
-        color: #1f2937;
+    .elementaryNavContentItem:hover {
+      color: #1f2937;
     }
     .elementaryNavContentItemActive {
       color: #182233;
@@ -234,7 +230,7 @@ export default defineComponent({
       cursor: pointer;
       color: #9ca3af;
     }
-    .secondaryNavContentItem:hover{
+    .secondaryNavContentItem:hover {
       color: #1f2937;
     }
   }
@@ -305,16 +301,13 @@ export default defineComponent({
         }
 
         .secondaryItemBox {
-          display: none;
-          height: 0;
+          overflow: hidden;
           max-height: 0;
           background-color: #fff;
-          transition: max-height 0.3s;
+          transition: max-height 0.5s cubic-bezier(0.15, 0.85, 0.35, 1);
         }
         .secondaryItemBoxShow {
-          display: block;
-          height: auto;
-          max-height: 1000px;
+          max-height: 300px;
         }
         .secondaryItem {
           display: flex;
