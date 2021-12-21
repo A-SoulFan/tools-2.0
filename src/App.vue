@@ -23,6 +23,8 @@ export default defineComponent({
           { name: '成分姬', methods: 'router', link: '/ingredientChecking' },
           { name: "表情包", methods: "router", link: "/emojicollect" },
           { name: '方言词典', methods: 'router', link: '/zhijiangDict' },
+          { name: '枝江债单', methods: 'router', link: '/ZhijiangDebts' },
+
         ],
       },
       {
