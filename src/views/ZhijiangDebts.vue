@@ -1,5 +1,9 @@
 <template>
-  <headerTitle title="枝江债单" sub-title="许下的诺言是前进的动力" @buttonClick="changeIntroduceShow"></headerTitle>
+  <headerTitle
+    title="枝江债单"
+    sub-title="许下的诺言是前进的动力"
+    @buttonClick="changeIntroduceShow"
+  ></headerTitle>
   <div v-show="isShowIntroduce" :class="$style.introducePhone">
     <div :class="$style.introduceTitle">功能介绍</div>
     <div :class="$style.introduceContent">
@@ -15,17 +19,28 @@
       <div :class="$style.searchArea">
         <div :class="$style.tagsAndtime">
           <div :class="$style.tagArea">
-            <div v-for="tag in  AsoulTagList" :class="$style.tag">{{ tag.name }}</div>
+            <div
+              v-for="(tag, index) in AsoulTagList"
+              :class="[$style.tag, tag.isSelect ? $style.tagActive : '']"
+              @click="changeTags(index)"
+            >
+              {{ tag.name }}
+            </div>
           </div>
           <div :class="$style.timeSection">TODO时间选择器</div>
         </div>
 
         <div :class="$style.debtStatus" ref="statusBox">
           <div
-            :class="[$style.debtStatusItem, item.isSelect ? $style.debtStatusItemActive : '']"
-            v-for="(item,index) in statuList"
+            :class="[
+              $style.debtStatusItem,
+              item.isSelect ? $style.debtStatusItemActive : '',
+            ]"
+            v-for="(item, index) in statuList"
             @click="changeStatus(index)"
-          >{{ item.status }}</div>
+          >
+            {{ item.status }}
+          </div>
         </div>
       </div>
     </div>
@@ -42,82 +57,123 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from 'vue'
-import headerTitle from '@/components/HeaderTitle.vue'
-import introduceAsoul from '@/components/IntroduceAsoul.vue'
+import { defineComponent, ref, reactive, onMounted } from "vue";
+import headerTitle from "@/components/HeaderTitle.vue";
+import introduceAsoul from "@/components/IntroduceAsoul.vue";
 
-import useCurrentInstance from '@/hooks/useCurrentInstance'
-import toTargetUrlWithNewWindow from '@/hooks/useUtility'
-
+import useCurrentInstance from "@/hooks/useCurrentInstance";
+import toTargetUrlWithNewWindow from "@/hooks/useUtility";
 
 export default defineComponent({
-  name: 'ZhijiangDict',
+  name: "ZhijiangDict",
   components: { headerTitle, introduceAsoul },
   setup() {
-    const { proxy } = useCurrentInstance()
-    const statuList = reactive([
-      { status: '全部', isSelect: false },
-      { status: '已还', isSelect: true },
-      { status: '未还', isSelect: false },
-    ])
+    const { proxy } = useCurrentInstance();
+
     const AsoulTagList = reactive([
       {
-        name: '向晚',
-        key: 'ava',
+        name: "向晚",
+        key: "ava",
         isSelect: false,
       },
       {
-        name: '贝拉',
-        key: 'ava',
+        name: "贝拉",
+        key: "ava",
         isSelect: false,
-      }, {
-        name: '珈乐',
-        key: 'ava',
+      },
+      {
+        name: "珈乐",
+        key: "ava",
         isSelect: false,
-      }, {
-        name: '嘉然',
-        key: 'ava',
+      },
+      {
+        name: "嘉然",
+        key: "ava",
         isSelect: false,
-      }, {
-        name: '乃琳',
-        key: 'ava',
+      },
+      {
+        name: "乃琳",
+        key: "ava",
         isSelect: false,
-      }
-    ])
-    const statusBox = ref<null | HTMLElement>(null)
+      },
+    ]);
+    const changeTags = (index: number) => {
+      AsoulTagList[index].isSelect = !AsoulTagList[index].isSelect;
+    };
+
+    const statuList = reactive([
+      { status: "全部", isSelect: true },
+      { status: "已还", isSelect: false },
+      { status: "未还", isSelect: false },
+    ]);
+    const statusBox = ref<null | HTMLElement>(null);
+
     const changeStatus = (index: number) => {
-      statusBox.value?.style.setProperty("--tempIndex", `${index}`)
+      statusBox.value?.style.setProperty("--tempIndex", `${index}`);
       console.log(statusBox.value);
       statuList.forEach((item, i) => {
         if (i === index) {
-          item.isSelect = true
+          item.isSelect = true;
         } else {
-          item.isSelect = false
+          item.isSelect = false;
         }
-      })
+      });
+    };
 
-    }
+    const debtList = [
 
+      {
+        year: "2021",
+        month: "10",
+        debt:[
+          {
+            title:'珈乐替三人欠下《rollin》。',
+            member: '',
+            isOwe:true,
+            oweTime:'2021.08.18',
+            revertsTime:''
+          },
+           {
+            title:'欠债二',
+            member: '',
+            isOwe:true,
+            oweTime:'2021.08.18',
+            revertsTime:''
+          },
+           {
+            title:'已还债',
+            member: '',
+            isOwe:false,
+            oweTime:'2021.08.18',
+            revertsTime:'2021.06.09'
+          },
+           {
+            title:'珈乐替三人欠下《rollin》。',
+            member: '',
+            isOwe:true,
+            oweTime:'2021.08.18',
+            revertsTime:'2022.10.10'
+          }
+        ]
+      }
+    ]
 
-
-
-
-
-
-    const isShowIntroduce = ref(true)
+    const isShowIntroduce = ref(true);
     const changeIntroduceShow = (e: boolean) => {
-      isShowIntroduce.value = e
-    }
+      isShowIntroduce.value = e;
+    };
     return {
       changeIntroduceShow,
       changeStatus,
+      changeTags,
       isShowIntroduce,
       AsoulTagList,
       statuList,
-      statusBox
-    }
+      statusBox,
+      debtList
+    };
   },
-})
+});
 </script>
 
 <style lang="less" module>
@@ -152,13 +208,19 @@ export default defineComponent({
           display: flex;
           .tag {
             .displayCenter;
-            padding: 2px 6px;
+            padding: 8px;
             margin: 0 4.5px;
-            border-radius: 22px;
             width: 100px;
+            border-radius: 22px;
             background-color: #d9dde7;
-            font-size: 20px;
+            font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.5s, color 0.5s;
+          }
+
+          .tagActive {
+            color: #f3f4f6;
+            background-color: #4b5563;
           }
         }
         .timeSection {
@@ -172,6 +234,7 @@ export default defineComponent({
         max-width: 663px;
         position: relative;
         z-index: 1;
+        font-size: 16px;
         --tempIndex: 0;
         .debtStatusItem {
           .displayCenter;
@@ -179,11 +242,13 @@ export default defineComponent({
           cursor: pointer;
           background-color: transparent;
           border-radius: 22px;
+          color: #4b5563;
+          transition: 0.5s ease;
         }
         .debtStatusItemActive {
           color: #f3f4f6;
         }
-        .debtStatusItemActive::after {
+        .debtStatusItem::after {
           position: absolute;
           content: "";
           top: 0;
