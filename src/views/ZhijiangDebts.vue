@@ -1,9 +1,5 @@
 <template>
-  <headerTitle
-    title="枝江债单"
-    sub-title="许下的诺言是前进的动力"
-    @buttonClick="changeIntroduceShow"
-  ></headerTitle>
+  <headerTitle title="枝江债单" sub-title="许下的诺言是前进的动力" @buttonClick="changeIntroduceShow"></headerTitle>
   <div v-show="isShowIntroduce" :class="$style.introducePhone">
     <div :class="$style.introduceTitle">功能介绍</div>
     <div :class="$style.introduceContent">
@@ -23,9 +19,7 @@
               v-for="(tag, index) in AsoulTagList"
               :class="[$style.tag, tag.isSelect ? $style.tagActive : '']"
               @click="changeTags(index)"
-            >
-              {{ tag.name }}
-            </div>
+            >{{ tag.name }}</div>
           </div>
           <div :class="$style.timeSection">TODO时间选择器</div>
         </div>
@@ -38,9 +32,25 @@
             ]"
             v-for="(item, index) in statuList"
             @click="changeStatus(index)"
-          >
-            {{ item.status }}
+          >{{ item.status }}</div>
+        </div>
+      </div>
+      <div :class="$style.resultArea">
+        <div v-for="(BigItem,index) in debtList" :class="$style.resultItemArea">
+          <div :class="$style.debtTimeAndbutton">
+            <div>
+              <div>{{ BigItem.month + '月' }}</div>
+              <div>{{ BigItem.year + '年' }}</div>
+            </div>
+            <div :class="$style.divder"></div>
+            <div @click="changeDebtFold(index)">
+              <img
+                :class="[$style.iconArrow, BigItem.isFold ? $style.iconArrowFold : '']"
+                src="@/assets/icons/arrow.svg"
+              />
+            </div>
           </div>
+          <div :class="$style.debtItemArea"></div>
         </div>
       </div>
     </div>
@@ -110,7 +120,6 @@ export default defineComponent({
 
     const changeStatus = (index: number) => {
       statusBox.value?.style.setProperty("--tempIndex", `${index}`);
-      console.log(statusBox.value);
       statuList.forEach((item, i) => {
         if (i === index) {
           item.isSelect = true;
@@ -120,43 +129,84 @@ export default defineComponent({
       });
     };
 
-    const debtList = [
+    const debtList = reactive([
 
       {
         year: "2021",
         month: "10",
-        debt:[
+        isFold: false,
+        debt: [
           {
-            title:'珈乐替三人欠下《rollin》。',
+            title: '珈乐替三人欠下《rollin》。',
             member: '',
-            isOwe:true,
-            oweTime:'2021.08.18',
-            revertsTime:''
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
           },
-           {
-            title:'欠债二',
+          {
+            title: '欠债二',
             member: '',
-            isOwe:true,
-            oweTime:'2021.08.18',
-            revertsTime:''
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
           },
-           {
-            title:'已还债',
+          {
+            title: '已还债',
             member: '',
-            isOwe:false,
-            oweTime:'2021.08.18',
-            revertsTime:'2021.06.09'
+            isOwe: false,
+            oweTime: '2021.08.18',
+            revertsTime: '2021.06.09'
           },
-           {
-            title:'珈乐替三人欠下《rollin》。',
+          {
+            title: '珈乐替三人欠下《rollin》。',
             member: '',
-            isOwe:true,
-            oweTime:'2021.08.18',
-            revertsTime:'2022.10.10'
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: '2022.10.10'
+          }
+        ]
+      },
+      {
+        year: "2021",
+        month: "11",
+        isFold: false,
+        debt: [
+          {
+            title: '珈乐替三人欠下《rollin》。',
+            member: '',
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          },
+          {
+            title: '欠债二',
+            member: '',
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          },
+          {
+            title: '已还债',
+            member: '',
+            isOwe: false,
+            oweTime: '2021.08.18',
+            revertsTime: '2021.06.09'
+          },
+          {
+            title: '珈乐替三人欠下《rollin》。',
+            member: '',
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: '2022.10.10'
           }
         ]
       }
-    ]
+    ])
+
+    const changeDebtFold = (index: number) => {
+
+      debtList[index].isFold = !debtList[index].isFold
+    }
 
     const isShowIntroduce = ref(true);
     const changeIntroduceShow = (e: boolean) => {
@@ -166,6 +216,7 @@ export default defineComponent({
       changeIntroduceShow,
       changeStatus,
       changeTags,
+      changeDebtFold,
       isShowIntroduce,
       AsoulTagList,
       statuList,
@@ -177,6 +228,7 @@ export default defineComponent({
 </script>
 
 <style lang="less" module>
+@white1: #f3f4f6;
 .displayCenter {
   display: flex;
   justify-content: center;
@@ -219,19 +271,21 @@ export default defineComponent({
           }
 
           .tagActive {
-            color: #f3f4f6;
+            color: @white1;
             background-color: #4b5563;
           }
         }
         .timeSection {
+          font-size: 14px;
+          border: 1px black solid;
         }
       }
       .debtStatus {
         border-radius: 22px;
         background-color: #d9dde7;
         display: flex;
-        height: 40px;
-        max-width: 663px;
+        height: 34px;
+        max-width: 546px;
         position: relative;
         z-index: 1;
         font-size: 16px;
@@ -246,7 +300,7 @@ export default defineComponent({
           transition: 0.5s ease;
         }
         .debtStatusItemActive {
-          color: #f3f4f6;
+          color: @white1;
         }
         .debtStatusItem::after {
           position: absolute;
@@ -261,15 +315,35 @@ export default defineComponent({
           transition: 0.5s ease;
           z-index: -1;
         }
-        // .debtStatusItemActive {
-        //   position: absolute;
-        //   left: 0;
-        //   width: calc(1 / 3 * 100%);
-        //   height: 100%;
-        //   background-color: #4b5563;
-        //   border-radius: 22px;
-        //   transition: position 0.3s linear;
-        // }
+      }
+    }
+    .resultArea {
+      margin-top: 30px;
+      .resultItemArea {
+        // display: flex;
+        margin-bottom: 20px;
+        .debtTimeAndbutton {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .divder {
+            border-top: 1px #d9dde7 solid;
+            margin: 0 20px;
+            flex: 1;
+          }
+          .iconArrow {
+            width: 20px;
+            height: 20px;
+            transform: rotate(0deg);
+            transition: transform 0.5s;
+          }
+          .iconArrowFold {
+            transform: rotate(180deg);
+          }
+        }
+        .debtItemArea {
+          display: flex;
+        }
       }
     }
   }
