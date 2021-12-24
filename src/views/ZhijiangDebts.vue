@@ -50,7 +50,31 @@
               />
             </div>
           </div>
-          <div :class="$style.debtItemArea"></div>
+          <div :class="$style.debtItemArea">
+            <div v-for="item in BigItem.debt" :class="$style.debtItem">
+              <div :class="$style.titleArea">
+                <img v-if="!item.isOwe" src="@/assets/icons/correct.svg" />
+                <img v-else src="@/assets/icons/wrong.svg" />
+                <div :class="$style.title">{{ item.title }}</div>
+              </div>
+              <div :class="$style.avatarArea">
+                <img :src="'./src/assets/image/' + avatar + '.webp'" v-for="avatar in item.member" />
+              </div>
+              <div :class="$style.oweAndReverts">
+                <div :class="[$style.baseItem, $style.owe]">
+                  <img src="@/assets/icons/clock.svg" />
+                  <div :class="$style.time">{{ '欠债时间' + item.oweTime }}</div>
+                  <img src="@/assets/icons/coolicon.svg" :class="$style.iconCool" />
+                </div>
+                <div v-if="!item.isOwe" :class="[$style.baseItem, $style.reverts]">
+                  <img src="@/assets/icons/clock.svg" />
+                  <!-- TODO: 参数 -->
+                  <div :class="$style.time">{{ '还债时间' + item.oweTime }}</div>
+                  <img src="@/assets/icons/coolicon.svg" :class="$style.iconCool" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -138,28 +162,142 @@ export default defineComponent({
         debt: [
           {
             title: '珈乐替三人欠下《rollin》。',
-            member: '',
+            member: ['ava', 'bella'],
+            isOwe: false,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella', 'carol', 'diana', 'eileen'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella', 'carol'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
+            isOwe: true,
+            oweTime: '2021.08.18',
+            revertsTime: ''
+          }, {
+            title: '珈乐替三人欠下《rollin》。',
+            member: ['ava', 'bella'],
             isOwe: true,
             oweTime: '2021.08.18',
             revertsTime: ''
           },
           {
             title: '欠债二',
-            member: '',
+            member: ['ava', 'bella'],
             isOwe: true,
             oweTime: '2021.08.18',
             revertsTime: ''
           },
           {
             title: '已还债',
-            member: '',
+            member: ['ava', 'bella'],
             isOwe: false,
             oweTime: '2021.08.18',
             revertsTime: '2021.06.09'
           },
           {
             title: '珈乐替三人欠下《rollin》。',
-            member: '',
+            member: ['ava', 'bella'],
             isOwe: true,
             oweTime: '2021.08.18',
             revertsTime: '2022.10.10'
@@ -173,28 +311,28 @@ export default defineComponent({
         debt: [
           {
             title: '珈乐替三人欠下《rollin》。',
-            member: '',
+            member: ['ava', 'bella'],
             isOwe: true,
             oweTime: '2021.08.18',
             revertsTime: ''
           },
           {
             title: '欠债二',
-            member: '',
+            member: ['ava', 'bella'],
             isOwe: true,
             oweTime: '2021.08.18',
             revertsTime: ''
           },
           {
             title: '已还债',
-            member: '',
+            member: ['ava', 'bella'],
             isOwe: false,
             oweTime: '2021.08.18',
             revertsTime: '2021.06.09'
           },
           {
             title: '珈乐替三人欠下《rollin》。',
-            member: '',
+            member: ['ava', 'bella'],
             isOwe: true,
             oweTime: '2021.08.18',
             revertsTime: '2022.10.10'
@@ -334,15 +472,76 @@ export default defineComponent({
           .iconArrow {
             width: 20px;
             height: 20px;
-            transform: rotate(0deg);
+            transform: rotate(180deg);
             transition: transform 0.5s;
           }
           .iconArrowFold {
-            transform: rotate(180deg);
+            transform: rotate(0deg);
           }
         }
         .debtItemArea {
           display: flex;
+          flex-wrap: wrap;
+          .debtItem {
+            background-color: #f8f8f8;
+            border-radius: 4px;
+            width: 300px;
+            height: 180px;
+            margin: 5px;
+            padding: 8px 11px;
+            color: #6b7280;
+            .titleArea {
+              display: flex;
+              align-items: center;
+              img {
+                width: 14px;
+                height: 14px;
+              }
+              .title {
+                margin-left: 10px;
+                font-size: 14.4px;
+              }
+            }
+            .avatarArea {
+              margin-top: 40px;
+              display: flex;
+              img {
+                width: 34px;
+                height: 34px;
+                border-radius: 50%;
+                border: 1px #6b7280 solid;
+                margin-right: 10px;
+              }
+            }
+            .oweAndReverts {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              margin-top: 30px;
+              .baseItem {
+                width: 120px;
+                padding: 5px 2px;
+                display: flex;
+                border-radius: 4px;
+                .time {
+                  text-align: center;
+                }
+                .iconCool {
+                  transform: rotate(225deg);
+                }
+                img {
+                  width: 14px;
+                  height: 14px;
+                }
+              }
+              .owe {
+                background-color: #ea9c94;
+              }
+              .reverts {
+                background-color: #c8fdbe;
+              }
+            }
+          }
         }
       }
     }
