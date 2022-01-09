@@ -1,0 +1,13 @@
+{
+  "cSpell.enableFiletypes": ["vue"],
+  "cSpell.words": [
+    "ASOUL",
+    "cnki",
+    "FANMADE",
+    "toastification",
+    "Uploaders"
+  ],
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "eslint.validate": ["javascript", "javascriptreact", "vue"]
+}
