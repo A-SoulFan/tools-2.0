@@ -3,28 +3,18 @@
 ## 介绍
 ASOULFAN小工具前端仓库
 
-## 环境需求
-
-全局安装 `pnpm`
-
-```
-npm i -g pnpm
-```
 
 ## 开发
 
-1. 安装所有 node_modules
+1. npm ci
+
+
+2. 将 `.env.example` 文件重命名为`.env.local`, 并按需修改其中配置
+
+3. 启动开发服务器
 
 ```
-pnpm i
-```
-
-3. 将 `.env.example` 文件重命名为`.env.local`, 并按需修改其中配置
-
-4. 启动开发服务器
-
-```
-pnpm dev
+npm run serve
 ```
 
 ## 编辑器配置
