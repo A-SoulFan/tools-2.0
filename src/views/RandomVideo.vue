@@ -1,7 +1,11 @@
 <!-- 今天溜什么-->
 <template>
   <div>
-    <header-title title="今天溜什么" sub-title="相见即是缘份" @buttonClick="changeIntroduceShow"></header-title>
+    <header-title
+      title="今天溜什么"
+      sub-title="相见即是缘份"
+      @buttonClick="changeIntroduceShow"
+    ></header-title>
     <div v-show="isShowIntroduce" class="introduce-phone">
       <div class="introduce-title">功能介绍</div>
       <div class="introduce-text-content">
@@ -10,7 +14,7 @@
     </div>
     <div class="update-time-area">
       <img class="icon-clock" src="@/assets/icons/clock.svg" />
-      <div class="update-time-text">{{ "最近更新" + updateTime }}</div>
+      <div class="update-time-text">{{ '最近更新' + updateTime }}</div>
     </div>
     <div class="randomVideo">
       <div style="flex: 1">
@@ -19,7 +23,9 @@
           <div class="iframe-box-button-area">
             <div class="pre-button-area">
               <img class="pre-button-img" src="@/assets/icons/cube.svg" />
-              <div class="pre-button-text" @click="preVideo">回到上一条视频</div>
+              <div class="pre-button-text" @click="preVideo">
+                回到上一条视频
+              </div>
             </div>
             <div class="random-button" @click="getRandomVideo">随便看看</div>
           </div>
@@ -27,14 +33,20 @@
         <div class="history-video-area" v-if="Data.historyVideoList.length > 0">
           <div class="history-video-title-area">
             <div class="history-video-title">历史记录</div>
-            <div class="history-video-clear-button" @click="clearHistory">清理历史记录</div>
+            <div class="history-video-clear-button" @click="clearHistory">
+              清理历史记录
+            </div>
           </div>
           <div class="history-video">
             <div
               v-for="(item, index) in Data.historyVideoList"
               :key="index"
               class="history-video-item"
-              @click="toTargetUrlWithNewWindow('https://www.bilibili.com/video/' + item.bv)"
+              @click="
+                toTargetUrlWithNewWindow(
+                  'https://www.bilibili.com/video/' + item.bv,
+                )
+              "
             >
               <div class="video-cover">
                 <img :src="item.imgsrc" />
@@ -60,101 +72,91 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, reactive } from 'vue'
-import headerTitle from '@/components/HeaderTitle.vue'
-import useCurrentInstance from '@/hooks/useCurrentInstance'
-import toTargetUrlWithNewWindow from '@/hooks/useUtility'
-import introduceAsoul from '@/components/IntroduceAsoul.vue'
+<script lang="ts" setup>
+import { ref, reactive, onBeforeMount } from 'vue';
+
+import headerTitle from '@/components/HeaderTitle.vue';
+import introduceAsoul from '@/components/IntroduceAsoul.vue';
+
+import useCurrentInstance from '@/hooks/useCurrentInstance';
+import toTargetUrlWithNewWindow from '@/hooks/useUtility';
 
 interface videoObj {
-  title: string
-  cover?: string
-  time: string
-  imgsrc: string
-  play_url: string
-  bv: string
+  title: string;
+  cover?: string;
+  time: string;
+  imgsrc: string;
+  play_url: string;
+  bv: string;
 }
 
-export default defineComponent({
-  components: { headerTitle, introduceAsoul },
-  setup() {
-    const { proxy } = useCurrentInstance()
-    const isShowIntroduce = ref(true)
+const { proxy } = useCurrentInstance();
 
-    const updateTime = ref('')
-    const getUpdateTime = async () => {
-      const res = await proxy.$request({
-        url: import.meta.env.VITE_API_RANDOMVIDEO_UPDATETIME,
-      }) as { last_update_time: string }
-      updateTime.value = new Date(res.last_update_time).toLocaleString('chinese', { hour12: false })
-    }
-    getUpdateTime()
+const updateTime = ref('');
+const getUpdateTime = async () => {
+  const res = (await proxy.$request({
+    url: import.meta.env.VITE_API_RANDOMVIDEO_UPDATETIME,
+  })) as { last_update_time: string };
+  updateTime.value = new Date(res.last_update_time).toLocaleString('chinese', {
+    hour12: false,
+  });
+};
 
-    const Data = reactive({
-      historyVideoList: [] as videoObj[]
-    })
-    Data.historyVideoList = JSON.parse(
-      localStorage.getItem('historyVideoList') || JSON.stringify([]),
-    )
-    let currentVideoIndex = 0
-    const iframeUrl = ref('')
-    const getRandomVideo = async () => {
-      try {
-        const res = await proxy.$request({
-          url: import.meta.env.VITE_API_RANDOMVIDEO,
-        })
-        res.time = new Date().toLocaleString('chinese', { hour12: false })
-        currentVideoIndex = 0
-        res.play_url = `https:${res.play_url}`
-        iframeUrl.value = res.play_url
-        // 长度保持在二十条
-        if (Data.historyVideoList.length >= 20) Data.historyVideoList.pop()
+const Data = reactive({
+  historyVideoList: [] as videoObj[],
+});
+Data.historyVideoList = JSON.parse(
+  localStorage.getItem('historyVideoList') || JSON.stringify([]),
+);
+let currentVideoIndex = 0;
+const iframeUrl = ref('');
+const getRandomVideo = async () => {
+  try {
+    const res = await proxy.$request({
+      url: import.meta.env.VITE_API_RANDOMVIDEO,
+    });
+    res.time = new Date().toLocaleString('chinese', { hour12: false });
+    currentVideoIndex = 0;
+    res.play_url = `https:${res.play_url}`;
+    iframeUrl.value = res.play_url;
+    // 长度保持在二十条
+    if (Data.historyVideoList.length >= 20) Data.historyVideoList.pop();
 
-        Data.historyVideoList.unshift({
-          title: res.title,
-          imgsrc: res.cover || '',
-          time: res.time,
-          play_url: res.play_url,
-          bv: res.bv,
-        })
-        localStorage.setItem(
-          'historyVideoList',
-          JSON.stringify(Data.historyVideoList),
-        )
-      }
-      catch (error) {
-        proxy.$Toast.showError(error, 'getRandomVideo')
-      }
-    }
-    const preVideo = (): void => {
-      currentVideoIndex++
-      iframeUrl.value = Data.historyVideoList[currentVideoIndex].play_url
-    }
-    const clearHistory = () => {
-      Data.historyVideoList = [] as videoObj[]
-      localStorage.removeItem('historyVideoList')
-    }
+    Data.historyVideoList.unshift({
+      title: res.title,
+      imgsrc: res.cover || '',
+      time: res.time,
+      play_url: res.play_url,
+      bv: res.bv,
+    });
+    localStorage.setItem(
+      'historyVideoList',
+      JSON.stringify(Data.historyVideoList),
+    );
+  } catch (error) {
+    proxy.$Toast.showError(error, 'getRandomVideo');
+  }
+};
 
+const preVideo = (): void => {
+  currentVideoIndex++;
+  iframeUrl.value = Data.historyVideoList[currentVideoIndex].play_url;
+};
 
-    const changeIntroduceShow = (e: boolean) => {
-      isShowIntroduce.value = e
-    }
+const clearHistory = () => {
+  Data.historyVideoList = [] as videoObj[];
+  localStorage.removeItem('historyVideoList');
+};
 
-    getRandomVideo()
-    return {
-      getRandomVideo,
-      preVideo,
-      toTargetUrlWithNewWindow,
-      changeIntroduceShow,
-      clearHistory,
-      updateTime,
-      Data,
-      iframeUrl,
-      isShowIntroduce,
-    }
-  },
-})
+const isShowIntroduce = ref(true);
+const changeIntroduceShow = (e: boolean) => {
+  isShowIntroduce.value = e;
+};
+
+onBeforeMount(() => {
+  getUpdateTime();
+  getRandomVideo();
+});
 </script>
 
 <style scoped lang="less">
