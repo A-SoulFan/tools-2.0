@@ -137,11 +137,11 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { onBeforeMount, reactive, ref } from 'vue';
 import useCurrentInstance from '@/hooks/useCurrentInstance';
 import headerTitle from '@/components/HeaderTitle.vue';
 import copyToClipBoard from '@/hooks/useCopyToClipBoard';
-import toTargetUrlWithNewWindow from '@/hooks/useUtility';
+import { toTargetUrlWithNewWindow, getURLParam } from '@/hooks/useUtility';
 
 interface DuplicateCheckingItem {
   targetUrl: string;
@@ -172,10 +172,13 @@ const searchData = reactive({
   btnContent: '查询结果',
 });
 const DuplicateCheckingList = ref([] as DuplicateCheckingItem[]);
-const isShowIntroduce = ref(true);
+
 const { proxy } = useCurrentInstance();
 // 方法
 const getDuplicate = async () => {
+  if (searchData.searchValue.length === 0) {
+    return;
+  }
   if (searchData.searchValue.length <= 10) {
     proxy.$Toast.show('请输入十字以上的小作文');
     return;
@@ -211,9 +214,7 @@ const getDuplicate = async () => {
     proxy.$Toast.showError(error, 'getDuplicate');
   }
 };
-const changeIntroduceShow = (e: boolean) => {
-  isShowIntroduce.value = e;
-};
+
 const copyResult = (item: any) => {
   const Time = new Date().toLocaleString('chinese', {
     hour12: false,
@@ -228,6 +229,20 @@ const copyResult = (item: any) => {
       `;
   copyToClipBoard(copyText);
 };
+
+const isShowIntroduce = ref(true);
+const changeIntroduceShow = (e: boolean) => {
+  isShowIntroduce.value = e;
+};
+
+const haveParam = () => {
+  searchData.searchValue = getURLParam('search');
+  getDuplicate();
+};
+
+onBeforeMount(() => {
+  haveParam();
+});
 </script>
 
 <style scoped lang="less">

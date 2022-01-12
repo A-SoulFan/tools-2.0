@@ -96,11 +96,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import headerTitle from '@/components/HeaderTitle.vue';
 import useCurrentInstance from '@/hooks/useCurrentInstance';
 import copyToClipBoard from '@/hooks/useCopyToClipBoard';
-import toTargetUrlWithNewWindow from '@/hooks/useUtility';
+import { toTargetUrlWithNewWindow, getURLParam } from '@/hooks/useUtility';
 import introduceAsoul from '@/components/IntroduceAsoul.vue';
 
 interface vupItem {
@@ -173,6 +173,14 @@ const isShowIntroduce = ref(true);
 const changeIntroduceShow = (e: boolean) => {
   isShowIntroduce.value = e;
 };
+
+const haveParam = () => {
+  searchText.value = getURLParam('search');
+  getIngredient();
+};
+onBeforeMount(() => {
+  haveParam();
+});
 </script>
 
 <style scoped lang="less">

@@ -79,7 +79,7 @@ import headerTitle from '@/components/HeaderTitle.vue';
 import introduceAsoul from '@/components/IntroduceAsoul.vue';
 
 import useCurrentInstance from '@/hooks/useCurrentInstance';
-import toTargetUrlWithNewWindow from '@/hooks/useUtility';
+import { toTargetUrlWithNewWindow } from '@/hooks/useUtility';
 
 interface videoObj {
   title: string;

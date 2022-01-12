@@ -4,7 +4,7 @@
     sub-title="你想了解的词条都在这"
     @buttonClick="changeIntroduceShow"
     @returnClick="returnCategory"
-    :returnButton="isShowSerchResult"
+    :returnButton="isShowSearchResult"
     class="header-title"
   ></headerTitle>
   <div v-show="isShowIntroduce" class="introduce-phone">
@@ -49,7 +49,7 @@
       </div>
 
       <div v-show="!isShowDetail" class="result-area">
-        <div v-show="!isShowSerchResult">
+        <div v-show="!isShowSearchResult">
           <!-- 分类 -->
           <div class="result-categories">
             <div
@@ -158,7 +158,7 @@ import headerTitle from '@/components/HeaderTitle.vue';
 import introduceAsoul from '@/components/IntroduceAsoul.vue';
 
 import useCurrentInstance from '@/hooks/useCurrentInstance';
-import toTargetUrlWithNewWindow from '@/hooks/useUtility';
+import { toTargetUrlWithNewWindow, getURLParam } from '@/hooks/useUtility';
 
 interface categoriesList {
   name: string;
@@ -176,12 +176,11 @@ const data = reactive({
   entryList: [] as any[],
   entryKey: 0,
 });
-const isShowSerchResult = ref(false);
+const isShowSearchResult = ref(false);
 const searchText = ref('');
-
 const searchWords = async () => {
   if (searchText.value.length === 0) {
-    isShowSerchResult.value && returnCategory();
+    isShowSearchResult.value && returnCategory();
     return;
   }
   try {
@@ -199,13 +198,13 @@ const searchWords = async () => {
       });
       return item;
     });
-    isShowSerchResult.value = true;
+    isShowSearchResult.value = true;
   } catch (error) {
     proxy.$Toast.showError(error, 'searchWords');
   }
 };
 const returnCategory = async () => {
-  isShowSerchResult.value = false;
+  isShowSearchResult.value = false;
   searchText.value = '';
   try {
     await getContentList(data.childCategorieskey);
@@ -293,8 +292,14 @@ const changeIntroduceShow = (e: boolean) => {
   isShowIntroduce.value = e;
 };
 
-onMounted(() => {
-  getCategoriesList();
+const haveParam = async () => {
+  searchText.value = getURLParam('search');
+  await searchWords();
+};
+
+onMounted(async () => {
+  await getCategoriesList();
+  await haveParam();
 });
 </script>
 
