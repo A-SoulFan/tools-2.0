@@ -59,7 +59,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { defineComponent, ref, reactive, onMounted, onUnmounted, nextTick } from 'vue'
 import headerTitle from '../components/HeaderTitle.vue'
 import useCurrentInstance from '@/hooks/useCurrentInstance'
@@ -78,9 +78,6 @@ export interface imgObj {
   name: string
 }
 
-export default defineComponent({
-  components: { headerTitle, introduceAsoul },
-  setup() {
     const { proxy } = useCurrentInstance()
     const waterfallBox = ref<null | HTMLElement>(null)
     let Width = 250;
@@ -259,18 +256,6 @@ export default defineComponent({
       window.removeEventListener('resize', setWaterfallData)
     })
 
-
-
-    return {
-      downloadImage,
-      toTargetUrlWithNewWindow,
-      changeIntroduceShow,
-      waterfallData,
-      waterfallBox,
-      isShowIntroduce,
-    }
-  },
-})
 </script>
 
 <style scoped lang="less">
