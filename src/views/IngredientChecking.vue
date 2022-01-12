@@ -1,5 +1,9 @@
 <template>
-  <headerTitle title="成分姬" sub-title="帮助你快速分析用户成分" @buttonClick="changeIntroduceShow"></headerTitle>
+  <headerTitle
+    title="成分姬"
+    sub-title="帮助你快速分析用户成分"
+    @buttonClick="changeIntroduceShow"
+  ></headerTitle>
   <div v-show="isShowIntroduce" class="introduce-phone">
     <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
@@ -7,8 +11,11 @@
         成分姬是由
         <span
           class="introduce-text-content-name"
-          @click="toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')"
-        >@晓轩iMIKU</span>
+          @click="
+            toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')
+          "
+          >@晓轩iMIKU</span
+        >
         为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
       </div>
       <introduceAsoul></introduceAsoul>
@@ -30,7 +37,9 @@
             'background-color': searchText.length > 0 ? '#4B5563' : '#9CA3AF',
           }"
           @click="getIngredient()"
-        >查询成分</div>
+        >
+          查询成分
+        </div>
       </div>
       <!-- 查询结果展示 -->
       <div class="results-area">
@@ -41,13 +50,19 @@
             复制结果
           </div>
         </div>
-        <div v-if="isVuplistEmpty" class="search-result-tip">该用户没有关注的Vup捏~！</div>
+        <div v-if="isVuplistEmpty" class="search-result-tip">
+          该用户没有关注的Vup捏~！
+        </div>
         <div v-else class="search-result-VupList">
           <div
             v-for="item in vupList"
             :key="item.vupUid"
             class="Vup-item"
-            @click="toTargetUrlWithNewWindow('https://space.bilibili.com/' + item.vupUid)"
+            @click="
+              toTargetUrlWithNewWindow(
+                'https://space.bilibili.com/' + item.vupUid,
+              )
+            "
           >
             <img :src="item.vupFace" class="Vup-item-face" />
             <div class="Vup-name">{{ item.vupName }}</div>
@@ -66,8 +81,11 @@
             成分姬是由
             <span
               class="introduce-text-content-name"
-              @click="toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')"
-            >@晓轩iMIKU</span>
+              @click="
+                toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')
+              "
+              >@晓轩iMIKU</span
+            >
             为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
           </div>
           <introduceAsoul></introduceAsoul>
@@ -77,100 +95,84 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
-import headerTitle from '@/components/HeaderTitle.vue'
-import useCurrentInstance from '@/hooks/useCurrentInstance'
-import copyToClipBoard from '@/hooks/useCopyToClipBoard'
-import toTargetUrlWithNewWindow from '@/hooks/useUtility'
-import introduceAsoul from '@/components/IntroduceAsoul.vue'
-
-
+<script lang="ts" setup>
+import { ref } from 'vue';
+import headerTitle from '@/components/HeaderTitle.vue';
+import useCurrentInstance from '@/hooks/useCurrentInstance';
+import copyToClipBoard from '@/hooks/useCopyToClipBoard';
+import toTargetUrlWithNewWindow from '@/hooks/useUtility';
+import introduceAsoul from '@/components/IntroduceAsoul.vue';
 
 interface vupItem {
-  vupName: string
-  officalVerify: string
-  vupSign: string
-  vupUid: string
-  vupFace: string
+  vupName: string;
+  officalVerify: string;
+  vupSign: string;
+  vupUid: string;
+  vupFace: string;
 }
-export default defineComponent({
-  components: { headerTitle, introduceAsoul },
-  setup() {
-    const { proxy } = useCurrentInstance()
-    const vupList = ref([] as vupItem[])
-    const searchText = ref('')
-    const isVuplistEmpty = ref(false)
-    const isShowIntroduce = ref(true)
-    let saveSearchText = ''
-    const getIngredient = async () => {
-      try {
-        if (searchText.value === '') return
 
-        vupList.value = []
-        isVuplistEmpty.value = false
+const { proxy } = useCurrentInstance();
+const vupList = ref([] as vupItem[]);
+const searchText = ref('');
+const isVuplistEmpty = ref(false);
+let saveSearchText = '';
+const getIngredient = async () => {
+  try {
+    if (searchText.value === '') return;
 
-        const res = await proxy.$request({
-          url: import.meta.env.VITE_API_CFJ,
-          params: {
-            name: searchText.value.replace(/^(UID\:|UID：)/i, ''),
-          },
-        })
-        saveSearchText = searchText.value
-        console.log(res, 'res')
-        if (!res || !res.list || res.list.length === 0) {
-          isVuplistEmpty.value = true
-          return
-        }
-        vupList.value = res.list.map(
-          (item: {
-            uname: string
-            official_verify?: any
-            sign: string
-            mid: string
-            face: string
-          }) => {
-            return {
-              vupName: item.uname,
-              officalVerify: item.official_verify.desc,
-              vupSign: item.sign,
-              vupUid: item.mid,
-              vupFace: item.face.replace('http://', 'https://'),
-            } as vupItem
-          },
-        )
-      }
-      catch (error) {
-        proxy.$Toast.showError(error, 'getIngredient')
-      }
+    vupList.value = [];
+    isVuplistEmpty.value = false;
+
+    const res = await proxy.$request({
+      url: import.meta.env.VITE_API_CFJ,
+      params: {
+        name: searchText.value.replace(/^(UID\:|UID：)/i, ''),
+      },
+    });
+    saveSearchText = searchText.value;
+    console.log(res, 'res');
+    if (!res || !res.list || res.list.length === 0) {
+      isVuplistEmpty.value = true;
+      return;
     }
-    const copySearchResult = () => {
-      const vupName = vupList.value
-        .map((item: any) => {
-          return `${item.vupName}`
-        })
-        .join(',')
-      const copyTime = new Date().toLocaleString('chinese', { hour12: false })
-      copyToClipBoard(
-        `@${saveSearchText} 关注的VUP有：\r\n${vupName}\r\n查询时间：${copyTime}\r\n数据来源：ProJectASF`,
-      )
-      console.log('copySearchResult')
-    }
-    const changeIntroduceShow = (e: boolean) => {
-      isShowIntroduce.value = e
-    }
-    return {
-      getIngredient,
-      toTargetUrlWithNewWindow,
-      copySearchResult,
-      changeIntroduceShow,
-      vupList,
-      searchText,
-      isVuplistEmpty,
-      isShowIntroduce,
-    }
-  },
-})
+    vupList.value = res.list.map(
+      (item: {
+        uname: string;
+        official_verify?: any;
+        sign: string;
+        mid: string;
+        face: string;
+      }) => {
+        return {
+          vupName: item.uname,
+          officalVerify: item.official_verify.desc,
+          vupSign: item.sign,
+          vupUid: item.mid,
+          vupFace: item.face.replace('http://', 'https://'),
+        } as vupItem;
+      },
+    );
+  } catch (error) {
+    proxy.$Toast.showError(error, 'getIngredient');
+  }
+};
+const copySearchResult = () => {
+  const vupName = vupList.value
+    .map((item: any) => {
+      return `${item.vupName}`;
+    })
+    .join(',');
+  const copyTime = new Date().toLocaleString('chinese', { hour12: false });
+  copyToClipBoard(
+    `@${saveSearchText} 关注的VUP有：\r\n${vupName}\r\n查询时间：${copyTime}\r\n数据来源：ProJectASF`,
+  );
+  console.log('copySearchResult');
+};
+
+const isShowIntroduce = ref(true);
+const changeIntroduceShow = (e: boolean) => {
+  isShowIntroduce.value = e;
+};
 </script>
 
 <style scoped lang="less">

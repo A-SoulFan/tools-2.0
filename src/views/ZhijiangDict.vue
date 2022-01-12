@@ -18,8 +18,11 @@
         如果有新词条或者对词条的内容方面有建议的欢迎联系:
         <span
           class="introduce-targetUrl"
-          @click="toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')"
-        >&nbsp;&nbsp;@ProJectASF</span>
+          @click="
+            toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')
+          "
+          >&nbsp;&nbsp;@ProJectASF</span
+        >
       </div>
       <introduceAsoul></introduceAsoul>
     </div>
@@ -40,7 +43,9 @@
             'background-color': searchText.length > 0 ? '#4B5563' : '#9CA3AF',
           }"
           @click="searchWords()"
-        >查询词条</div>
+        >
+          查询词条
+        </div>
       </div>
 
       <div v-show="!isShowDetail" class="result-area">
@@ -57,7 +62,9 @@
                   : ''
               "
               @click="setChildCategoriesList(item.cid)"
-            >{{ item.name }}</div>
+            >
+              {{ item.name }}
+            </div>
             <!-- 二级分类 -->
           </div>
           <div class="result-entries">
@@ -71,15 +78,24 @@
                   : ''
               "
               @click="getContentList(item.cid)"
-            >{{ item.name }}</div>
+            >
+              {{ item.name }}
+            </div>
           </div>
         </div>
         <!-- 结果 -->
         <div class="result-item-area" v-if="data.entryList.length > 0">
-          <div v-for="entry in data.entryList" :key="entry.eid" class="result-item">
+          <div
+            v-for="entry in data.entryList"
+            :key="entry.eid"
+            class="result-item"
+          >
             <div class="result-item-header">
               <div class="result-item-title">{{ entry.title }}</div>
-              <div class="result-item-header-right" @click="toShowDetail(entry)">
+              <div
+                class="result-item-header-right"
+                @click="toShowDetail(entry)"
+              >
                 <img src="@/assets/icons/link-icon.svg" />
                 查看详情
               </div>
@@ -113,17 +129,20 @@
         <div class="introduce-pc">
           <div class="introduce-title">功能介绍</div>
           <div class="introduce-text-content">
-            <div
-              class="introduce-text-content"
-            >本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。</div>
+            <div class="introduce-text-content">
+              本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
+            </div>
             <div class="introduce-text-content">
               如果有新词条或者对词条的内容方面有建议的欢迎联系:
               <span
                 class="introduce-targetUrl"
                 @click="
-                  toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')
+                  toTargetUrlWithNewWindow(
+                    'https://space.bilibili.com/1442421278',
+                  )
                 "
-              >&nbsp;&nbsp;@ProJectASF</span>
+                >&nbsp;&nbsp;@ProJectASF</span
+              >
             </div>
           </div>
           <introduceAsoul></introduceAsoul>
@@ -133,179 +152,150 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from 'vue'
-import headerTitle from '@/components/HeaderTitle.vue'
-import introduceAsoul from '@/components/IntroduceAsoul.vue'
+<script lang="ts" setup>
+import { ref, reactive, onMounted } from 'vue';
+import headerTitle from '@/components/HeaderTitle.vue';
+import introduceAsoul from '@/components/IntroduceAsoul.vue';
 
-import useCurrentInstance from '@/hooks/useCurrentInstance'
-import toTargetUrlWithNewWindow from '@/hooks/useUtility'
+import useCurrentInstance from '@/hooks/useCurrentInstance';
+import toTargetUrlWithNewWindow from '@/hooks/useUtility';
 
 interface categoriesList {
-  name: string
-  children: categoriesList[]
-  cid: number
+  name: string;
+  children: categoriesList[];
+  cid: number;
 }
 
-export default defineComponent({
-  name: 'ZhijiangDict',
-  components: { headerTitle, introduceAsoul },
-  setup() {
-    const { proxy } = useCurrentInstance()
+const { proxy } = useCurrentInstance();
 
+const data = reactive({
+  categoriesList: [] as categoriesList[],
+  categoriesKey: 0,
+  childCategoriesList: [] as any[],
+  childCategorieskey: 0,
+  entryList: [] as any[],
+  entryKey: 0,
+});
+const isShowSerchResult = ref(false);
+const searchText = ref('');
 
-    const data = reactive({
-      categoriesList: [] as categoriesList[],
-      categoriesKey: 0,
-      childCategoriesList: [] as any[],
-      childCategorieskey: 0,
-      entryList: [] as any[],
-      entryKey: 0,
-    })
-    const isShowSerchResult = ref(false)
-    const searchText = ref('')
+const searchWords = async () => {
+  if (searchText.value.length === 0) {
+    isShowSerchResult.value && returnCategory();
+    return;
+  }
+  try {
+    const res = await proxy.$request({
+      url: import.meta.env.VITE_API_DICT_SEARCH,
+      method: 'get',
+      params: {
+        kwd: searchText.value,
+      },
+    });
+    data.entryList = res.map((item: any) => {
+      // 将10位时间戳转成13位
+      item.timeText = new Date(item.updated * 1000).toLocaleString('chinese', {
+        hour12: false,
+      });
+      return item;
+    });
+    isShowSerchResult.value = true;
+  } catch (error) {
+    proxy.$Toast.showError(error, 'searchWords');
+  }
+};
+const returnCategory = async () => {
+  isShowSerchResult.value = false;
+  searchText.value = '';
+  try {
+    await getContentList(data.childCategorieskey);
+  } catch (error) {
+    proxy.$Toast.showError(error, 'getContentList');
+  }
+};
+// 获取内容数据
+const getContentList = async (cid: number) => {
+  try {
+    data.childCategorieskey = cid;
+    const res = await proxy.$request({
+      url: import.meta.env.VITE_API_DICT_ENTRIES,
+      method: 'get',
+      params: {
+        cid,
+      },
+    });
+    data.entryList = res.map((item: any) => {
+      // 将10位时间戳转成13位
+      item.timeText = new Date(item.updated * 1000).toLocaleString('chinese', {
+        hour12: false,
+      });
+      return item;
+    });
+  } catch (error) {
+    proxy.$Toast.showError(error, 'getContentList');
+  }
+};
+// // 设置二级目录列表
+const setChildCategoriesList = (cid: number) => {
+  data.categoriesKey = cid;
+  data.categoriesList.forEach(item => {
+    if (item.cid === cid) {
+      data.childCategoriesList = item.children;
+      data.childCategorieskey = item.children[0].cid;
+    }
+  });
+  getContentList(data.childCategoriesList[0].cid);
+};
+// 获取目录
+const getCategoriesList = async () => {
+  try {
+    const result = (await proxy.$request({
+      url: import.meta.env.VITE_API_DICT_CATEGORIES,
+      method: 'get',
+    })) as categoriesList[];
+    data.categoriesList = result;
+    data.categoriesKey = result[0].cid;
+    setChildCategoriesList(data.categoriesKey);
+  } catch (error) {
+    proxy.$Toast.showError(error, 'getCategoriesList');
+  }
+};
+const contentDetailItem = reactive({
+  title: '',
+  timeText: '',
+  content: '',
+});
+const isShowDetail = ref(false);
+const toShowDetail = (item: any) => {
+  localStorage.setItem(
+    'AsoulFanZhijiangDict',
+    (document.documentElement.scrollTop || document.body.scrollTop).toString(),
+  );
+  contentDetailItem.title = item.title;
+  contentDetailItem.timeText = item.timeText;
+  contentDetailItem.content = item.content;
+  isShowDetail.value = true;
+  toScrollTop(0);
+};
+const closeDetail = () => {
+  isShowDetail.value = false;
+  toScrollTop(Number(localStorage.getItem('AsoulFanZhijiangDict')));
+};
 
-    const searchWords = async () => {
-      if (searchText.value.length === 0) {
-        isShowSerchResult.value && returnCategory()
-        return
-      }
-      try {
-        const res = await proxy.$request({
-          url: import.meta.env.VITE_API_DICT_SEARCH,
-          method: 'get',
-          params: {
-            kwd: searchText.value,
-          },
-        })
-        data.entryList = res.map((item: any) => {
-          // 将10位时间戳转成13位
-          item.timeText = new Date(item.updated * 1000).toLocaleString(
-            'chinese',
-            {
-              hour12: false,
-            },
-          )
-          return item
-        })
-        isShowSerchResult.value = true
-      } catch (error) {
-        proxy.$Toast.showError(error, 'searchWords')
-      }
-    }
-    const returnCategory = async () => {
-      isShowSerchResult.value = false
-      searchText.value = ""
-      try {
-        await getContentList(data.childCategorieskey)
+const toScrollTop = (scrollTop: number) => {
+  setTimeout(() => {
+    document.documentElement.scrollTop = scrollTop;
+  }, 0);
+};
 
-      } catch (error) {
-        proxy.$Toast.showError(error, 'getContentList')
+const isShowIntroduce = ref(true);
+const changeIntroduceShow = (e: boolean) => {
+  isShowIntroduce.value = e;
+};
 
-      }
-    }
-    // 获取内容数据
-    const getContentList = async (cid: number) => {
-      try {
-        data.childCategorieskey = cid
-        const res = await proxy.$request({
-          url: import.meta.env.VITE_API_DICT_ENTRIES,
-          method: 'get',
-          params: {
-            cid,
-          },
-        })
-        data.entryList = res.map((item: any) => {
-          // 将10位时间戳转成13位
-          item.timeText = new Date(item.updated * 1000).toLocaleString(
-            'chinese',
-            {
-              hour12: false,
-            },
-          )
-          return item
-        })
-      }
-      catch (error) {
-        proxy.$Toast.showError(error, 'getContentList')
-      }
-    }
-    // // 设置二级目录列表
-    const setChildCategoriesList = (cid: number) => {
-      data.categoriesKey = cid
-      data.categoriesList.forEach((item) => {
-        if (item.cid === cid) {
-          data.childCategoriesList = item.children
-          data.childCategorieskey = item.children[0].cid
-        }
-      })
-      getContentList(data.childCategoriesList[0].cid)
-    }
-    // 获取目录
-    const getCategoriesList = async () => {
-      try {
-        const result = await proxy.$request({
-          url: import.meta.env.VITE_API_DICT_CATEGORIES,
-          method: 'get',
-        }) as categoriesList[]
-        data.categoriesList = result
-        data.categoriesKey = result[0].cid
-        setChildCategoriesList(data.categoriesKey)
-      }
-      catch (error) {
-        proxy.$Toast.showError(error, 'getCategoriesList')
-      }
-    }
-    const contentDetailItem = reactive({
-      title: '',
-      timeText: '',
-      content: '',
-    })
-    const isShowDetail = ref(false)
-    const toShowDetail = (item: any) => {
-      localStorage.setItem("AsoulFanZhijiangDict", (document.documentElement.scrollTop || document.body.scrollTop).toString())
-      contentDetailItem.title = item.title
-      contentDetailItem.timeText = item.timeText
-      contentDetailItem.content = item.content
-      isShowDetail.value = true
-      toScrollTop(0)
-    }
-    const closeDetail = () => {
-      isShowDetail.value = false
-      toScrollTop(Number(localStorage.getItem("AsoulFanZhijiangDict")))
-    }
-
-    const toScrollTop = (scrollTop: number) => {
-      setTimeout(() => {
-        document.documentElement.scrollTop = scrollTop
-      }, 0);
-    }
-    const isShowIntroduce = ref(true)
-    const changeIntroduceShow = (e: boolean) => {
-      isShowIntroduce.value = e
-    }
-    onMounted(() => {
-      getCategoriesList()
-    })
-
-    return {
-      searchWords,
-      setChildCategoriesList,
-      getContentList,
-      changeIntroduceShow,
-      toShowDetail,
-      closeDetail,
-      toTargetUrlWithNewWindow,
-      returnCategory,
-      searchText,
-      data,
-      isShowIntroduce,
-      isShowDetail,
-      isShowSerchResult,
-      contentDetailItem,
-    }
-  },
-})
+onMounted(() => {
+  getCategoriesList();
+});
 </script>
 
 <style lang="less" scoped>
