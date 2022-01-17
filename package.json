@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@kangc/v-md-editor": "^2.3.12",
-    "@vue/compiler-sfc": "^3.2.24",
+    "@vue/compiler-sfc": "^3.2.27",
     "axios": "^0.24.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0"
