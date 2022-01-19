@@ -14,7 +14,7 @@ const $Toast = createApp(Toast, { msg }).mount(
 )
 const toast = {
   // 控制显示loading的方法
-  show (title: string) {
+  show(title: string) {
     msg.errorToast = false
     msg.toastShow = true
     msg.title = title
@@ -23,20 +23,20 @@ const toast = {
     }, 1.5 * 1000)
     document.body.appendChild($Toast.$el)
   },
-  showError (title: any,funtionName:string) {
+  showError(title: any, funtionName: string) {
     msg.errorToast = true
     msg.toastShow = true
-    msg.title = title 
+    msg.title = title
     setTimeout(() => {
       msg.toastShow = false
     }, 3 * 1000)
     document.body.appendChild($Toast.$el)
-    console.log(title,funtionName);
+    console.log(title, funtionName);
   }
 }
 
 export default {
-  install (app: App): void {
+  install(app: App): void {
     app.config.globalProperties.$Toast = toast
   },
   Toast: toast

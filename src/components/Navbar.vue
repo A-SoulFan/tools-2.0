@@ -6,12 +6,18 @@
       </div>
       <div :class="$style.elementaryNavContentArea">
         <div
-          v-for="(elementary, index) in navList "
+          v-for="(elementary, index) in navList"
           :key="elementary.name"
-          :class="
-          [$style.elementaryNavContentItem, data.navIndex === index ? $style.elementaryNavContentItemActive : '']"
+          :class="[
+            $style.elementaryNavContentItem,
+            data.navIndex === index
+              ? $style.elementaryNavContentItemActive
+              : '',
+          ]"
           @click="selectElementary(elementary, index, 'pc')"
-        >{{ elementary.name }}</div>
+        >
+          {{ elementary.name }}
+        </div>
       </div>
       <!-- <div>
         <img src="@/assets/icons/personIcon.svg" />
@@ -23,7 +29,9 @@
         :key="secondary"
         :class="$style.secondaryNavContentItem"
         @click="selectSecondary(secondary)"
-      >{{ secondary.name }}</div>
+      >
+        {{ secondary.name }}
+      </div>
     </div>
   </div>
 
@@ -45,18 +53,37 @@
     </div>
     <div
       @click="changePhoneMenu('close')"
-      :class="[$style.muneBehind, phoneMenu.phoneMenuShow ? $style.muneBehindShow : '']"
+      :class="[
+        $style.muneBehind,
+        phoneMenu.phoneMenuShow ? $style.muneBehindShow : '',
+      ]"
     ></div>
-    <div :class="[$style.navPhoneMain, phoneMenu.phoneMenuShow ? $style.navPhoneMainShow : '']">
-      <img @click="changePhoneMenu('close')" :class="$style.MenuIcon" src="@/assets/icons/menu.svg" />
+    <div
+      :class="[
+        $style.navPhoneMain,
+        phoneMenu.phoneMenuShow ? $style.navPhoneMainShow : '',
+      ]"
+    >
+      <img
+        @click="changePhoneMenu('close')"
+        :class="$style.MenuIcon"
+        src="@/assets/icons/menu.svg"
+      />
 
       <div :class="$style.elementary">
-        <div v-for="(elementary ,index) in navList" :key="elementary.name">
+        <div v-for="(elementary, index) in navList" :key="elementary.name">
           <div>
             <div :class="$style.elementaryItem">
-              <div :class="$style.elementaryItemName">{{ elementary.name }}</div>
+              <div :class="$style.elementaryItemName">
+                {{ elementary.name }}
+              </div>
               <div
-                :class="[$style.elementaryItemIcon, (phoneMenu.navIndex === index && phoneMenu.isShowSecondary) ? $style.elementaryItemIconRotate : '']"
+                :class="[
+                  $style.elementaryItemIcon,
+                  phoneMenu.navIndex === index && phoneMenu.isShowSecondary
+                    ? $style.elementaryItemIconRotate
+                    : '',
+                ]"
                 @click="selectElementary(elementary, index, 'phone')"
                 v-if="elementary?.secondaryList?.length > 0"
               >
@@ -65,14 +92,21 @@
             </div>
 
             <div
-              :class="[$style.secondaryItemBox, (phoneMenu.navIndex === index && phoneMenu.isShowSecondary) ? $style.secondaryItemBoxShow : '']"
+              :class="[
+                $style.secondaryItemBox,
+                phoneMenu.navIndex === index && phoneMenu.isShowSecondary
+                  ? $style.secondaryItemBoxShow
+                  : '',
+              ]"
             >
               <div
                 v-for="item in elementary.secondaryList"
                 :key="item.name"
                 :class="$style.secondaryItem"
                 @click="selectSecondary(item)"
-              >{{ item.name }}</div>
+              >
+                {{ item.name }}
+              </div>
             </div>
           </div>
         </div>
@@ -82,12 +116,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, PropType } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineComponent, reactive, PropType } from 'vue';
+import { useRouter } from 'vue-router';
 export default defineComponent({
   props: {
     navList: {
-      type: Array as PropType<{ name: string, secondaryList: any[] }[]>,
+      type: Array as PropType<{ name: string; secondaryList: any[] }[]>,
     },
     title: {
       type: String,
@@ -102,68 +136,67 @@ export default defineComponent({
     },
   },
   setup() {
-    const route = useRouter()
+    const route = useRouter();
     const data = reactive({
       navIndex: 2,
       secondaryList: [] as any,
       isShowSecondary: false,
-    })
+    });
     const phoneMenu = reactive({
       phoneMenuShow: false,
       navIndex: 0,
       isShowSecondary: true,
-    })
+    });
 
     const selectElementary = (item: any, index: number, type: string) => {
       if (type === 'pc') {
         if (data.isShowSecondary && data.navIndex === index) {
-          data.isShowSecondary = false
-          return
+          data.isShowSecondary = false;
+          return;
         }
         if (item.link) {
-          data.isShowSecondary = false
-          window.open(item.link)
-          return
+          data.isShowSecondary = false;
+          window.open(item.link);
+          return;
         }
-        data.secondaryList = item.secondaryList
-        data.navIndex = index
-        data.isShowSecondary = true
-        return
+        data.secondaryList = item.secondaryList;
+        data.navIndex = index;
+        data.isShowSecondary = true;
+        return;
       }
       if (type === 'phone') {
         if (phoneMenu.isShowSecondary && phoneMenu.navIndex === index) {
-          phoneMenu.isShowSecondary = false
-          return
+          phoneMenu.isShowSecondary = false;
+          return;
         }
         if (item.link) {
-          phoneMenu.isShowSecondary = false
-          window.open(item.link)
-          return
+          phoneMenu.isShowSecondary = false;
+          window.open(item.link);
+          return;
         }
-        phoneMenu.navIndex = index
-        phoneMenu.isShowSecondary = true
+        phoneMenu.navIndex = index;
+        phoneMenu.isShowSecondary = true;
       }
-    }
+    };
     const selectSecondary = (item: any) => {
       if (item.methods === 'router') {
-        route.push(item.link)
-        data.isShowSecondary = false
-        phoneMenu.isShowSecondary = false
-        phoneMenu.phoneMenuShow = false
+        route.push(item.link);
+        data.isShowSecondary = false;
+        phoneMenu.isShowSecondary = false;
+        phoneMenu.phoneMenuShow = false;
       }
-    }
+    };
     const changePhoneMenu = (type: string) => {
       if (type === 'show') {
-        phoneMenu.phoneMenuShow = true
-        return
+        phoneMenu.phoneMenuShow = true;
+        return;
       }
-      if (type === 'close') phoneMenu.phoneMenuShow = false
-    }
+      if (type === 'close') phoneMenu.phoneMenuShow = false;
+    };
 
     const toASFHome = () => {
-      window.open("https://asoulfan.com/")
-
-    }
+      window.open('https://asoulfan.com/');
+    };
     return {
       selectElementary,
       selectSecondary,
@@ -171,13 +204,13 @@ export default defineComponent({
       toASFHome,
       data,
       phoneMenu,
-    }
+    };
   },
-})
+});
 </script>
 
-<style  lang="less" module>
-@import "../../src/assets/css/keyframes.css";
+<style lang="less" module>
+@import '../../src/assets/css/keyframes.css';
 
 .navAreaPc {
   background-color: rgba(248, 248, 248, 0.8);

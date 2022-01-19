@@ -9,11 +9,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue';
 
-export interface masObj{
-  loadingShow: boolean
-  title: string
+export interface masObj {
+  loadingShow: boolean;
+  title: string;
 }
 export default defineComponent({
   props: {
@@ -21,7 +21,7 @@ export default defineComponent({
       type: Object as PropType<masObj>,
     },
   },
-})
+});
 </script>
 
 <style lang="less" scoped>

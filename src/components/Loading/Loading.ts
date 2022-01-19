@@ -13,20 +13,20 @@ const $loading = createApp(Loading, { msg }).mount(
 )
 const load = {
   // 控制显示loading的方法
-  show (title = "拼命加载中...") {
+  show(title = "拼命加载中...") {
     msg.loadingShow = true
     msg.title = title
     document.body.appendChild($loading.$el)
   },
 
-  hide () {
+  hide() {
     // 控制loading隐藏的方法
     msg.loadingShow = false
   }
 }
 
 export default {
-  install (app: App): void {
+  install(app: App): void {
     app.config.globalProperties.$loading = load
   },
   Loading: load

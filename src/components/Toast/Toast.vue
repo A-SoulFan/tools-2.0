@@ -1,22 +1,19 @@
 <!-- 请求加载弹窗组件 -->
 <template>
   <div v-if="msg!.toastShow" class="loading">
-    <div
-      class="loading-text"
-      :class="msg!.errorToast?'error':''"
-    >
+    <div class="loading-text" :class="msg!.errorToast?'error':''">
       {{ msg!.title }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue';
 
-export interface masObj{
-  toastShow: boolean
-  title: string
-  errorToast: boolean
+export interface masObj {
+  toastShow: boolean;
+  title: string;
+  errorToast: boolean;
 }
 export default defineComponent({
   props: {
@@ -24,7 +21,7 @@ export default defineComponent({
       type: Object as PropType<masObj>,
     },
   },
-})
+});
 </script>
 
 <style lang="less" scoped>
@@ -41,20 +38,20 @@ export default defineComponent({
   align-items: center;
   z-index: 10000;
   .loading-text {
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0, 0, 0, 0.7);
     color: #fff;
     padding: 6px 15px;
-    animation: moveTop .3s ease-in;
+    animation: moveTop 0.3s ease-in;
   }
-   .error{
+  .error {
     background-color: rgba(250, 141, 141);
   }
 }
 @keyframes moveTop {
-  0%{
+  0% {
     opacity: 0;
   }
-  100%{
+  100% {
     opacity: 1;
   }
 }

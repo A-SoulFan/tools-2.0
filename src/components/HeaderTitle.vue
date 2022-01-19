@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   props: {
@@ -35,35 +35,33 @@ export default defineComponent({
     returnButton: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   setup(prop, context) {
-    const buttonText = ref<string>('收起')
-    const isTopIcon = ref(true)
+    const buttonText = ref<string>('收起');
+    const isTopIcon = ref(true);
     const handleClick = () => {
-      context.emit('buttonClick', !isTopIcon.value)
+      context.emit('buttonClick', !isTopIcon.value);
       // false
-      if (!isTopIcon.value)
-        buttonText.value = '收起'
-      else
-        buttonText.value = '详情'
-      isTopIcon.value = !isTopIcon.value
-    }
+      if (!isTopIcon.value) buttonText.value = '收起';
+      else buttonText.value = '详情';
+      isTopIcon.value = !isTopIcon.value;
+    };
     const returnClick = () => {
-      context.emit('returnClick')
-    }
+      context.emit('returnClick');
+    };
     return {
       handleClick,
       returnClick,
       buttonText,
       isTopIcon,
-    }
+    };
   },
-})
+});
 </script>
 
 <style scoped lang="less">
-@import "../../src/assets/css/keyframes.css";
+@import '../../src/assets/css/keyframes.css';
 
 .main-title {
   font-size: 34px;

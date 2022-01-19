@@ -23,8 +23,8 @@ const downloadImage = async (item: downloadObj) => {
     a.download = item.name;
     a.click();
   } catch (error) {
-    Toast.Toast.showError(error,"downloadImage")
-  }finally{
+    Toast.Toast.showError(error, "downloadImage")
+  } finally {
     Loading.Loading.hide()
   }
 };
