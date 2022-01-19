@@ -235,7 +235,7 @@ const getContentList = async (cid: number) => {
   }
 };
 // // 设置二级目录列表
-const setChildCategoriesList = (cid: number) => {
+const setChildCategoriesList = async (cid: number) => {
   data.categoriesKey = cid;
   data.categoriesList.forEach(item => {
     if (item.cid === cid) {
@@ -243,7 +243,7 @@ const setChildCategoriesList = (cid: number) => {
       data.childCategorieskey = item.children[0].cid;
     }
   });
-  getContentList(data.childCategoriesList[0].cid);
+  await getContentList(data.childCategoriesList[0].cid);
 };
 // 获取目录
 const getCategoriesList = async () => {
@@ -254,7 +254,7 @@ const getCategoriesList = async () => {
     })) as categoriesList[];
     data.categoriesList = result;
     data.categoriesKey = result[0].cid;
-    setChildCategoriesList(data.categoriesKey);
+    await setChildCategoriesList(data.categoriesKey);
   } catch (error) {
     proxy.$Toast.showError(error, 'getCategoriesList');
   }
