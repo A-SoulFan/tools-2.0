@@ -27,7 +27,22 @@
               {{ tag.name }}
             </div>
           </div>
-          <div :class="$style.timeSection">TODO时间选择器</div>
+          <div :class="$style.timeSection">
+            <ElConfigProvider :locale="locale">
+              <el-date-picker
+                  v-model="datePicked"
+                  type="daterange"
+                  unlink-panels
+                  :class="$style.elDatePicker"
+                  range-separator="To"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  @change="onDateChanged"
+              >
+              </el-date-picker>
+            </ElConfigProvider>
+
+          </div>
         </div>
 
         <div :class="$style.debtStatus" ref="statusBox">
@@ -70,7 +85,11 @@
               BigItem.isFold ? $style.debtItemAreaFlod : '',
             ]"
           >
-            <div v-for="item in BigItem.debt" :class="$style.debtItem">
+            <div v-for="item in BigItem.debt.filter(v=>v.member.reduce((pre,now)=>{
+            return pre&&AsoulTagList.find(vv=>vv.key===now).isSelect
+          },true))
+            .filter(v=>statuList[0].isSelect||v.isOwe===statuList[2].isSelect)
+              .filter(v=>dateChecker(v.oweTime))" :class="$style.debtItem">
               <div :class="$style.titleArea">
                 <img v-if="!item.isOwe" src="@/assets/icons/correct.svg" />
                 <img v-else src="@/assets/icons/wrong.svg" />
@@ -100,7 +119,7 @@
                   <img src="@/assets/icons/clock.svg" />
                   <!-- TODO: 参数 -->
                   <div :class="$style.time">
-                    {{ "还债时间" + item.oweTime }}
+                    {{ "还债时间" + item.revertsTime }}
                   </div>
                   <img
                     src="@/assets/icons/coolicon.svg"
@@ -126,44 +145,47 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted, nextTick } from "vue";
+import { defineComponent, ref, reactive, onMounted, nextTick} from "vue";
 import headerTitle from "@/components/HeaderTitle.vue";
 import introduceAsoul from "@/components/IntroduceAsoul.vue";
+import {ElConfigProvider} from 'element-plus'
+import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 
 import useCurrentInstance from "@/hooks/useCurrentInstance";
 import toTargetUrlWithNewWindow from "@/hooks/useUtility";
 
 export default defineComponent({
-  name: "ZhijiangDict",
-  components: { headerTitle, introduceAsoul },
+  name: "ZhijiangDebts",
+  components: { headerTitle, introduceAsoul ,ElConfigProvider},
   setup() {
     const { proxy } = useCurrentInstance();
-
+    const locale=ref(zhCn)
+    const datePicked=ref([new Date("2020-12-11"),new Date()])
     const AsoulTagList = reactive([
       {
         name: "向晚",
         key: "ava",
-        isSelect: false,
+        isSelect: true,
       },
       {
         name: "贝拉",
-        key: "ava",
-        isSelect: false,
+        key: "bella",
+        isSelect: true,
       },
       {
         name: "珈乐",
-        key: "ava",
-        isSelect: false,
+        key: "carol",
+        isSelect: true,
       },
       {
         name: "嘉然",
-        key: "ava",
-        isSelect: false,
+        key: "diana",
+        isSelect: true,
       },
       {
         name: "乃琳",
-        key: "ava",
-        isSelect: false,
+        key: "eileen",
+        isSelect: true,
       },
     ]);
     const changeTags = (index: number) => {
@@ -171,9 +193,9 @@ export default defineComponent({
     };
 
     const statuList = reactive([
-      { status: "全部", isSelect: true },
-      { status: "已还", isSelect: false },
-      { status: "未还", isSelect: false },
+      { status: "全部", key:"all",isSelect: true },
+      { status: "已还", key:"ok",isSelect: false },
+      { status: "未还", key:"owing",isSelect: false },
     ]);
     const statusBox = ref<null | HTMLElement>(null);
 
@@ -197,7 +219,7 @@ export default defineComponent({
           {
             title: "珈乐替三人欠下《rollin》。珈乐替三人欠下《rollin》。",
             member: ["ava", "bella"],
-            isOwe: false,
+            isOwe: true,
             oweTime: "2021.08.18",
             revertsTime: "",
           },
@@ -352,7 +374,7 @@ export default defineComponent({
           {
             title: "珈乐替三人欠下《rollin》。",
             member: ["ava", "bella"],
-            isOwe: true,
+            isOwe: false,
             oweTime: "2021.08.18",
             revertsTime: "2022.10.10",
           },
@@ -402,16 +424,36 @@ export default defineComponent({
     const changeIntroduceShow = (e: boolean) => {
       isShowIntroduce.value = e;
     };
+    const dateChecker=(s:string):boolean=>{
+      if(datePicked.value===null){
+        return true
+      }else{
+        let oweDate=new Date(s.replace(/\./g,'-'))
+        return (oweDate>datePicked.value[0])&&(oweDate<datePicked.value[1])
+      }
+    }
+    const onDateChanged=(e:[Date,Date])=>{
+      if(e[0]<new Date("2020-12-11")){
+        datePicked.value[0]=new Date("2020-12-11")
+      }
+      if(e[1]>new Date()){
+        datePicked.value[1]=new Date()
+      }
+    }
     return {
       changeIntroduceShow,
       changeStatus,
       changeTags,
       changeDebtFold,
+      dateChecker,
+      onDateChanged,
       isShowIntroduce,
       AsoulTagList,
       statuList,
       statusBox,
       debtList,
+      datePicked,
+      locale,
     };
   },
 });
@@ -447,6 +489,7 @@ export default defineComponent({
         align-items: center;
         margin-bottom: 10px;
         .tagArea {
+          margin-top: 10px;
           display: flex;
           .tag {
             .displayCenter;
@@ -468,7 +511,10 @@ export default defineComponent({
         }
         .timeSection {
           font-size: 14px;
-          border: 1px black solid;
+          .elDatePicker{
+          margin-top:10px;
+          width:300px;
+          }
         }
       }
       .debtStatus {
