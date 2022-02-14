@@ -20,7 +20,7 @@
     "vue-router": "^4.0.0-0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.0.1",
+    "@vitejs/plugin-vue": "^2.2.0",
     "husky": "^7.0.4",
     "less": "^4.1.1",
     "eslint": "^8.5.0",
