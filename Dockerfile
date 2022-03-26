@@ -15,8 +15,8 @@ ENV VITE_API_EMOJI="https://api.asoulfan.com/meme/" \
     VITE_API_DICT_SEARCH="https://api.asoulfan.com/dict/api/v1/public/search"     \
     VITE_API_DICT_CATEGORIES="https://api.asoulfan.com/dict/api/v1/public/categories"     \
     VITE_API_DICT_ENTRIES="https://api.asoulfan.com/dict/api/v1/public/entries"       \
-    VITE_API_DUPLICATECHECKING="https://asoulcnki.asia/v1/api/check"    
-
+    VITE_API_DUPLICATECHECKING="https://asoulcnki.asia/v1/api/check"    \
+    VITE_API_DEBT="https://api-v2.asoulfan.com/asf/mobile/member/debts"
 RUN pnpm build
 
 FROM nginx:1.19.6-alpine
