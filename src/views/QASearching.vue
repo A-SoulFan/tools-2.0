@@ -63,7 +63,7 @@
             <div class="result-item-flex">
               <div class="display-center">
                 <img src="@/assets/icons/clock.svg" />
-                <div style="display:inline;">发表时间 {{ item.title.match(/(?<=制作委员会的每周QA )[\s\S]*/)[0] }}</div>
+                <div style="display:inline;">发表时间 {{ item.title.match(/(?<=制作委员会的每周QA )[\s\S]*/)?.at(0) }}</div>
               </div>
               <div class="display-center cursor" @click="toTargetUrlWithNewWindow(item.link)">
                 <img src="@/assets/icons/link-icon.svg" />
