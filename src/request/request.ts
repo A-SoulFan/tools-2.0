@@ -18,10 +18,12 @@ const request = async (config: AxiosRequestConfig,
     if (result.status === 200) {
       if (result.data.code === 0) {
         Loading.Loading.hide()
-        return result.data.data
+        //Fit QASearching response body(||result.data.Data)
+        return result.data.data||result.data.Data
       } else {
         Loading.Loading.hide()
-        return Promise.reject(result.data.message)
+        //Fit QASearching response body(||result.data.status)
+        return Promise.reject(result.data.message||result.data.status)
       }
     }
 
