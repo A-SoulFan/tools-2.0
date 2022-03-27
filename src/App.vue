@@ -24,6 +24,7 @@ export default defineComponent({
           { name: "表情包", methods: "router", link: "/emojicollect" },
           { name: "方言词典", methods: "router", link: "/zhijiangDict" },
           { name: "枝江账单", methods: "router", link: "/ZhijiangDebts" },
+          { name: "QA查询", methods: "router", link: "/QASearching" }
         ],
       },
       {
