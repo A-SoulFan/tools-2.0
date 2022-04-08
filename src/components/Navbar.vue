@@ -52,11 +52,11 @@
       </div>
     </div>
     <div
-      @click="changePhoneMenu('close')"
       :class="[
         $style.muneBehind,
         phoneMenu.phoneMenuShow ? $style.muneBehindShow : '',
       ]"
+      @click="changePhoneMenu('close')"
     ></div>
     <div
       :class="[
@@ -65,9 +65,9 @@
       ]"
     >
       <img
-        @click="changePhoneMenu('close')"
         :class="$style.MenuIcon"
         src="@/assets/icons/menu.svg"
+        @click="changePhoneMenu('close')"
       />
 
       <div :class="$style.elementary">
@@ -78,6 +78,7 @@
                 {{ elementary.name }}
               </div>
               <div
+                v-if="elementary?.secondaryList?.length > 0"
                 :class="[
                   $style.elementaryItemIcon,
                   phoneMenu.navIndex === index && phoneMenu.isShowSecondary
@@ -85,7 +86,6 @@
                     : '',
                 ]"
                 @click="selectElementary(elementary, index, 'phone')"
-                v-if="elementary?.secondaryList?.length > 0"
               >
                 <img src="@/assets/icons/arrow.svg" />
               </div>

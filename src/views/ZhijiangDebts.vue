@@ -12,7 +12,7 @@
   </div>
   <div :class="$style.updateTimeArea">
     <img :class="$style.iconClock" src="@/assets/icons/clock.svg" />
-    <div>{{ "最近更新" + "2021-01-01" }}</div>
+    <div>{{ '最近更新' + '2021-01-01' }}</div>
   </div>
   <div :class="$style.ZhijiangDebts">
     <div :class="$style.searchAndResult">
@@ -30,31 +30,31 @@
           <div :class="$style.timeSection">
             <el-config-provider :locale="locale">
               <el-date-picker
-                  v-model="datePickedStart"
-                  type="month"
-                  :class="$style.elDatePicker"
-                  :disabled-date="dateValidatorStart"
+                v-model="datePickedStart"
+                type="month"
+                :class="$style.elDatePicker"
+                :disabled-date="dateValidatorStart"
               >
               </el-date-picker>
               <span>-</span>
               <el-date-picker
-                  v-model="datePickedEnd"
-                  type="month"
-                  :class="$style.elDatePicker"
-                  :disabled-date="dateValidatorEnd"
+                v-model="datePickedEnd"
+                type="month"
+                :class="$style.elDatePicker"
+                :disabled-date="dateValidatorEnd"
               >
               </el-date-picker>
             </el-config-provider>
           </div>
         </div>
 
-        <div :class="$style.debtStatus" ref="statusBox">
+        <div ref="statusBox" :class="$style.debtStatus">
           <div
+            v-for="(item, index) in statuList"
             :class="[
               $style.debtStatusItem,
               item.isSelect ? $style.debtStatusItemActive : '',
             ]"
-            v-for="(item, index) in statuList"
             @click="changeStatus(index)"
           >
             {{ item.status }}
@@ -63,15 +63,15 @@
       </div>
       <div :class="$style.resultArea">
         <div
-          v-for="(BigItem, index) in debtList.filter(v=>{
-            return dateChecker(`${v.year}-${v.month}`)
+          v-for="(BigItem, index) in debtList.filter(v => {
+            return dateChecker(`${v.year}-${v.month}`);
           })"
           :class="$style.resultItemArea"
         >
           <div :class="$style.debtTimeAndbutton">
             <div>
-              <div>{{ BigItem.month + "月" }}</div>
-              <div>{{ BigItem.year + "年" }}</div>
+              <div>{{ BigItem.month + '月' }}</div>
+              <div>{{ BigItem.year + '年' }}</div>
             </div>
             <div :class="$style.divder"></div>
             <div @click="changeDebtFold(index)">
@@ -92,21 +92,24 @@
           >
             <div v-for="item in itemFilter(BigItem)" :class="$style.debtItem">
               <div :class="$style.titleArea">
-                <img v-if="item.completion_date!==``" src="@/assets/icons/correct.svg" />
+                <img
+                  v-if="item.completion_date !== ``"
+                  src="@/assets/icons/correct.svg"
+                />
                 <img v-else src="@/assets/icons/wrong.svg" />
                 <div :class="$style.title">{{ item.subject }}</div>
               </div>
               <div :class="$style.avatarArea">
                 <img
+                  v-for="avatar in item.tags.map(v => v.key)"
                   :src="'./src/assets/image/' + avatar + '.webp'"
-                  v-for="avatar in item.tags.map(v=>v.key)"
                 />
               </div>
               <div :class="$style.oweAndReverts">
                 <div :class="[$style.baseItem, $style.owe]">
                   <img src="@/assets/icons/clock.svg" />
                   <div :class="$style.time">
-                    {{ "欠债时间" + item.start_date }}
+                    {{ '欠债时间' + item.start_date }}
                   </div>
                   <img
                     src="@/assets/icons/coolicon.svg"
@@ -114,13 +117,13 @@
                   />
                 </div>
                 <div
-                  v-if="item.completion_date!==``"
+                  v-if="item.completion_date !== ``"
                   :class="[$style.baseItem, $style.reverts]"
                 >
                   <img src="@/assets/icons/clock.svg" />
                   <!-- TODO: 参数 -->
                   <div :class="$style.time">
-                    {{ "还债时间" + item.completion_date }}
+                    {{ '还债时间' + item.completion_date }}
                   </div>
                   <img
                     src="@/assets/icons/coolicon.svg"
@@ -146,91 +149,90 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted, nextTick} from "vue";
-import headerTitle from "@/components/HeaderTitle.vue";
-import introduceAsoul from "@/components/IntroduceAsoul.vue";
-import zhCn from 'element-plus/lib/locale/lang/zh-cn'
-import useCurrentInstance from "@/hooks/useCurrentInstance";
-import toTargetUrlWithNewWindow from "@/hooks/useUtility";
-import {ElDatePicker,ElConfigProvider} from "element-plus";
-import useDebounce from '@/hooks/useDebounce'
+import { defineComponent, ref, reactive, onMounted, nextTick } from 'vue';
+import headerTitle from '@/components/HeaderTitle.vue';
+import introduceAsoul from '@/components/IntroduceAsoul.vue';
+import zhCn from 'element-plus/lib/locale/lang/zh-cn';
+import useCurrentInstance from '@/hooks/useCurrentInstance';
+import {toTargetUrlWithNewWindow} from '@/hooks/useUtility';
+import { ElDatePicker, ElConfigProvider } from 'element-plus';
+import useDebounce from '@/hooks/useDebounce';
 
-interface Debt{
-  month:string,
-  year:string,
-  isFold:boolean,
-  debt:DebtItem[]
+interface Debt {
+  month: string;
+  year: string;
+  isFold: boolean;
+  debt: DebtItem[];
 }
-interface ASMember{
-  key:string;
-  name:string;
+interface ASMember {
+  key: string;
+  name: string;
 }
-interface ASMemberDebtTag extends ASMember{
-  is_leader:boolean;
-  home_page:string;
+interface ASMemberDebtTag extends ASMember {
+  is_leader: boolean;
+  home_page: string;
 }
-interface ASMemberSelector extends ASMember{
-  isSelect:boolean
+interface ASMemberSelector extends ASMember {
+  isSelect: boolean;
 }
-interface DebtItem{
-  start_date:string;
-  completion_date:string;
-  start_url:string;
-  completion_url:string;
-  subject:string;
-  tags:ASMemberDebtTag[]
+interface DebtItem {
+  start_date: string;
+  completion_date: string;
+  start_url: string;
+  completion_url: string;
+  subject: string;
+  tags: ASMemberDebtTag[];
 }
-
 
 export default defineComponent({
-  name: "ZhijiangDebts",
-  components: { headerTitle, introduceAsoul,ElDatePicker,ElConfigProvider},
+  name: 'ZhijiangDebts',
+  components: { headerTitle, introduceAsoul, ElDatePicker, ElConfigProvider },
   setup() {
     const { proxy } = useCurrentInstance();
-    const locale=ref(zhCn)
-    let datePickedStart = ref(new Date("2020-12-11"))
-    let datePickedEnd = ref(new Date())
+    const locale = ref(zhCn);
+    const datePickedStart = ref(new Date('2020-12-11'));
+    const datePickedEnd = ref(new Date());
     const AsoulTagList = reactive<ASMemberSelector[]>([
       {
-        name: "向晚",
-        key: "ava",
+        name: '向晚',
+        key: 'ava',
         isSelect: true,
       },
       {
-        name: "贝拉",
-        key: "bella",
+        name: '贝拉',
+        key: 'bella',
         isSelect: true,
       },
       {
-        name: "珈乐",
-        key: "carol",
+        name: '珈乐',
+        key: 'carol',
         isSelect: true,
       },
       {
-        name: "嘉然",
-        key: "diana",
+        name: '嘉然',
+        key: 'diana',
         isSelect: true,
       },
       {
-        name: "乃琳",
-        key: "eileen",
+        name: '乃琳',
+        key: 'eileen',
         isSelect: true,
       },
     ]);
     const changeTags = useDebounce((index: number) => {
       AsoulTagList[index].isSelect = !AsoulTagList[index].isSelect;
-      questDebt()
-    },300);
+      questDebt();
+    }, 300);
 
     const statuList = reactive([
-      { status: "全部", key:"all",isSelect: true },
-      { status: "已还", key:"ok",isSelect: false },
-      { status: "未还", key:"owing",isSelect: false },
+      { status: '全部', key: 'all', isSelect: true },
+      { status: '已还', key: 'ok', isSelect: false },
+      { status: '未还', key: 'owing', isSelect: false },
     ]);
     const statusBox = ref<null | HTMLElement>(null);
 
     const changeStatus = (index: number) => {
-      statusBox.value?.style.setProperty("--tempIndex", `${index}`);
+      statusBox.value?.style.setProperty('--tempIndex', `${index}`);
       statuList.forEach((item, i) => {
         if (i === index) {
           item.isSelect = true;
@@ -238,9 +240,10 @@ export default defineComponent({
           item.isSelect = false;
         }
       });
-    }
+    };
 
-    const debtList = ref<Debt[]>([/*
+    const debtList = ref<Debt[]>([
+    /*
       {
         year: "2021",
         month: "10",
@@ -445,7 +448,10 @@ export default defineComponent({
           },
         ],
       },
-    */]);
+    */
+    ]);
+    
+
     const changeDebtFold = (index: number) => {
       debtList.value[index].isFold = !debtList.value[index].isFold;
     };
@@ -454,71 +460,93 @@ export default defineComponent({
     const changeIntroduceShow = (e: boolean) => {
       isShowIntroduce.value = e;
     };
-    const dateChecker=(s:string):boolean=>{
-      if(datePickedStart.value===null||datePickedEnd.value===null){
-        return true
-      }else{
-        let oweDate=new Date(s)
-        return (oweDate>datePickedStart.value)&&(oweDate<datePickedEnd.value)
+    const dateChecker = (s: string): boolean => {
+      if (datePickedStart.value === null || datePickedEnd.value === null) {
+        return true;
+      } else {
+        const oweDate = new Date(s);
+        return oweDate > datePickedStart.value && oweDate < datePickedEnd.value;
       }
-    }
-    const dateValidatorStart=(e:Date)=>{
-      if(e<new Date("2020-12")||e>new Date()){
-        return true
+    };
+
+    const dateValidatorStart = (e: Date) => {
+      if (e < new Date('2020-12') || e > new Date()) {
+        return true;
       }
-      if(e>datePickedEnd.value){
-        return true
+      if (e > datePickedEnd.value) {
+        return true;
       }
-      return false
-    }
-    const dateValidatorEnd=(e:Date)=>{
-      if(e<new Date("2020-12")||e>new Date()){
-        return true
+      return false;
+    };
+    const dateValidatorEnd = (e: Date) => {
+      if (e < new Date('2020-12') || e > new Date()) {
+        return true;
       }
-      if(e<datePickedStart.value){
-        return true
+      if (e < datePickedStart.value) {
+        return true;
       }
-      return false
-    }
-    const itemFilter = (e:Debt)=>{
-      return (
-        e.debt
-          .filter((v:DebtItem)=>v.tags.reduce((pre:boolean,now:ASMemberDebtTag)=>{
-            return pre&&AsoulTagList.find((vv:ASMemberSelector)=>vv.key===now.key)!.isSelect
-          },true))
-            .filter((v:DebtItem)=>statuList[0].isSelect||(v.completion_date===``===statuList[2].isSelect))
-              .filter((v:DebtItem)=>dateChecker(v.start_date))
-      )
-    }
-    const questDebt = async()=>{
-      let rawData =await proxy.$request({
-        url: import.meta.env.VITE_API_DEBT,
-        params:{
-          memberName:AsoulTagList.reduce((pre:string,v:ASMemberSelector)=>{
-            if(v.isSelect===true){
-              return pre+v.key+','
-            }else{
-              return pre
-            }
-          },'').replace(/,$/,'')
-        }
+      return false;
+    };
+
+    const itemFilter = (e: Debt) => {
+      
+     return e.debt.filter((v: DebtItem) =>
+      {
+
+      return   v.tags.reduce((pre: boolean, now: ASMemberDebtTag) => {
+          return (
+            pre &&
+            AsoulTagList.find((vv: ASMemberSelector) => vv.key === now.key)!.isSelect
+          )
+        }, true)
       })
-      let processedData=rawData.reduce((pre:any,now:any)=>{
-        if(!pre.hasOwnProperty(now.start_date.slice(0,7))){
-          pre[now.start_date.slice(0,7)]={
-            year:now.start_date.slice(0,4),
-            month:now.start_date.slice(5,7),
-            isFold:false,
-            debt:[now]
-          }
-        }else{
-          pre[now.start_date.slice(0,7)].debt.push(now)
-        }
-        return pre
-      },{})
-      debtList.value=Object.values(processedData);
+        .filter(
+          (v: DebtItem) =>
+            statuList[0].isSelect ||
+            (v.completion_date === ``) === statuList[2].isSelect,
+        )
+        .filter((v: DebtItem) => dateChecker(v.start_date));
+
+
+
     }
-    questDebt()
+
+    const questDebt = async () => {
+
+      const rawData = await proxy.$request({
+        url: import.meta.env.VITE_API_DEBT,
+        params: {
+          memberName: AsoulTagList.reduce(
+            (pre: string, v: ASMemberSelector) => {
+              if (v.isSelect === true) {
+                return pre + v.key + ',';
+              } else {
+                return pre;
+              }
+            },
+            '',
+          ).replace(/,$/, ''),
+        },
+      });
+
+      const processedData = rawData.reduce((pre: any, now: any) => {
+        if (!pre.hasOwnProperty(now.start_date.slice(0, 7))) {
+          pre[now.start_date.slice(0, 7)] = {
+            year: now.start_date.slice(0, 4),
+            month: now.start_date.slice(5, 7),
+            isFold: false,
+            debt: [now],
+          };
+        } else {
+          pre[now.start_date.slice(0, 7)].debt.push(now);
+        }
+        return pre;
+      }, {});
+      
+      debtList.value = Object.values(processedData);
+    };
+    
+    questDebt();
     return {
       changeIntroduceShow,
       changeStatus,
@@ -535,10 +563,9 @@ export default defineComponent({
       datePickedStart,
       datePickedEnd,
       locale,
-      itemFilter
+      itemFilter,
     };
   },
-  
 });
 </script>
 
@@ -572,7 +599,7 @@ export default defineComponent({
         .tagArea {
           margin-top: 10px;
           display: flex;
-          margin-right:10px;
+          margin-right: 10px;
           .tag {
             .displayCenter;
             padding: 8px;
@@ -593,13 +620,13 @@ export default defineComponent({
         }
         .timeSection {
           font-size: 14px;
-          display:flex;
+          display: flex;
           margin-top: 10px;
-          width:100%;
-          justify-content:space-around;
-          align-items:center;
-          .elDatePicker{
-            width:40%;
+          width: 100%;
+          justify-content: space-around;
+          align-items: center;
+          .elDatePicker {
+            width: 40%;
           }
         }
       }
@@ -627,7 +654,7 @@ export default defineComponent({
         }
         .debtStatusItem::after {
           position: absolute;
-          content: "";
+          content: '';
           top: 0;
           left: 0;
           height: 100%;
@@ -774,11 +801,11 @@ export default defineComponent({
   .introducePc {
     display: none;
   }
-  .tagsAndtime{
-    display:flex;
-    flex-wrap:wrap-reverse;
-    justify-content:space-between;
-    align-items:center;
+  .tagsAndtime {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: space-between;
+    align-items: center;
   }
   .introducePhone {
     display: block;
