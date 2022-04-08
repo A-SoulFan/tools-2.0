@@ -219,12 +219,14 @@ export default defineComponent({
   width: 100%;
   position: fixed;
   top: 0;
+  animation: faceInDown 0.3s ease-in-out both;
   z-index: 1000;
   .elementaryNavArea {
     margin: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    user-select: none;
     .asfLogo {
       width: 80px;
       cursor: pointer;
@@ -251,11 +253,13 @@ export default defineComponent({
     }
   }
   .secondaryNavArea {
+    position: relative;
+    z-index: -1;
     margin: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: Navbar-opacity 0.6s;
+    animation: Navbar-opacity 0.4s;
     .secondaryNavContentItem {
       padding: 20px 25px;
       margin: 0 10px;
@@ -266,6 +270,16 @@ export default defineComponent({
     .secondaryNavContentItem:hover {
       color: #1f2937;
     }
+  }
+}
+@keyframes Navbar-opacity {
+  0% {
+    opacity: 0;
+    max-height: 0px;
+  }
+  100% {
+    opacity: 1;
+    max-height: 100px;
   }
 }
 

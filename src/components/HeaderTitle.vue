@@ -70,7 +70,7 @@ export default defineComponent({
 }
 .title-area {
   position: relative;
-  animation: herderTitle 0.5s;
+  animation: faceInToRight 0.3s ease-in-out both;
   margin-top: 70px;
 }
 .title-area-sub {

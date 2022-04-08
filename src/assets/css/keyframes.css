@@ -1,35 +1,21 @@
-@keyframes introduce-pc {
-  0% {
-    right: -300px;
-  }
-  100% {
-    right: 0px;
-  }
-}
-
-@keyframes herderTitle {
-  0% {
-    top: -100px;
-  }
-  30%{
-      top: 0px;
-  }
-  60%{
-    top: -30px;
-  }
-  100% {
-    top: 0px;
-  }
-}
-
-@keyframes Navbar-opacity {
+@keyframes faceInDown {
   0% {
     opacity: 0;
-  }
-  33% {
-    opacity: 0.5;
+    transform: translateY(-100px) ;
   }
   100% {
     opacity: 1;
+    transform: translateY(0px) ;
+  }
+}
+
+@keyframes faceInToRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px) ;
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0px) ;
   }
 }
