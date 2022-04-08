@@ -12,9 +12,9 @@
         <span
           class="introduce-text-content-name"
           @click="
-            toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')
+            toTargetUrlWithNewWindow('https://space.bilibili.com/1772442517')
           "
-          >@晓轩iMIKU</span
+          >@晓小轩iAS</span
         >
         为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
       </div>
@@ -82,9 +82,11 @@
             <span
               class="introduce-text-content-name"
               @click="
-                toTargetUrlWithNewWindow('https://space.bilibili.com/32957695')
+                toTargetUrlWithNewWindow(
+                  'https://space.bilibili.com/1772442517',
+                )
               "
-              >@晓轩iMIKU</span
+              >@晓小轩iAS</span
             >
             为了鉴别b站用户成分制作的用于抓取b站用户关注列表内vup的小工具，快速识别评论区发言者成分
           </div>
