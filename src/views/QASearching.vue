@@ -44,35 +44,45 @@
         </div>
       </div>
       <div class="result-area">
-        <div v-if="hasError===false">
+        <div v-if="hasError === false">
           <div v-for="item in result" :key="item.title" class="result-item">
             <div class="result-item-flex">
               <div class="display-center result-title">
-                <div
-                  class="display-center"
-                >
+                <div class="display-center">
                   <img src="@/assets/icons/BilibiliIcon.svg" />
                   <div class="result-item-author">{{ item.title }}</div>
                 </div>
               </div>
             </div>
-            <div v-for="qaNow in item.qa" :key="qaNow.q" class="result-item-content">
+            <div
+              v-for="qaNow in item.qa"
+              :key="qaNow.q"
+              class="result-item-content"
+            >
               <div v-html="highLight(qaNow.q)"></div>
-              <div>{{qaNow.a}}</div>
+              <div>{{ qaNow.a }}</div>
             </div>
             <div class="result-item-flex">
               <div class="display-center">
                 <img src="@/assets/icons/clock.svg" />
-                <div style="display:inline;">发表时间 {{ item.title.match(/(?<=制作委员会的每周QA )[\s\S]*/)?.at(0) }}</div>
+                <div style="display: inline">
+                  发表时间
+                  {{
+                    item.title.match(/(?<=制作委员会的每周QA )[\s\S]*/)?.at(0)
+                  }}
+                </div>
               </div>
-              <div class="display-center cursor" @click="toTargetUrlWithNewWindow(item.link)">
+              <div
+                class="display-center cursor"
+                @click="toTargetUrlWithNewWindow(item.link)"
+              >
                 <img src="@/assets/icons/link-icon.svg" />
                 查看详情
               </div>
             </div>
           </div>
         </div>
-        <div class="result-noRes" v-if="hasError===true">
+        <div v-if="hasError === true" class="result-noRes">
           没找到对应的QA哦
         </div>
       </div>
@@ -87,7 +97,7 @@
               class="introduce-text-content-name"
               @click="
                 toTargetUrlWithNewWindow(
-                  'https://space.bilibili.com/1442421278'
+                  'https://space.bilibili.com/1442421278',
                 )
               "
               >@ProjectASF</span
@@ -103,11 +113,11 @@
 </template>
 
 <script lang="ts" setup>
-import headerTitle from "@/components/HeaderTitle.vue";
-import toTargetUrlWithNewWindow from "@/hooks/useUtility";
-import introduceAsoul from "@/components/IntroduceAsoul.vue";
-import { reactive, ref } from "vue";
-import useCurrentInstance from "@/hooks/useCurrentInstance";
+import headerTitle from '@/components/HeaderTitle.vue';
+import { toTargetUrlWithNewWindow } from '@/hooks/useUtility';
+import introduceAsoul from '@/components/IntroduceAsoul.vue';
+import { reactive, ref } from 'vue';
+import useCurrentInstance from '@/hooks/useCurrentInstance';
 interface QAResult {
   title: string;
   link: string;
@@ -123,31 +133,33 @@ const isShowIntroduce = ref(true);
 const changeIntroduceShow = (e: boolean) => {
   isShowIntroduce.value = e;
 };
-const highLight = (str:string)=>{
- return str.replace(nowValue.value,`<span style="color:red">${nowValue.value}</span>`)
-}
+const highLight = (str: string) =>
+  str.replace(
+    nowValue.value,
+    `<span style="color:red">${nowValue.value}</span>`,
+  );
 const searchData = reactive({
   maxLength: 20,
-  searchValue: "",
-  btnContent: "查询结果",
+  searchValue: '',
+  btnContent: '查询结果',
 });
-const nowValue = ref("")
-const hasError = ref(false)
+const nowValue = ref('');
+const hasError = ref(false);
 const result = ref<QAResult[]>([]);
 const getQA = async () => {
-  try{
+  try {
     result.value = await proxy.$request({
       url: import.meta.env.VITE_API_QASEARCHING,
       params: {
         key: searchData.searchValue,
       },
     });
-    nowValue.value=searchData.searchValue
-    hasError.value=false
-  }catch(e){
-    hasError.value=true
-    nowValue.value=""
-    result.value=[]
+    nowValue.value = searchData.searchValue;
+    hasError.value = false;
+  } catch (e) {
+    hasError.value = true;
+    nowValue.value = '';
+    result.value = [];
   }
 };
 </script>
@@ -160,8 +172,8 @@ const getQA = async () => {
   display: flex;
   margin-top: 20px;
   color: #374151;
-  .search-and-result{
-    flex:1;
+  .search-and-result {
+    flex: 1;
   }
   .search-area {
     flex: 1;
@@ -184,7 +196,7 @@ const getQA = async () => {
       outline: none;
       border: 1px solid #000;
     }
-    textarea[class="search-textarea"]::-webkit-input-placeholder {
+    textarea[class='search-textarea']::-webkit-input-placeholder {
       font-size: 20px;
       color: #d1d5db;
     }
@@ -219,10 +231,10 @@ const getQA = async () => {
         display: flex;
         justify-content: space-between;
         margin: 10px 0;
-        img{
+        img {
           vertical-align: middle;
         }
-        .result-title{
+        .result-title {
           width: 100%;
         }
         .result-item-author {
@@ -245,9 +257,9 @@ const getQA = async () => {
         margin-right: 10px;
       }
     }
-    .result-noRes{
+    .result-noRes {
       text-align: center;
-      color:#a55;
+      color: #a55;
       font-size: 24px;
     }
   }
