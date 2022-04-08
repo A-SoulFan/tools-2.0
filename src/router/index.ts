@@ -38,7 +38,22 @@ const routes: RouteRecordRaw[] = [
     component: () => import(
       /* webpackChunkName: "IngredientChecking" */ "../views/IngredientChecking.vue"
     )
+  },
+  {
+    path: "/ZhijiangDebts",
+    name: "ZhijiangDebts",
+    component: () => import(
+      /* webpackChunkName: "ZhijiangDebts" */ "../views/ZhijiangDebts.vue"
+    )
+  },
+  {
+    path: "/QASearching",
+    name: "QASearching",
+    component: () => import(
+      /* webpackChunkName: "QASearching" */ "../views/QASearching.vue"
+    )
   }
+  
 ]
 
 const router = createRouter({

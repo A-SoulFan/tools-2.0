@@ -354,7 +354,7 @@ export default defineComponent({
           transition: max-height 0.5s cubic-bezier(0.15, 0.85, 0.35, 1);
         }
         .secondaryItemBoxShow {
-          max-height: 300px;
+          max-height: 360px;
         }
         .secondaryItem {
           display: flex;
