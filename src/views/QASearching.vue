@@ -288,6 +288,7 @@ const getQA = async () => {
     padding: 20px;
     margin-top: 30px;
     min-height: 180px;
+    max-height: 350px;
     transition: all 0.3s;
     overflow: hidden;
   }

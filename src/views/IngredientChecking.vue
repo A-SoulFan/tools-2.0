@@ -358,15 +358,17 @@ onBeforeMount(() => {
     padding: 20px;
     margin-top: 30px;
     min-height: 180px;
-    transition: all 0.3s;
+    transition: all 0.5s ;
     overflow: hidden;
+    max-height: 350px;
+    opacity: 1;
   }
   .introduce-phone-none{
     min-height: 0;
     max-height: 0;  
     opacity: 0;
     padding: 0 20px;
-     margin-top: 0px;
+    margin-top: 0px;
   } 
 
 

@@ -1,11 +1,7 @@
 <!-- 表情包-->
 <template>
-  <header-title
-    title="表情包"
-    sub-title="你想要的表情包都在这里"
-    @buttonClick="changeIntroduceShow"
-  ></header-title>
-  <div class="introduce-phone" :class="isShowIntroduce ? '':'introduce-phone-none' ">
+  <header-title title="表情包" sub-title="你想要的表情包都在这里" @buttonClick="changeIntroduceShow"></header-title>
+  <div class="introduce-phone" :class="isShowIntroduce ? '' : 'introduce-phone-none'">
     <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
       <div class="introduce-text-content-section">
@@ -15,19 +11,14 @@
           @click="
             toTargetUrlWithNewWindow('https://space.bilibili.com/15073186')
           "
-          >@洛骑塔</span
-        >的专栏。 小伙伴们可以点击下载按钮下载对应表情包
+        >@洛骑塔</span>的专栏。 小伙伴们可以点击下载按钮下载对应表情包
       </div>
       <introduceAsoul></introduceAsoul>
     </div>
   </div>
   <div class="EmojiCollection">
     <div class="waterfall" ref="waterfallBox">
-      <div
-        v-for="(item, index) in waterfallData.waterfallList"
-        class="waterfall-list"
-        :key="index"
-      >
+      <div v-for="(item, index) in waterfallData.waterfallList" class="waterfall-list" :key="index">
         <div
           class="waterfall-item"
           v-for="img in item"
@@ -59,8 +50,7 @@
               @click="
                 toTargetUrlWithNewWindow('https://space.bilibili.com/15073186')
               "
-              >@洛骑塔</span
-            >的专栏。 小伙伴们可以点击下载按钮下载对应表情包
+            >@洛骑塔</span>的专栏。 小伙伴们可以点击下载按钮下载对应表情包
           </div>
           <div class="introduce-Asoul">
             <introduceAsoul></introduceAsoul>
@@ -371,15 +361,16 @@ onUnmounted(() => {
     padding: 20px;
     margin-top: 30px;
     min-height: 180px;
-     transition: all 0.3s;
+    max-height: 350px;
+    transition: all 0.3s;
     overflow: hidden;
   }
-    .introduce-phone-none{
+  .introduce-phone-none {
     min-height: 0;
-    max-height: 0;  
+    max-height: 0;
     opacity: 0;
     padding: 0 20px;
-     margin-top: 0px;
-  } 
+    margin-top: 0px;
+  }
 }
 </style>
