@@ -1,10 +1,6 @@
 <template>
-  <header-title
-    title="羊驼打过的太极"
-    sub-title="看看羊驼都说了什么"
-    @buttonClick="changeIntroduceShow"
-  ></header-title>
-  <div v-show="isShowIntroduce" class="introduce-phone">
+  <header-title title="羊驼打过的太极" sub-title="看看羊驼都说了什么" @buttonClick="changeIntroduceShow"></header-title>
+  <div class="introduce-phone" :class="isShowIntroduce ? '' : 'introduce-phone-none'">
     <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
       <div class="introduce-text-content-section">
@@ -14,8 +10,7 @@
           @click="
             toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')
           "
-          >@ProjectASF</span
-        >
+        >@ProjectASF</span>
       </div>
       <introduceAsoul></introduceAsoul>
     </div>
@@ -29,9 +24,9 @@
           maxlength="20"
           class="search-textarea"
         ></textarea>
-        <div class="search-text-count">
-          总字数:{{ searchData.searchValue.length }}/{{ searchData.maxLength }}
-        </div>
+        <div
+          class="search-text-count"
+        >总字数:{{ searchData.searchValue.length }}/{{ searchData.maxLength }}</div>
         <div
           class="search-button"
           :style="{
@@ -39,9 +34,7 @@
               searchData.searchValue.length >= 3 ? '#4B5563' : '#9CA3AF',
           }"
           @click="getQA()"
-        >
-          查询结果
-        </div>
+        >查询结果</div>
       </div>
       <div class="result-area">
         <div v-if="hasError === false">
@@ -54,11 +47,7 @@
                 </div>
               </div>
             </div>
-            <div
-              v-for="qaNow in item.qa"
-              :key="qaNow.q"
-              class="result-item-content"
-            >
+            <div v-for="qaNow in item.qa" :key="qaNow.q" class="result-item-content">
               <div v-html="highLight(qaNow.q)"></div>
               <div>{{ qaNow.a }}</div>
             </div>
@@ -72,19 +61,14 @@
                   }}
                 </div>
               </div>
-              <div
-                class="display-center cursor"
-                @click="toTargetUrlWithNewWindow(item.link)"
-              >
+              <div class="display-center cursor" @click="toTargetUrlWithNewWindow(item.link)">
                 <img src="@/assets/icons/link-icon.svg" />
                 查看详情
               </div>
             </div>
           </div>
         </div>
-        <div v-if="hasError === true" class="result-noRes">
-          没找到对应的QA哦
-        </div>
+        <div v-if="hasError === true" class="result-noRes">没找到对应的QA哦</div>
       </div>
     </div>
     <div>
@@ -100,8 +84,7 @@
                   'https://space.bilibili.com/1442421278',
                 )
               "
-              >@ProjectASF</span
-            >
+            >@ProjectASF</span>
           </div>
           <div class="introduce-Asoul">
             <introduceAsoul></introduceAsoul>
@@ -196,7 +179,7 @@ const getQA = async () => {
       outline: none;
       border: 1px solid #000;
     }
-    textarea[class='search-textarea']::-webkit-input-placeholder {
+    textarea[class="search-textarea"]::-webkit-input-placeholder {
       font-size: 20px;
       color: #d1d5db;
     }
@@ -305,6 +288,23 @@ const getQA = async () => {
     padding: 20px;
     margin-top: 30px;
     min-height: 180px;
+    transition: all 0.3s;
+    overflow: hidden;
+  }
+  .introduce-phone-none {
+    min-height: 0;
+    max-height: 0;
+    opacity: 0;
+    padding: 0 20px;
+    margin-top: 0px;
+  }
+
+  .QASearching {
+    .search-area {
+      .search-textarea {
+        min-width: 0;
+      }
+    }
   }
 }
 </style>

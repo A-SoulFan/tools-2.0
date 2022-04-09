@@ -4,7 +4,7 @@
     sub-title="帮助你快速分析用户成分"
     @buttonClick="changeIntroduceShow"
   ></headerTitle>
-  <div v-show="isShowIntroduce" class="introduce-phone">
+  <div class="introduce-phone " :class="isShowIntroduce ? '':'introduce-phone-none' " >
     <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
       <div class="introduce-text-content-section">
@@ -358,7 +358,18 @@ onBeforeMount(() => {
     padding: 20px;
     margin-top: 30px;
     min-height: 180px;
+    transition: all 0.3s;
+    overflow: hidden;
   }
+  .introduce-phone-none{
+    min-height: 0;
+    max-height: 0;  
+    opacity: 0;
+    padding: 0 20px;
+     margin-top: 0px;
+  } 
+
+
   .search-result-VupList {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
   }

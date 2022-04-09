@@ -73,7 +73,7 @@
       <div :class="$style.elementary">
         <div v-for="(elementary, index) in navList" :key="elementary.name">
           <div>
-            <div :class="$style.elementaryItem">
+            <div :class="$style.elementaryItem" @click="selectElementary(elementary, index, 'phone')">
               <div :class="$style.elementaryItemName">
                 {{ elementary.name }}
               </div>
@@ -85,7 +85,7 @@
                     ? $style.elementaryItemIconRotate
                     : '',
                 ]"
-                @click="selectElementary(elementary, index, 'phone')"
+                
               >
                 <img src="@/assets/icons/arrow.svg" />
               </div>
@@ -164,6 +164,8 @@ export default defineComponent({
         data.isShowSecondary = true;
         return;
       }
+      console.log('selectElementary');
+      
       if (type === 'phone') {
         if (phoneMenu.isShowSecondary && phoneMenu.navIndex === index) {
           phoneMenu.isShowSecondary = false;

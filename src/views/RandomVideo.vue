@@ -1,12 +1,8 @@
 <!-- 今天溜什么-->
 <template>
   <div>
-    <header-title
-      title="今天溜什么"
-      sub-title="相见即是缘份"
-      @buttonClick="changeIntroduceShow"
-    ></header-title>
-    <div v-show="isShowIntroduce" class="introduce-phone">
+    <header-title title="今天溜什么" sub-title="相见即是缘份" @buttonClick="changeIntroduceShow"></header-title>
+    <div class="introduce-phone" :class="isShowIntroduce ? '' : 'introduce-phone-none'">
       <div class="introduce-title">功能介绍</div>
       <div class="introduce-text-content">
         <introduceAsoul></introduceAsoul>
@@ -23,9 +19,7 @@
           <div class="iframe-box-button-area">
             <div class="pre-button-area">
               <img class="pre-button-img" src="@/assets/icons/cube.svg" />
-              <div class="pre-button-text" @click="preVideo">
-                回到上一条视频
-              </div>
+              <div class="pre-button-text" @click="preVideo">回到上一条视频</div>
             </div>
             <div class="random-button" @click="getRandomVideo">随便看看</div>
           </div>
@@ -33,9 +27,7 @@
         <div class="history-video-area" v-if="Data.historyVideoList.length > 0">
           <div class="history-video-title-area">
             <div class="history-video-title">历史记录</div>
-            <div class="history-video-clear-button" @click="clearHistory">
-              清理历史记录
-            </div>
+            <div class="history-video-clear-button" @click="clearHistory">清理历史记录</div>
           </div>
           <div class="history-video">
             <div
@@ -324,6 +316,15 @@ onBeforeMount(() => {
     padding: 20px;
     margin-top: 30px;
     min-height: 180px;
+    transition: all 0.3s;
+    overflow: hidden;
+  }
+  .introduce-phone-none {
+    min-height: 0;
+    max-height: 0;
+    opacity: 0;
+    padding: 0 20px;
+    margin-top: 0px;
   }
 }
 </style>

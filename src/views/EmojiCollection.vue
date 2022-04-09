@@ -5,7 +5,7 @@
     sub-title="你想要的表情包都在这里"
     @buttonClick="changeIntroduceShow"
   ></header-title>
-  <div v-show="isShowIntroduce" class="introduce-phone">
+  <div class="introduce-phone" :class="isShowIntroduce ? '':'introduce-phone-none' ">
     <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
       <div class="introduce-text-content-section">
@@ -371,6 +371,15 @@ onUnmounted(() => {
     padding: 20px;
     margin-top: 30px;
     min-height: 180px;
+     transition: all 0.3s;
+    overflow: hidden;
   }
+    .introduce-phone-none{
+    min-height: 0;
+    max-height: 0;  
+    opacity: 0;
+    padding: 0 20px;
+     margin-top: 0px;
+  } 
 }
 </style>

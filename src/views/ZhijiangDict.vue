@@ -7,7 +7,7 @@
     :returnButton="isShowSearchResult"
     class="header-title"
   ></headerTitle>
-  <div v-show="isShowIntroduce" class="introduce-phone">
+  <div class="introduce-phone" :class="isShowIntroduce ? '' : 'introduce-phone-none'">
     <div class="introduce-title">功能介绍</div>
     <div class="introduce-text-content">
       <div class="introduce-text-content">
@@ -21,8 +21,7 @@
           @click="
             toTargetUrlWithNewWindow('https://space.bilibili.com/1442421278')
           "
-          >&nbsp;&nbsp;@ProJectASF</span
-        >
+        >&nbsp;&nbsp;@ProJectASF</span>
       </div>
       <introduceAsoul></introduceAsoul>
     </div>
@@ -43,9 +42,7 @@
             'background-color': searchText.length > 0 ? '#4B5563' : '#9CA3AF',
           }"
           @click="searchWords()"
-        >
-          查询词条
-        </div>
+        >查询词条</div>
       </div>
 
       <div v-show="!isShowDetail" class="result-area">
@@ -62,9 +59,7 @@
                   : ''
               "
               @click="setChildCategoriesList(item.cid)"
-            >
-              {{ item.name }}
-            </div>
+            >{{ item.name }}</div>
             <!-- 二级分类 -->
           </div>
           <div class="result-entries">
@@ -78,24 +73,15 @@
                   : ''
               "
               @click="getContentList(item.cid)"
-            >
-              {{ item.name }}
-            </div>
+            >{{ item.name }}</div>
           </div>
         </div>
         <!-- 结果 -->
         <div class="result-item-area" v-if="data.entryList.length > 0">
-          <div
-            v-for="entry in data.entryList"
-            :key="entry.eid"
-            class="result-item"
-          >
+          <div v-for="entry in data.entryList" :key="entry.eid" class="result-item">
             <div class="result-item-header">
               <div class="result-item-title">{{ entry.title }}</div>
-              <div
-                class="result-item-header-right"
-                @click="toShowDetail(entry)"
-              >
+              <div class="result-item-header-right" @click="toShowDetail(entry)">
                 <img src="@/assets/icons/link-icon.svg" />
                 查看详情
               </div>
@@ -129,9 +115,9 @@
         <div class="introduce-pc">
           <div class="introduce-title">功能介绍</div>
           <div class="introduce-text-content">
-            <div class="introduce-text-content">
-              本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。
-            </div>
+            <div
+              class="introduce-text-content"
+            >本词典收录了A-Soul以及A-Soul评论区相关的梗，旨在帮助新入坑的一个魂们能更快的融入这个大家庭里。我们希望大家能通过了解不同圈子的梗和文化，避免一些误解和纷争、减少一些陌生感和恐惧感，化解大家的戾气，从而让我们的讨论环境更加和谐友善。</div>
             <div class="introduce-text-content">
               如果有新词条或者对词条的内容方面有建议的欢迎联系:
               <span
@@ -141,8 +127,7 @@
                     'https://space.bilibili.com/1442421278',
                   )
                 "
-                >&nbsp;&nbsp;@ProJectASF</span
-              >
+              >&nbsp;&nbsp;@ProJectASF</span>
             </div>
           </div>
           <introduceAsoul></introduceAsoul>
@@ -532,7 +517,17 @@ onMounted(async () => {
     padding: 20px;
     margin-top: 30px;
     min-height: 180px;
+    transition: all 0.3s;
+    overflow: hidden;
   }
+  .introduce-phone-none {
+    min-height: 0;
+    max-height: 0;
+    opacity: 0;
+    padding: 0 20px;
+    margin-top: 0px;
+  }
+
   .result-categories,
   .result-entries {
     max-width: 88.34vw !important;

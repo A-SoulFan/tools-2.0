@@ -1,16 +1,8 @@
 <template>
-  <headerTitle
-    title="枝网查重"
-    sub-title="帮助你快速识别原创小作文"
-    @buttonClick="changeIntroduceShow"
-  ></headerTitle>
-  <div v-show="isShowIntroduce" class="introduce-phone">
+  <headerTitle title="枝网查重" sub-title="帮助你快速识别原创小作文" @buttonClick="changeIntroduceShow"></headerTitle>
+  <div class="introduce-phone" :class="isShowIntroduce ? '' : 'introduce-phone-none'">
     <div class="introduce-title">功能介绍</div>
-    <div
-      v-for="(item, index) in contentList"
-      :key="index"
-      class="introduce-text-content"
-    >
+    <div v-for="(item, index) in contentList" :key="index" class="introduce-text-content">
       <div>{{ item.title }}</div>
       <div>{{ item.content }}</div>
     </div>
@@ -43,9 +35,9 @@
           maxlength="1000"
           class="search-textarea"
         ></textarea>
-        <div class="search-text-count">
-          总字数:{{ searchData.searchValue.length }}/{{ searchData.maxLength }}
-        </div>
+        <div
+          class="search-text-count"
+        >总字数:{{ searchData.searchValue.length }}/{{ searchData.maxLength }}</div>
         <div
           class="search-button"
           :style="{
@@ -53,17 +45,11 @@
               searchData.searchValue.length > 10 ? '#4B5563' : '#9CA3AF',
           }"
           @click="getDuplicate()"
-        >
-          查询结果
-        </div>
+        >查询结果</div>
       </div>
 
       <div class="result-area">
-        <div
-          v-for="item in DuplicateCheckingList"
-          :key="item.date"
-          class="result-item"
-        >
+        <div v-for="item in DuplicateCheckingList" :key="item.date" class="result-item">
           <div class="result-item-flex">
             <div class="display-center">
               <div
@@ -90,10 +76,7 @@
               <img src="@/assets/icons/clock.svg" />
               <div>发表时间 {{ item.date }}</div>
             </div>
-            <div
-              class="display-center cursor"
-              @click="toTargetUrlWithNewWindow(item.targetUrl)"
-            >
+            <div class="display-center cursor" @click="toTargetUrlWithNewWindow(item.targetUrl)">
               <img src="@/assets/icons/link-icon.svg" />
               前往评论区
             </div>
@@ -104,11 +87,7 @@
     <div>
       <div class="introduce-pc">
         <div class="introduce-title">功能介绍</div>
-        <div
-          v-for="(item, index) in contentList"
-          :key="index"
-          class="introduce-text-content"
-        >
+        <div v-for="(item, index) in contentList" :key="index" class="introduce-text-content">
           <div>{{ item.title }}</div>
           <div>{{ item.content }}</div>
         </div>
@@ -281,7 +260,7 @@ onBeforeMount(() => {
       outline: none;
       border: 1px solid #000;
     }
-    textarea[class='search-textarea']::-webkit-input-placeholder {
+    textarea[class="search-textarea"]::-webkit-input-placeholder {
       font-size: 20px;
       color: #d1d5db;
     }
@@ -384,6 +363,15 @@ onBeforeMount(() => {
     padding: 20px;
     margin-top: 30px;
     min-height: 180px;
+    transition: all 0.3s;
+    overflow: hidden;
+  }
+  .introduce-phone-none {
+    min-height: 0;
+    max-height: 0;
+    opacity: 0;
+    padding: 0 20px;
+    margin-top: 0px;
   }
   .search-textarea {
     min-width: 0 !important;
