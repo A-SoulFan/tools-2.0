@@ -4,7 +4,7 @@ import Loading from "@/components/Loading/Loading"
 
 const request = async (config: AxiosRequestConfig,
   loadingText = "拼命加载中...") => {
-  const { url, data, params, method = "get" } = config
+  const { url, data, params, method = "get",headers } = config
   console.log(url, data, params, method, loadingText)
   console.log("url,data, params, method, loading")
   try {
@@ -13,7 +13,8 @@ const request = async (config: AxiosRequestConfig,
       url,
       data,
       method,
-      params
+      params,
+      headers
     })
     if (result.status === 200) {
       if (result.data.code === 0) {

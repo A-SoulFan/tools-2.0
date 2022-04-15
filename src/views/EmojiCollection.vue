@@ -6,12 +6,9 @@
     <div class="introduce-text-content">
       <div class="introduce-text-content-section">
         表情包大部分数据来自于
-        <span
-          class="introduce-text-content-name"
-          @click="
-            toTargetUrlWithNewWindow('https://space.bilibili.com/15073186')
-          "
-        >@洛骑塔</span>的专栏。 小伙伴们可以点击下载按钮下载对应表情包
+        <span class="introduce-text-content-name" @click="
+          toTargetUrlWithNewWindow('https://space.bilibili.com/15073186')
+        ">@洛骑塔</span>的专栏。 小伙伴们可以点击下载按钮下载对应表情包
       </div>
       <introduceAsoul></introduceAsoul>
     </div>
@@ -19,22 +16,10 @@
   <div class="EmojiCollection">
     <div class="waterfall" ref="waterfallBox">
       <div v-for="(item, index) in waterfallData.waterfallList" class="waterfall-list" :key="index">
-        <div
-          class="waterfall-item"
-          v-for="img in item"
-          :key="img.id"
-          :style="'padding-top:' + img.paddingTop + '%;'"
-        >
-          <img
-            class="waterfall-item-img"
-            data-loaded="false"
-            :data-src="img.url + `@` + img.width + 'w_' + img.height + 'h.webp'"
-          />
-          <img
-            @click="downloadImage(img)"
-            class="waterfall-download-img"
-            src="@/assets/icons/coolicon.svg"
-          />
+        <div class="waterfall-item" v-for="img in item" :key="img.id" :style="'padding-top:' + img.paddingTop + '%;'">
+          <img class="waterfall-item-img" data-loaded="false"
+            :data-src="img.url + `@` + img.width + 'w_' + img.height + 'h.webp'" />
+          <img @click="downloadImage(img)" class="waterfall-download-img" src="@/assets/icons/coolicon.svg" />
         </div>
       </div>
     </div>
@@ -45,12 +30,9 @@
         <div class="introduce-text-content">
           <div class="introduce-text-content-section">
             表情包大部分数据来自于
-            <span
-              class="introduce-text-content-name"
-              @click="
-                toTargetUrlWithNewWindow('https://space.bilibili.com/15073186')
-              "
-            >@洛骑塔</span>的专栏。 小伙伴们可以点击下载按钮下载对应表情包
+            <span class="introduce-text-content-name" @click="
+              toTargetUrlWithNewWindow('https://space.bilibili.com/15073186')
+            ">@洛骑塔</span>的专栏。 小伙伴们可以点击下载按钮下载对应表情包
           </div>
           <div class="introduce-Asoul">
             <introduceAsoul></introduceAsoul>
@@ -232,10 +214,16 @@ const lazyLoad = () => {
           if (loaded == 'true') {
             return;
           }
+          // console.log('=============style===============',img.parentNode.className);
 
           const src = img.getAttribute('data-src');
           img.setAttribute('src', src!);
           img.setAttribute('data-loaded', 'true');
+          console.log('img.className-=-=---------------------------',img);
+          
+          // console.log('img.parentNode======================',img.parentNode?.);
+          
+          ( img.parentNode as  Element ).className = 'waterfall-item waterfall-item-show'
           observer.unobserve(entry.target);
         }
       });
@@ -285,23 +273,32 @@ onUnmounted(() => {
 .waterfall {
   flex: 1;
   display: flex;
+
   // justify-content: space-around;
   .waterfall-list {
     flex: 1;
     margin-right: 10px;
+    margin-bottom: 10px;
     max-width: 300px;
   }
+
   .waterfall-item {
     margin-bottom: 20px;
     background-color: #f3f4f6;
     position: relative;
     width: 100%;
-    box-shadow: 1px 1px 4px #a1a2a3;
+    box-shadow: 0px 0px 2px #a1a2a3;
     transition: all 0.3s ease-in;
   }
+
   .waterfall-item:hover {
-    box-shadow: 3px 3px 10px #6b6b6b;
+    box-shadow: 0px 0px 10px #6b6b6b;
   }
+
+  .waterfall-item-show {
+    animation: fadeShowUp 0.5s ease-in-out both;
+  }
+
   .waterfall-item-img {
     position: absolute;
     width: 100%;
@@ -309,6 +306,7 @@ onUnmounted(() => {
     z-index: 1;
     top: 0;
   }
+
   .waterfall-download-img {
     position: absolute;
     width: 30px;
@@ -318,6 +316,14 @@ onUnmounted(() => {
     bottom: 0;
     right: 0;
     z-index: 2;
+    transition: all 0.3s;
+  }
+
+  .waterfall-download-img:hover {
+    width: 40px;
+    height: 40px;
+    box-shadow: 0px 0px 5px #6b6b6b;
+
   }
 }
 
@@ -330,25 +336,31 @@ onUnmounted(() => {
   padding: 20px;
   border-radius: 2px;
 }
+
 .introduce-phone {
   display: none;
 }
+
 .introduce-title {
   font-weight: 400;
   font-size: 24px;
   margin-bottom: 20px;
 }
+
 .introduce-text-content {
   font-size: 15px;
+
   .introduce-text-content-section {
     margin-bottom: 20px;
   }
 }
+
 .introduce-text-content-name {
   margin: 0 10px;
   cursor: pointer;
   color: #1e90ff;
 }
+
 //
 @media only screen and (max-width: 768px) {
   .introduce-pc {
@@ -365,12 +377,27 @@ onUnmounted(() => {
     transition: all 0.3s;
     overflow: hidden;
   }
+
   .introduce-phone-none {
     min-height: 0;
     max-height: 0;
     opacity: 0;
     padding: 0 20px;
     margin-top: 0px;
+  }
+}
+
+
+@keyframes fadeShowUp {
+  0% {
+    opacity: 0;
+    transform: translateY(200px) scale(0.5);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+
   }
 }
 </style>

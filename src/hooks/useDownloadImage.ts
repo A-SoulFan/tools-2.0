@@ -16,12 +16,13 @@ const downloadImage = async (item: downloadObj) => {
       url: item.url,
       responseType: 'arraybuffer',
     });
-
     const a = document.createElement('a');
     const url = window.URL.createObjectURL(new Blob([res.data]));
     a.href = url;
-    a.download = item.name;
+    a.download = res.config.url!.substring(res.config.url!.length - 9);
+    document.body.appendChild(a)
     a.click();
+    document.body.removeChild(a)
   } catch (error) {
     Toast.Toast.showError(error, 'downloadImage');
   } finally {
