@@ -110,7 +110,6 @@
 <script lang="ts" setup>
 import { onBeforeMount, reactive, ref } from 'vue';
 import useCurrentInstance from '@/hooks/useCurrentInstance';
-import headerTitle from '@/components/HeaderTitle.vue';
 import copyToClipBoard from '@/hooks/useCopyToClipBoard';
 import { toTargetUrlWithNewWindow, getURLParam } from '@/hooks/useUtility';
 
@@ -316,6 +315,9 @@ onBeforeMount(() => {
       .result-item-content {
         color: #555555;
         font-size: 16px;
+        max-width: 1200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       img {
@@ -362,13 +364,7 @@ onBeforeMount(() => {
 }
 
 .introduce-text-content {
-  // font-size: 12px;
-  // color: #555555;
-  // white-space: nowrap;
-  // margin-top: 5px;
-  // transform: scale(0.83);
-  // transform-origin: left center;
-      font-size: 15px;
+    font-size: 15px;
     margin: 10px 0;
   .introduce-text-content-section {
     margin-bottom: 20px;
@@ -376,16 +372,7 @@ onBeforeMount(() => {
 }
 
 .introduce-footer {
-  // display: flex;
-  // align-items: center;
-  // font-size: 12px;
-  // margin-top: 10px;
-  // transform: scale(0.83);
-  // transform-origin: left center;
-  // white-space: nowrap;
-  // float: right;
-  // color: white;
-      display: flex;
+    display: flex;
     align-items: center;
     margin-top: 40px;
     font-size: 18px;
@@ -528,7 +515,6 @@ onBeforeMount(() => {
       width: 25px;
       position: relative;
       left: 10px;
-      img {}
     }
   }
 }
